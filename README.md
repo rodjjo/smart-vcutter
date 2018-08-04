@@ -21,7 +21,7 @@ It was a prototype and needs lots of code improvements, i'm opening the code to 
 **Example of a generated file**:
 
 <video autoplay repeat muted>
-  <source src="https://raw.githubusercontent.com/rodjjo/smart-vcutter/master/docs/video/sample_result.webm" type="video/webm">
+  <source src="https://raw.githubusercontent.com/rodjjo/smart-vcutter/master/docs/video/sample_result.webm">
 </video>
 
 
