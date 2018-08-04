@@ -18,9 +18,12 @@ It was a prototype and needs lots of code improvements, i'm opening the code to 
 * User friendly interface.
 * Multiplatform.
 
-# Example of a generated file:
+**Example of a generated file**:
 
-![Ubuntu screenshot](https://raw.githubusercontent.com/rodjjo/smart-vcutter/master/docs/video/sample_result.webm)
+<video autoplay repeat muted>
+  <source src="https://raw.githubusercontent.com/rodjjo/smart-vcutter/master/docs/video/sample_result.webm" type="video/webm">
+</video>
+
 
 ## Build
 
