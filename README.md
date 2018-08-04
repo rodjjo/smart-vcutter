@@ -66,3 +66,8 @@ cmake --build .
 * Rename functions and variables to make the project easy to understand.
 * Create documentations.
 * Add tests when it's possible.
+
+
+**TODO:**  
+Generate a debian package (.deb file)
+Generate a windows installer.
