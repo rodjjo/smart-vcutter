@@ -1,6 +1,8 @@
 # smart-vcutter
 A multiplatform tool to generate small, silent and short clips from videos.
 
+![Ubuntu screenshot](https://raw.githubusercontent.com/rodjjo/smart-vcutter/master/docs/images/ubuntu-screen-shot.png)
+
 Attention: The sound support is not necessary to this project. The focus is to produce video animations instead of GIF images. I hope gif format get out of the internet some day.
 
 It was a prototype and needs lots of code improvements, i'm opening the code to get some help with that.
