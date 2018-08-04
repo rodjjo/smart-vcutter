@@ -20,9 +20,7 @@ It was a prototype and needs lots of code improvements, i'm opening the code to 
 
 **Example of a generated file**:
 
-<video autoplay repeat muted>
-  <source src="https://raw.githubusercontent.com/rodjjo/smart-vcutter/master/docs/video/sample_result.webm" type="video/webm">
-</video>
+[![example](http://img.youtube.com/vi/7MCendkxo1I/0.jpg)](http://www.youtube.com/watch?v=7MCendkxo1I)
 
 
 ## Build
