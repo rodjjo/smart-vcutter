@@ -18,7 +18,7 @@ It was a prototype and needs lots of code improvements, i'm opening the code to 
 * User friendly interface.
 * Multiplatform.
 
-**Example of a generated file**:
+**Example of a generated video clip**:
 
 [![example](http://img.youtube.com/vi/7MCendkxo1I/0.jpg)](http://www.youtube.com/watch?v=7MCendkxo1I)
 
