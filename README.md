@@ -1,5 +1,7 @@
 # smart-vcutter
-A multiplatform tool to generate small silent and short video clips from videos.
+A multiplatform tool to generate small, silent and short clips from videos.
+
+Attention: The sound support is not necessary to this project. The focus is to produce video animations instead of GIF images. I hope gif format get out of the internet some day.
 
 It was a prototype and needs lots of code improvements, i'm opening the code to get some help with that.
 
