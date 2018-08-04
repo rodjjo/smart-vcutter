@@ -1,7 +1,7 @@
 # smart-vcutter
 A multiplatform tool to generate small silent and short video clips from videos.
 
-It was a prototype and need lots of code improvements, i'm opening the code to get some help with that.
+It was a prototype and needs lots of code improvements, i'm opening the code to get some help with that.
 
 ## Features
 
