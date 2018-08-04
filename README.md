@@ -69,5 +69,5 @@ cmake --build .
 
 
 **TODO:**  
-Generate a debian package (.deb file)
+Generate a debian package (.deb file)  
 Generate a windows installer.
