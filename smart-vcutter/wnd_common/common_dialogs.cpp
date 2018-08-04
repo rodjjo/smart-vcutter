@@ -8,6 +8,7 @@
 namespace vcutter {
 
 namespace {
+
 const char *kOUTPUT_VIDEO_FILE_FILTER = "Video files\t*.{mp4,webm,mjpeg}\n";
 const char *kINPUT_VIDEO_FILE_FILTER = "Video files\t*.{avi,mp4,mkv,mpeg,wmv,mov}\n";
 const char *kINPUT_PROJECT_FILE_FILTER = "Open clipping project\t*.vcutter\n";
@@ -18,6 +19,7 @@ const char *kINPUT_VIDEO_FILE_TITLE = "Select a video to open";
 const char *kINPUT_PROJECT_FILE_TITLE = "Select a project to open";
 const char *kOUTPUT_PROJECT_FILE_TITLE = "Define a location to save the project";
 const char *kOUTPUT_VIDEO_FILE_TITLE = "Define a location to save the video";
+
 }
 
 

@@ -1,6 +1,7 @@
 # smart-vcutter
 A multiplatform tool to generate small silent and short video clips from videos.
 
+It was a prototype and need lots of code improvements, i'm opening the code to get some help with that.
 
 ## Features
 
@@ -12,7 +13,6 @@ A multiplatform tool to generate small silent and short video clips from videos.
 * Interpolation support.
 * User friendly interface.
 * Multiplatform.
-
 
 ## Build
 
@@ -48,3 +48,12 @@ Generate and build the project
 cmake .
 cmake --build .
 ```
+
+# If you are a developer and want to colaborate:
+
+* Turn the functions smallers
+* Remove repeated code.
+* Refactory complex code.
+* Rename functions and variables to make the project easy to understand.
+* Create documentations
+* Add tests when it's possible.
