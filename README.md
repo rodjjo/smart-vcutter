@@ -51,9 +51,9 @@ cmake --build .
 
 # If you are a developer and want to colaborate:
 
-* Turn the functions smallers
+* Turn the functions smaller.
 * Remove repeated code.
 * Refactory complex code.
 * Rename functions and variables to make the project easy to understand.
-* Create documentations
+* Create documentations.
 * Add tests when it's possible.
