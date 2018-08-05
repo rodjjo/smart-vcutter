@@ -73,7 +73,7 @@ cmake --build .
 * Create a user manual.
 * Generate a .deb package.
 * Add option to run after setup.
-* Add option to associate files to setup.
+* Add option to associate files on setup.
 * Disable menus when all submenus are disabled (except root ones).
 * Remove repeated code and create functions.
 * Iconize all menu items with xpm.
