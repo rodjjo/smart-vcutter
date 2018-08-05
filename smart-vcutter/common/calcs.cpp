@@ -2,23 +2,16 @@
 #include <string.h>
 #include "smart-vcutter/common/calcs.h"
 
-namespace vcutter {
-
-float positive_angle(double angle) {
-    if (angle > 360) {
-        return angle - 360;
-    }
-    if (angle < -360) {
-        return (360 - ((-angle) - 360));
-    }
-    if (angle < 0) {
-        return 360 + angle;
-    }
-    return angle;
-}
-
 #define PI 3.1415926535897
 #define DEGS (PI / 180.0)
+
+namespace vcutter {
+
+float normalize_angle(float angle) {
+    while (angle < 0) angle += 360;
+    while (angle > 360) angle -= 360;
+    return angle;
+}
 
 void rotate_point(float angle, float *x, float *y) {
     if (!angle) {
@@ -128,7 +121,7 @@ float vector_angle(double x, double y) {
 };
 
 float get_angle(float x, float y) {
-    return positive_angle(vector_angle(x, y));
+    return normalize_angle(vector_angle(x, y));
 }
 
 point_t to_axis(float px, float py, float x, float y) {

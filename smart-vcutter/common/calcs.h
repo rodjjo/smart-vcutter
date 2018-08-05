@@ -14,7 +14,9 @@ typedef struct {
     point_t p[4];
 } box_t;
 
-float positive_angle(double angle);
+// Ensure the angle is interval 0..360
+float normalize_angle(float angle);
+
 void rotate_point(float angle, float *x, float *y);
 void rotate_box(float angle, box_t *box);
 void translate_box(float px, float py, box_t *box);

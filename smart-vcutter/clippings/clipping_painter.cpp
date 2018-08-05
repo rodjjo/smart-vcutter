@@ -170,7 +170,7 @@ clipping_key_t compute_interpolation(
         current.px = left.px + difx * interpolation;
         current.py = left.py + dify * interpolation;
         current.scale = left.scale + difs * interpolation;
-        current.angle = positive_angle(left.angle + (difa * interpolation * (clockwise ? 1 : -1)));
+        current.angle = normalize_angle(left.angle + (difa * interpolation * (clockwise ? 1 : -1)));
     }
 
     return current;
@@ -346,7 +346,7 @@ clipping_key_t magic_tool(
         float target_angle = get_angle(curr_rx2 - curr_rx1, curr_ry2 - curr_ry1);
         float diff = target_angle - source_angle;
         if (diff) {
-            source.angle = positive_angle(source.angle + diff);
+            source.angle = normalize_angle(source.angle + diff);
         }
     }
 
