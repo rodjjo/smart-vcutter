@@ -14,17 +14,14 @@ float normalize_angle(float angle) {
 }
 
 void rotate_point(float angle, float *x, float *y) {
-    if (!angle) {
-        return;
+    if (angle) {
+        float temp = 0;
+        float s = sin(angle * DEGS);
+        float c = cos(angle * DEGS);
+        temp = *x;
+        *x = (*x) * c - (*y) * s;
+        *y = temp * s + (*y) * c;
     }
-
-    float temp = 0;
-    float s = sin(angle * DEGS);
-    float c = cos(angle * DEGS);
-
-    temp = *x;
-    *x = (*x) * c - (*y) * s;
-    *y = temp * s + (*y) * c;
 }
 
 void rotate_box(float angle, box_t *box) {
