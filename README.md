@@ -50,6 +50,7 @@ sudo apt-get update -qq && sudo apt-get -y install \
     libgl-dev \
     libjsoncpp-dev
 ```
+**you also need to install opencv libraries.**
 
 Generate and build the project
 
