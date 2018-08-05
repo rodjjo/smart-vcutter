@@ -197,7 +197,7 @@ void ViewerTexture::update_texture(const int *vp, const uint8_t* buffer, int w, 
         texture_h_ = h;
 
         if (resize_texture) {
-            rescale(vp, &texture_w_, &texture_h_);
+            fit_width_and_height(vp, &texture_w_, &texture_h_);
         }
     }
 

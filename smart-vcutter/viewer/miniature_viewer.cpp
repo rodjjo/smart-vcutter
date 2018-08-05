@@ -51,7 +51,7 @@ void MiniatureViewer::update_preview(PlayerWrapper *player, ClippingKeeper *keep
     uint32_t preview_w = keeper->get_width(), preview_h = keeper->get_height();
     float scale = 1.0;
     int vp[4] = {0, 0, w(), h()};
-    rescale(vp, &preview_w, &preview_h, &scale);
+    fit_width_and_height(vp, &preview_w, &preview_h, &scale);
         
     unsigned int required_size = preview_w * preview_h * 3;
 

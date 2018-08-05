@@ -75,7 +75,7 @@ void raster_coordinates(const int *vp, uint32_t video_w, uint32_t video_h, float
     *raster_py = (1.0f / vp[3])  * (vp[3] - (video_h * scale));
 }
 
-void rescale(const int *vp, uint32_t *w, uint32_t *h, float *oscale) {
+void fit_width_and_height(const int *vp, uint32_t *w, uint32_t *h, float *computed_fit_scale) {
     if (*w <= vp[2] && *h <= vp[3]) {
         return;  // no upscale
     }
@@ -103,8 +103,8 @@ void rescale(const int *vp, uint32_t *w, uint32_t *h, float *oscale) {
         *h *= scale;
     }
 
-    if (oscale) {
-        *oscale *=  (1.0 / scale);
+    if (computed_fit_scale) {
+        *computed_fit_scale *=  (1.0 / scale);
     }
 }
 

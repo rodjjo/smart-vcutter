@@ -188,7 +188,7 @@ void BufferViewer::update_cache(const unsigned char** buffer, uint32_t *w, uint3
     unsigned int required_size = (*w) * (*h) * 3;
     unsigned int nw = *w, nh = *h;
 
-    rescale(view_port(), &nw, &nh);
+    fit_width_and_height(view_port(), &nw, &nh);
 
     unsigned int vp_size = nw * nh * 3;
 
