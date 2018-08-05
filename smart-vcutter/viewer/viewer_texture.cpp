@@ -53,7 +53,7 @@ void ViewerTexture::update(const uint8_t *buffer, int w, int h, bool resize_text
     memcpy(buffer_.get(), buffer, buffer_size);
 }
 
-void ViewerTexture::draw(const int *vp, float x, float y, float zoom) {
+void ViewerTexture::draw(const viewport_t &vp, float x, float y, float zoom) {
     update_texture(vp, NULL, 0, 0, resize_texture_, rgba_);
 
     if (!texture_w_ || !texture_h_ || !texture_id_) {
@@ -91,7 +91,7 @@ void ViewerTexture::draw(const int *vp, float x, float y, float zoom) {
     }
 }
 
-void ViewerTexture::draw(const int *vp, const uint8_t *buffer, int w, int h, bool resize_texture, bool rgba) {
+void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int h, bool resize_texture, bool rgba) {
     update_texture(vp, buffer, w, h, resize_texture, rgba);
     
     if (!texture_w_ || !texture_h_ || !texture_id_) {
@@ -126,7 +126,7 @@ void ViewerTexture::draw(const int *vp, const uint8_t *buffer, int w, int h, boo
     }
 }
 
-void ViewerTexture::draw(const int *vp, int vw, int vh, box_t texture_coords, box_t view_coords, float alpha) {
+void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coords, box_t view_coords, float alpha) {
     update_texture(vp, NULL, 0, 0, resize_texture_, rgba_);
     
     if (!texture_w_ || !texture_h_ || !texture_id_) {
@@ -134,7 +134,7 @@ void ViewerTexture::draw(const int *vp, int vw, int vh, box_t texture_coords, bo
     }
 
     for (char i = 0; i < 4; ++i) {
-        screen_coords(vp, vw, vh, &view_coords[i].x, &view_coords[i].y);
+        view_coords[i] = vp.frame_to_screen_coords(vw, vh, view_coords[i]);
         view_coords[i].x = view_coords[i].x * (2.0f / vp[2]) - 1.0f;
         view_coords[i].y = (vp[3] - view_coords[i].y) * (2.0f / vp[3]) - 1.0f;
         texture_coords[i].x = (1.0f / vw) * texture_coords[i].x;
@@ -163,7 +163,7 @@ void ViewerTexture::draw(const int *vp, int vw, int vh, box_t texture_coords, bo
 }
 
 
-void ViewerTexture::update_texture(const int *vp, const uint8_t* buffer, int w, int h, bool resize_texture, bool rgba) {
+void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, int w, int h, bool resize_texture, bool rgba) {
     if (!buffer && !buffer_) {
         return;
     }
@@ -197,7 +197,7 @@ void ViewerTexture::update_texture(const int *vp, const uint8_t* buffer, int w, 
         texture_h_ = h;
 
         if (resize_texture) {
-            fit_width_and_height(vp, &texture_w_, &texture_h_);
+            vp.fit(&texture_w_, &texture_h_);
         }
     }
 

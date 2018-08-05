@@ -15,7 +15,7 @@
 namespace vcutter {
 
 
-box_t current_clipping_box(const int *vp, PlayerWrapper *player, ClippingKeeper *keeper, bool *computed=NULL);
+box_t current_clipping_box(const viewport_t &vp, PlayerWrapper *player, ClippingKeeper *keeper, bool *computed=NULL);
 
 class ClippingOperationSet;
 
@@ -45,20 +45,20 @@ class ClippingOperation {
      int mouse_down_y();
      int mouse_move_x();
      int mouse_move_y();
-     const int *view_port();
+     const viewport_t & view_port();
  private:
     friend class ClippingOperationSet;
     void register_operation(PlayerWrapper **player_var, ClippingKeeper **keeper_var, bool *modified_var);
     void mouse_down(bool left_pressed, bool right_pressed, int x, int y);
     void mouse_move(bool left_pressed, bool right_pressed, int dx, int dy, int mx, int my);
     void mouse_up(bool left_pressed, bool right_pressed, int dx, int dy, int ux, int uy);
-    void view_port(const int *vp);
+    void view_port(const viewport_t &vp);
     void _cancel();
  private:
     std::string name_;
     PlayerWrapper **player_;
     ClippingKeeper **keeper_;
-    int view_port_[4];
+    viewport_t view_port_;
     bool *modified_;
     int mouse_move_x_;
     int mouse_move_y_;
@@ -72,25 +72,25 @@ class ClippingOperationSet {
     virtual ~ClippingOperationSet();
     void register_operation(std::shared_ptr<ClippingOperation> operation);
     void activate(const char *name);
-    void draw(const int *vp);
-    void draw_ref_line(const int *vp);
-    void draw_dragging_points(const int *vp);
-    bool should_redraw(const int *vp);
+    void draw(const viewport_t &vp);
+    void draw_ref_line(const viewport_t &vp);
+    void draw_dragging_points(const viewport_t &vp);
+    bool should_redraw(const viewport_t &vp);
     bool modified(bool clear_flag);
-    void mouse_down(const int *vp, bool left_pressed, bool right_pressed, int x, int y);
-    void mouse_move(const int *vp, bool left_pressed, bool right_pressed, int dx, int dy, int mx, int my);
-    void mouse_up(const int *vp, bool left_pressed, bool right_pressed, int dx, int dy, int ux, int uy);
+    void mouse_down(const viewport_t &vp, bool left_pressed, bool right_pressed, int x, int y);
+    void mouse_move(const viewport_t &vp, bool left_pressed, bool right_pressed, int dx, int dy, int mx, int my);
+    void mouse_up(const viewport_t &vp, bool left_pressed, bool right_pressed, int dx, int dy, int ux, int uy);
     void cancel();
     bool is_active(const char *operation);
     clipping_key_t get_transformed_key();
     void alt_pressed();
     void set_option(const char *operation_name, const char *option_name, int value);
     int get_option(const char *operation_name, const char *option_name);
-    Fl_RGB_Image *current_cursor(const int *vp);
+    Fl_RGB_Image *current_cursor(const viewport_t &vp);
  private:
-    void draw_current_box(const int *vp);
-    void draw_next_box(const int *vp);
-    void draw_box(const int *vp, box_t box, bool invert, float r, float g, float b, float a);
+    void draw_current_box(const viewport_t &vp);
+    void draw_next_box(const viewport_t &vp);
+    void draw_box(const viewport_t &vp, box_t box, bool invert, float r, float g, float b, float a);
     
     bool has_active_operation();
  private:

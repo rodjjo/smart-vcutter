@@ -2,6 +2,13 @@
 
 namespace vcutter {
 
+box_t::box_t() {
+}
+
+box_t::box_t(const point_t & p1, const point_t & p2, const point_t & p3, const point_t & p4) : p_({p1, p2, p3, p4}) {
+}
+
+
 box_t box_t::rotated(float angle) const {
     box_t box(*this);
     box.rotate(angle);

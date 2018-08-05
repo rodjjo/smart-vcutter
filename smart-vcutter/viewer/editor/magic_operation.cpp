@@ -56,7 +56,7 @@ bool MagicOperation::active() {
 }
 
 void MagicOperation::to_gl_coords(float *x, float *y) {
-    const int *vp = view_port();
+    const viewport_t &vp = view_port();
     *x = (*x) * (2.0f / vp[2]) - 1.0f;
     *y = (vp[3] - (*y)) * (2.0f / vp[3]) - 1.0f;
 }

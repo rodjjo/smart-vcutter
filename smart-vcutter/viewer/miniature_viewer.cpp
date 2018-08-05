@@ -49,9 +49,9 @@ void MiniatureViewer::update_preview(PlayerWrapper *player, ClippingKeeper *keep
     keeper->set_video_dimensions(player->info()->w(), player->info()->h());
 
     uint32_t preview_w = keeper->get_width(), preview_h = keeper->get_height();
-    float scale = 1.0;
-    int vp[4] = {0, 0, w(), h()};
-    fit_width_and_height(vp, &preview_w, &preview_h, &scale);
+
+    viewport_t vp(0, 0, w(), h());
+    float fit_scale = vp.fit(&preview_w, &preview_h);
         
     unsigned int required_size = preview_w * preview_h * 3;
 
@@ -69,7 +69,7 @@ void MiniatureViewer::update_preview(PlayerWrapper *player, ClippingKeeper *keep
     miniature_buffer_h_ = preview_h;
 
     auto key = keeper->get_key(player->info()->position());
-    key.scale *= scale;
+    key.scale *= fit_scale;
 
     paint_clipping(player->info()->buffer(),  player->info()->w(), player->info()->h(), key, preview_w, preview_h, clipping_buffer_.get());
     

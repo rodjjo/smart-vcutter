@@ -228,7 +228,7 @@ bool ClippingEditor::compare_box() {
 }
 
 void ClippingEditor::viewer_after_draw(BufferViewer *viewer) {
-    const int *vp = view_port();
+    const viewport_t &vp = view_port();
     draw_compare_box();
     operation_set_.draw(vp);
     operation_set_.draw_ref_line(vp);

@@ -21,14 +21,11 @@ ClippingOperation::ClippingOperation(const char *name) {
     view_port_[3] = 1;
 }
 
-void ClippingOperation::view_port(const int *vp) {
-    view_port_[0] = vp[0];
-    view_port_[1] = vp[1];
-    view_port_[2] = vp[2];
-    view_port_[3] = vp[3];
+void ClippingOperation::view_port(const viewport_t &vp) {
+    view_port_ = vp;
 }
 
-const int *ClippingOperation::view_port() {
+const viewport_t & ClippingOperation::view_port() {
     return view_port_;
 }
 
@@ -168,7 +165,7 @@ clipping_key_t ClippingOperationSet::get_transformed_key() {
     return (*keeper_)->get_key((*player_)->info()->position());
 }
 
-void ClippingOperationSet::draw(const int *vp) {
+void ClippingOperationSet::draw(const viewport_t &vp) {
     if (!*player_ || !*keeper_) {
         return;
     }
@@ -203,10 +200,7 @@ void ClippingOperationSet::draw(const int *vp) {
         operation->draw();
 
         b = clipping_box(adjust_bounds(operation->get_transformed_key(), cw, ch, vw, vh), cw, ch);
-    
-        for (char i = 0; i < 4; ++i) {
-            screen_coords(vp, vw, vh, &b[i].x, &b[i].y);
-        }
+        b = vp.frame_to_screen_coords(vw, vh, b);
 
         color[0] = 0.0;
         color[1] = 0.0;
@@ -234,7 +228,7 @@ int ClippingOperationSet::get_option(const char *operation_name, const char *opt
     return 0;
 }
 
-void ClippingOperationSet::draw_dragging_points(const int *vp) {
+void ClippingOperationSet::draw_dragging_points(const viewport_t &vp) {
     if (!*player_ || !*keeper_) {
         return;
     }
@@ -257,7 +251,7 @@ bool ClippingOperationSet::modified(bool clear_flag) {
     return false;
 }
 
-void ClippingOperationSet::mouse_down(const int *vp, bool left_pressed, bool right_pressed, int x, int y) {
+void ClippingOperationSet::mouse_down(const viewport_t &vp, bool left_pressed, bool right_pressed, int x, int y) {
     if (!*player_ || !*keeper_) {
         return;
     }
@@ -279,7 +273,7 @@ void ClippingOperationSet::mouse_down(const int *vp, bool left_pressed, bool rig
     }
 }
 
-void ClippingOperationSet::mouse_move(const int *vp, bool left_pressed, bool right_pressed, int dx, int dy, int mx, int my) {
+void ClippingOperationSet::mouse_move(const viewport_t &vp, bool left_pressed, bool right_pressed, int dx, int dy, int mx, int my) {
     if (!*player_ || !*keeper_) {
         return;
     }
@@ -301,7 +295,7 @@ void ClippingOperationSet::mouse_move(const int *vp, bool left_pressed, bool rig
     }
 }
 
-void ClippingOperationSet::mouse_up(const int *vp, bool left_pressed, bool right_pressed, int dx, int dy, int ux, int uy) {
+void ClippingOperationSet::mouse_up(const viewport_t &vp, bool left_pressed, bool right_pressed, int dx, int dy, int ux, int uy) {
     if (!*player_ || !*keeper_) {
         return;
     }
@@ -369,7 +363,7 @@ void ClippingOperationSet::cancel() {
     }
 }
 
-Fl_RGB_Image *ClippingOperationSet::current_cursor(const int *vp) {
+Fl_RGB_Image *ClippingOperationSet::current_cursor(const viewport_t &vp) {
     Fl_RGB_Image *result = NULL;
 
     for (auto op : operations_) {
@@ -389,7 +383,7 @@ Fl_RGB_Image *ClippingOperationSet::current_cursor(const int *vp) {
     return result;
 }
 
-bool ClippingOperationSet::should_redraw(const int *vp) {
+bool ClippingOperationSet::should_redraw(const viewport_t &vp) {
     if (!*player_ || !*keeper_ || (*player_)->is_playing()) {
         return false;
     }
@@ -404,23 +398,18 @@ bool ClippingOperationSet::should_redraw(const int *vp) {
     return false;
 }
 
-
-box_t current_clipping_box(const int *vp, PlayerWrapper *player, ClippingKeeper *keeper, bool *computed) {
+box_t current_clipping_box(const viewport_t &vp, PlayerWrapper *player, ClippingKeeper *keeper, bool *computed) {
     auto vw = player->info()->w(), vh = player->info()->h();
     auto cw = keeper->get_width(), ch = keeper->get_height();
 
     auto key = keeper->get_key(player->info()->position(), computed);
 
     auto b = clipping_box(adjust_bounds(key, cw, ch, vw, vh), cw, ch);
-    
-    for (char i = 0; i < 4; ++i) {
-        screen_coords(vp, player->info()->w(), player->info()->h(), &b[i].x, &b[i].y);
-    }
 
-    return b;
+    return vp.frame_to_screen_coords(player->info()->w(), player->info()->h(), b);
 }
 
-void ClippingOperationSet::draw_box(const int *vp, box_t box, bool invert, float r, float g, float b, float a) {
+void ClippingOperationSet::draw_box(const viewport_t &vp, box_t box, bool invert, float r, float g, float b, float a) {
     for (char i = 0; i < 4; ++i) {
         box[i].x = box[i].x * (2.0f / vp[2]) - 1.0f;
         box[i].y = (vp[3] - box[i].y) * (2.0f / vp[3]) - 1.0f;
@@ -451,7 +440,7 @@ void ClippingOperationSet::draw_box(const int *vp, box_t box, bool invert, float
     glDisable(GL_BLEND);
 }
 
-void ClippingOperationSet::draw_ref_line(const int *vp) {
+void ClippingOperationSet::draw_ref_line(const viewport_t &vp) {
     if (!*player_ || !*keeper_) {
         return;
     }

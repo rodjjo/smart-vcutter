@@ -125,8 +125,8 @@ void BufferViewer::draw() {
         glLoadIdentity();
         glViewport(0, 0, this->w(), this->h());
     }
-
-    glGetIntegerv(GL_VIEWPORT, vp_);
+    
+    vp_.update();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -156,7 +156,7 @@ void BufferViewer::draw_overlay() {
 }
 
 
-const int *BufferViewer::view_port() const {
+const viewport_t & BufferViewer::view_port() const {
     return vp_;
 }
 
@@ -164,12 +164,10 @@ void BufferViewer::draw_buffer(const unsigned char* buffer, uint32_t w, uint32_t
     update_cache(&buffer, &w, &h);
 
     unsigned short x1, y1, x2, y2;
-    float pixel_zoom, raster_px, raster_py;
+    float pixel_zoom = vp_.raster_zoom(w, h);
+    point_t raster = vp_.raster_coords(w, h);
 
-    
-    raster_coordinates(view_port(), w, h, &pixel_zoom, &raster_px, &raster_py);
-
-    glRasterPos2f(-1.0 + raster_px, 1.0 - raster_py);
+    glRasterPos2f(-1.0 + raster.x, 1.0 - raster.y);
     glPixelZoom(pixel_zoom, -pixel_zoom);
     if (w % 4 == 0)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
@@ -182,13 +180,11 @@ void BufferViewer::draw_buffer(const unsigned char* buffer, uint32_t w, uint32_t
     glPixelZoom(1.0f, 1.0f);
 }
 
-
-
 void BufferViewer::update_cache(const unsigned char** buffer, uint32_t *w, uint32_t *h) {
     unsigned int required_size = (*w) * (*h) * 3;
     unsigned int nw = *w, nh = *h;
 
-    fit_width_and_height(view_port(), &nw, &nh);
+    view_port().fit(&nw, &nh);
 
     unsigned int vp_size = nw * nh * 3;
 

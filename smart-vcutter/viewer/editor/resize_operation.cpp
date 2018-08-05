@@ -53,21 +53,23 @@ void ResizeOperation::draw_dragging_points() {
 clipping_key_t ResizeOperation::get_transformed_key() {
     auto key = keeper()->get_key(player()->info()->position());
 
-    float mx = mouse_move_x();
-    float my = mouse_move_y();
-    float dx = mouse_down_x();
-    float dy = mouse_down_y();
+    const viewport_t & vp = view_port();
 
-    buffer_coords(view_port(), player()->info()->w(), player()->info()->h(), &mx, &my);
-    buffer_coords(view_port(), player()->info()->w(), player()->info()->h(), &dx, &dy);
+    auto m = vp.screen_to_frame_coords(
+        player()->info()->w(), player()->info()->h(),
+        point_t(mouse_move_x(), mouse_move_y()));
+
+    auto d = vp.screen_to_frame_coords(
+        player()->info()->w(), player()->info()->h(),
+        point_t(mouse_down_x(), mouse_down_y()));
 
     float dw, dh;
-    dw = mx - key.px;
-    dh = my - key.py;
+    dw = m.x - key.px;
+    dh = m.y - key.py;
     float dista1 = sqrt(dw * dw + dh * dh);
 
-    dw = dx - key.px;
-    dh = dy - key.py;
+    dw = d.x - key.px;
+    dh = d.y - key.py;
     float dista2 = sqrt(dw * dw + dh * dh);
 
     if (dista1 > 0 && dista2 > 0) {

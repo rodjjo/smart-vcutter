@@ -51,22 +51,22 @@ void RotateOperation::draw_dragging_points() {
 clipping_key_t RotateOperation::get_transformed_key() {
     auto key = keeper()->get_key(player()->info()->position());
 
-    float mx = mouse_move_x();
-    float my = mouse_move_y();
-    float dx = mouse_down_x();
-    float dy = mouse_down_y();
+    const viewport_t & vp = view_port();
 
-    buffer_coords(view_port(), player()->info()->w(), player()->info()->h(), &mx, &my);
-    buffer_coords(view_port(), player()->info()->w(), player()->info()->h(), &dx, &dy);
+    auto m = vp.screen_to_frame_coords(
+        player()->info()->w(), player()->info()->h(),
+        point_t(mouse_move_x(), mouse_move_y()));
 
-    float mdown_angle = point_t(dx - key.px, dy - key.py).angle_0_360();
-    float mmove_angle = point_t(mx - key.px, my - key.py).angle_0_360();
-    float angle = (static_cast<int>((key.angle +  mmove_angle - mdown_angle) * 1000) % 360000) / 1000.0f;
-    while (angle < 0) {
-        angle += 360;
-    }
-    key.angle = angle;
+    auto d = vp.screen_to_frame_coords(
+        player()->info()->w(), player()->info()->h(),
+        point_t(mouse_down_x(), mouse_down_y()));
 
+    float mdown_angle = point_t(d.x - key.px, d.y - key.py).angle_0_360();
+    float mmove_angle = point_t(m.x - key.px, m.y - key.py).angle_0_360();
+
+    key.angle = normalize_angle(
+        (static_cast<int>((key.angle +  mmove_angle - mdown_angle) * 1000) % 360000) / 1000.0f
+    );
 
     return key;
 };

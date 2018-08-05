@@ -29,33 +29,38 @@ void DragOperation::draw_dragging_points() {
 
 clipping_key_t DragOperation::get_transformed_key() {
     auto key = keeper()->get_key(player()->info()->position());
-    float nx = key.px; float ny = key.py;
+    
+    point_t n(key.px, key.py);
+
+    const viewport_t & vp = view_port();
 
     if (active_) {
         if (!mouse_down_) {
-            nx = mouse_move_x();
-            ny = mouse_move_y();
-            buffer_coords(view_port(), player()->info()->w(), player()->info()->h(), &nx, &ny);
+            n = vp.screen_to_frame_coords(
+                player()->info()->w(), player()->info()->h(), 
+                point_t(mouse_move_x(), mouse_move_y()));
         } else {
-            float dx = mouse_down_x(), dy = mouse_down_y();
-            nx = mouse_move_x();
-            ny = mouse_move_y();
-            buffer_coords(view_port(), player()->info()->w(), player()->info()->h(), &nx, &ny);
-            buffer_coords(view_port(), player()->info()->w(), player()->info()->h(), &dx, &dy);
-            nx -= dx;
-            ny -= dy;
-            nx += key.px;
-            ny += key.py;
+            n = vp.screen_to_frame_coords(
+                player()->info()->w(), player()->info()->h(), 
+                point_t(mouse_move_x(), mouse_move_y()));
+            auto d = vp.screen_to_frame_coords(
+                player()->info()->w(), player()->info()->h(), 
+                point_t(mouse_down_x(), mouse_down_y()));
+
+            n.x -= d.x;
+            n.y -= d.y;
+            n.x += key.px;
+            n.y += key.py;
         }
     }
 
     if (Fl::event_shift()) {
-        key.py = ny;
+        key.py = n.y;
     } else if (Fl::event_command() || Fl::event_ctrl()) {
-        key.px = nx;
+        key.px = n.x;
     } else {
-        key.px = nx;
-        key.py = ny;
+        key.px = n.x;
+        key.py = n.y;
     }
 
     return key;

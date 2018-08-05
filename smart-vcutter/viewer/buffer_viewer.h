@@ -5,6 +5,7 @@
 #include <memory>
 #include <FL/Fl_Gl_Window.H>
 
+#include "smart-vcutter/common/view_port.h"
 
 namespace vcutter {
 
@@ -43,7 +44,7 @@ class BufferViewer: public Fl_Gl_Window {
     BufferViewer(BufferSupplier *supplier, DrawHandler *observer, uint32_t x, uint32_t y, uint32_t w, uint32_t h);
     virtual ~BufferViewer();
     void cancel_operations();
-    const int *view_port() const;
+    const viewport_t & view_port() const;
  private:
     void init(BufferSupplier *supplier, DrawHandler *observer);
     void draw_buffer(const unsigned char* buffer, uint32_t w, uint32_t h);
@@ -54,7 +55,7 @@ class BufferViewer: public Fl_Gl_Window {
     void draw_overlay() override;
 
  private:
-    int vp_[4];
+    viewport_t vp_;
     BufferSupplier *supplier_;
     DrawHandler *observer_;
     bool mouse_down_left_;

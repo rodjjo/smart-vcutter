@@ -7,6 +7,8 @@ namespace vcutter {
 
 class box_t {
  public:
+    box_t();
+    box_t(const point_t & p1, const point_t & p2, const point_t & p3, const point_t & p4);
     // return point at index
     point_t & operator[] (int index) {
         return p_[index];
