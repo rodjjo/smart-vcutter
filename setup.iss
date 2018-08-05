@@ -1,8 +1,8 @@
 [Setup]
-AppName=Smart Loop Creator
+AppName=Smart VCutter - Loop Creator
 AppVersion=1.0
-DefaultDirName={pf}\Smart Loop Creator
-DefaultGroupName=Smart Loop Creator
+DefaultDirName={pf}\Smart VCutter Loop Creator
+DefaultGroupName=Smart VCutter Loop Creator
 UninstallDisplayIcon={app}\uninstall.ico
 Compression=lzma2
 SolidCompression=yes
