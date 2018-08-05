@@ -48,9 +48,9 @@ sudo apt-get update -qq && sudo apt-get -y install \
     fluid \
     libfltk1.3-dev \
     libgl-dev \
-    libjsoncpp-dev
+    libjsoncpp-dev \
+    libopencv-dev
 ```
-**you also need to install opencv libraries.**
 
 Generate and build the project
 
