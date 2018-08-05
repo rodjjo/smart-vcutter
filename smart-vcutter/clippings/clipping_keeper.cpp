@@ -362,44 +362,44 @@ bool ClippingKeeper::modified() {
 void ClippingKeeper::positionate_left(int frame) {
     box_t bb;
     auto key = get_key(frame, NULL, &bb);
-    if (bb.p[0].x <= 0) {
+    if (bb[0].x <= 0) {
         return;
     }
 
-    key.px -= bb.p[0].x;
+    key.px -= bb[0].x;
     add_key(key);
 }
 
 void ClippingKeeper::positionate_right(int frame) {
     box_t bb;
     auto key = get_key(frame, NULL, &bb);
-    if (bb.p[1].x >= get_video_width()) {
+    if (bb[1].x >= get_video_width()) {
         return;
     }
 
-    key.px += get_video_width() - bb.p[1].x;
+    key.px += get_video_width() - bb[1].x;
     add_key(key);
 }
 
 void ClippingKeeper::positionate_top(int frame) {
     box_t bb;
     auto key = get_key(frame, NULL, &bb);
-    if (bb.p[0].y <= 0) {
+    if (bb[0].y <= 0) {
         return;
     }
 
-    key.py -= bb.p[0].y;
+    key.py -= bb[0].y;
     add_key(key);
 }
 
 void ClippingKeeper::positionate_bottom(int frame) {
     box_t bb;
     auto key = get_key(frame, NULL, &bb);
-    if (bb.p[2].y >= get_video_height()) {
+    if (bb[2].y >= get_video_height()) {
         return;
     }
 
-    key.py += get_video_height() - bb.p[2].y;
+    key.py += get_video_height() - bb[2].y;
     add_key(key);
 }
 

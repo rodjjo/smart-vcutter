@@ -26,24 +26,23 @@ void rotate_point(float angle, float *x, float *y) {
 
 void rotate_box(float angle, box_t *box) {
     for (int i = 0; i < 4; ++i) {
-        rotate_point(angle, &box->p[i].x, &box->p[i].y);
+        rotate_point(angle, &(*box)[i].x, &(*box)[i].y);
     }
 }
 
 void translate_box(float px, float py, box_t *box) {
     for (int i = 0; i < 4; ++i) {
-        box->p[i].x += px;
-        box->p[i].y += py;
+        (*box)[i].x += px;
+        (*box)[i].y += py;
     }
 }
 
 void scale_box(float scale, box_t *box) {
-    if (scale == 1.0f) {
-        return;
-    }
-    for (int i = 0; i < 4; ++i) {
-        box->p[i].x *= scale;
-        box->p[i].y *= scale;
+    if (scale != 1.0f) {
+        for (int i = 0; i < 4; ++i) {
+            (*box)[i].x *= scale;
+            (*box)[i].y *= scale;
+        }
     }
 }
 
@@ -52,8 +51,8 @@ point_t get_box_center(const box_t& box) {
     r.x = 0;
     r.y = 0;
     for (int i = 0; i < 4; ++i) {
-        r.x += box.p[i].x;
-        r.y += box.p[i].y;
+        r.x += box[i].x;
+        r.y += box[i].y;
     }
     r.x /= 4;
     r.y /= 4;
@@ -77,27 +76,27 @@ void compute_xypass(float width, float height, const box_t& area, point_t *lt,  
     memset(lt, 0, sizeof(point_t));
     memset(rb, 0, sizeof(point_t));
 
-    if (area.p[0].x < 0) {
-        lt->x = static_cast<int>(-area.p[0].x);
+    if (area[0].x < 0) {
+        lt->x = static_cast<int>(-area[0].x);
     }
 
-    if (area.p[0].y < 0) {
-        lt->y = static_cast<int>(-area.p[0].y);
+    if (area[0].y < 0) {
+        lt->y = static_cast<int>(-area[0].y);
     }
 
-    if (area.p[1].x > width) {
-        rb->x = static_cast<int>(area.p[1].x - width);
+    if (area[1].x > width) {
+        rb->x = static_cast<int>(area[1].x - width);
     }
 
-    if (area.p[2].y > height) {
-        rb->y = static_cast<int>(area.p[2].y - height);
+    if (area[2].y > height) {
+        rb->y = static_cast<int>(area[2].y - height);
     }
 }
 
 point_t get_box_size(const box_t& area) {
     point_t p;
-    p.x = static_cast<int>(area.p[1].x - area.p[0].x);
-    p.y = static_cast<int>(area.p[2].y - area.p[0].y);
+    p.x = static_cast<int>(area[1].x - area[0].x);
+    p.y = static_cast<int>(area[2].y - area[0].y);
     return p;
 }
 
@@ -131,24 +130,24 @@ point_t to_axis(float px, float py, float x, float y) {
 box_t get_bound_box(const box_t& box) {
     box_t result = box;
     for (int i = 0; i < 4; ++i) {
-        if (box.p[i].x > result.p[1].x) {
-            result.p[1].x = box.p[i].x;
+        if (box[i].x > result[1].x) {
+            result[1].x = box[i].x;
         }
-        if (box.p[i].x < result.p[0].x) {
-            result.p[0].x = box.p[i].x;
+        if (box[i].x < result[0].x) {
+            result[0].x = box[i].x;
         }
-        if (box.p[i].y > result.p[2].y) {
-            result.p[2].y = box.p[i].y;
+        if (box[i].y > result[2].y) {
+            result[2].y = box[i].y;
         }
-        if (box.p[i].y < result.p[0].y) {
-            result.p[0].y = box.p[i].y;
+        if (box[i].y < result[0].y) {
+            result[0].y = box[i].y;
         }
     }
 
-    result.p[1].y = result.p[0].y;
-    result.p[3].x = result.p[0].x;
-    result.p[3].y = result.p[2].y;
-    result.p[2].x = result.p[1].x;
+    result[1].y = result[0].y;
+    result[3].x = result[0].x;
+    result[3].y = result[2].y;
+    result[2].x = result[1].x;
 
     return result;
 }
@@ -259,17 +258,17 @@ bool mouse_in_box(const box_t & b, int mouse_x, int mouse_y) {
 
     bool b1, b2, b3;
 
-    b1 = sign(pt, b.p[0], b.p[1]) < 0.0f;
-    b2 = sign(pt, b.p[1], b.p[2]) < 0.0f;
-    b3 = sign(pt, b.p[2], b.p[0]) < 0.0f;
+    b1 = sign(pt, b[0], b[1]) < 0.0f;
+    b2 = sign(pt, b[1], b[2]) < 0.0f;
+    b3 = sign(pt, b[2], b[0]) < 0.0f;
 
     if (b1 == b2 && b2 == b3) {
         return true;
     }
 
-    b1 = sign(pt, b.p[0], b.p[2]) < 0.0f;
-    b2 = sign(pt, b.p[2], b.p[3]) < 0.0f;
-    b3 = sign(pt, b.p[3], b.p[0]) < 0.0f;
+    b1 = sign(pt, b[0], b[2]) < 0.0f;
+    b2 = sign(pt, b[2], b[3]) < 0.0f;
+    b3 = sign(pt, b[3], b[0]) < 0.0f;
 
     return (b1 == b2 && b2 == b3);
 }

@@ -10,14 +10,14 @@ namespace vcutter {
 
 box_t clipping_box(const clipping_key_t& interpolated_clipping, unsigned int target_w, unsigned int target_h) {
     box_t result;
-    result.p[0].x = 0;
-    result.p[0].y = 0;
-    result.p[1].x = target_w;
-    result.p[1].y = 0;
-    result.p[2].x = target_w;
-    result.p[2].y = target_h;
-    result.p[3].x = 0;
-    result.p[3].y = target_h;
+    result[0].x = 0;
+    result[0].y = 0;
+    result[1].x = target_w;
+    result[1].y = 0;
+    result[2].x = target_w;
+    result[2].y = target_h;
+    result[3].x = 0;
+    result[3].y = target_h;
     float half_x = target_w / 2.0;
     float half_y = target_h / 2.0;
     translate_box(-half_x, -half_y, &result);
@@ -26,8 +26,8 @@ box_t clipping_box(const clipping_key_t& interpolated_clipping, unsigned int tar
     translate_box(interpolated_clipping.px, interpolated_clipping.py, &result);
 
     for (int i = 0; i < 4; ++i) {
-        result.p[i].x = static_cast<int>(result.p[i].x);
-        result.p[i].y = static_cast<int>(result.p[i].y);
+        result[i].x = static_cast<int>(result[i].x);
+        result[i].y = static_cast<int>(result[i].y);
     }
 
     return result;
@@ -236,22 +236,22 @@ void paint_clipping(
     
     box_t box = clipping_box(safe_clipping, target_w, target_h);
     box_t bbox = get_bound_box(box);
-    int bbox_w = bbox.p[1].x - bbox.p[0].x;
-    int bbox_h = bbox.p[2].y - bbox.p[0].y;
+    int bbox_w = bbox[1].x - bbox[0].x;
+    int bbox_h = bbox[2].y - bbox[0].y;
 
     assert(bbox_w >= 15);
     assert(bbox_h >= 15);
    
-    assert(bbox.p[0].y >= 0);
-    assert(bbox.p[0].x >= 0);
+    assert(bbox[0].y >= 0);
+    assert(bbox[0].x >= 0);
 
-    assert(bbox.p[0].y + bbox_h < source_h);
-    assert(bbox.p[0].x + bbox_w < source_w);
+    assert(bbox[0].y + bbox_h < source_h);
+    assert(bbox[0].x + bbox_w < source_w);
 
     cv::Mat frame(source_h, source_w, CV_8UC3, souce_buffer);
     cv::Mat output(target_h, target_w, CV_8UC3, target_buffer);
     if (safe_clipping.angle == 0) {
-        cv::Rect roi_input(bbox.p[0].x, bbox.p[0].y, bbox_w, bbox_h);
+        cv::Rect roi_input(bbox[0].x, bbox[0].y, bbox_w, bbox_h);
         cv::Mat roi_img_in(frame(roi_input));
 
         if (!transparent) {
@@ -352,7 +352,7 @@ clipping_key_t magic_tool(
 
     source = adjust_bounds(source, target_w, target_h, max_w, max_h);
     box_t bb = get_bound_box(clipping_box(source, target_w, target_h));
-    if (bb.p[1].x - bb.p[0].x > 15 && bb.p[2].y - bb.p[0].y > 15) {
+    if (bb[1].x - bb[0].x > 15 && bb[2].y - bb[0].y > 15) {
         result.scale = source.scale;
     }
 

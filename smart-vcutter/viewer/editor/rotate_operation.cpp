@@ -43,7 +43,7 @@ void RotateOperation::draw_dragging_points() {
 
     if (should_draw_points) {
         for (char i = 0; i < 4; ++i) {
-            rotate_point_->draw(view_port(),  b.p[i].x, b.p[i].y, 1.0);
+            rotate_point_->draw(view_port(),  b[i].x, b[i].y, 1.0);
         }
     }
 }
@@ -85,7 +85,7 @@ void RotateOperation::mouse_changed(char direction) {
     float d;
 
     for (char c = 0; c < 4; ++c) {
-        d = get_dista(mouse_move_x(), mouse_move_y(), b.p[c].x, b.p[c].y);
+        d = get_dista(mouse_move_x(), mouse_move_y(), b[c].x, b[c].y);
         if (d < mouse_dist) {
             mouse_dist = d;
         }

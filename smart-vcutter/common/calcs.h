@@ -11,7 +11,15 @@ typedef struct {
 } point_t;
 
 typedef struct {
-    point_t p[4];
+    point_t & operator[] (int index) {
+        return p_[index];
+    }
+
+    const point_t & operator[] (int index) const{
+        return p_[index];
+    }
+  private:
+    point_t p_[4];
 } box_t;
 
 // Ensure the angle is interval 0..360

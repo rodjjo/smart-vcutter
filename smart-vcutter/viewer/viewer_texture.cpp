@@ -134,11 +134,11 @@ void ViewerTexture::draw(const int *vp, int vw, int vh, box_t texture_coords, bo
     }
 
     for (char i = 0; i < 4; ++i) {
-        screen_coords(vp, vw, vh, &view_coords.p[i].x, &view_coords.p[i].y);
-        view_coords.p[i].x = view_coords.p[i].x * (2.0f / vp[2]) - 1.0f;
-        view_coords.p[i].y = (vp[3] - view_coords.p[i].y) * (2.0f / vp[3]) - 1.0f;
-        texture_coords.p[i].x = (1.0f / vw) * texture_coords.p[i].x;
-        texture_coords.p[i].y = (1.0f / vh) * texture_coords.p[i].y;
+        screen_coords(vp, vw, vh, &view_coords[i].x, &view_coords[i].y);
+        view_coords[i].x = view_coords[i].x * (2.0f / vp[2]) - 1.0f;
+        view_coords[i].y = (vp[3] - view_coords[i].y) * (2.0f / vp[3]) - 1.0f;
+        texture_coords[i].x = (1.0f / vw) * texture_coords[i].x;
+        texture_coords[i].y = (1.0f / vh) * texture_coords[i].y;
     }
 
     glEnable(GL_BLEND);
@@ -152,8 +152,8 @@ void ViewerTexture::draw(const int *vp, int vw, int vh, box_t texture_coords, bo
 
     glBegin (GL_QUADS);
     for (char i = 0; i < 4; ++i) {
-        glTexCoord2d(texture_coords.p[i].x, texture_coords.p[i].y); 
-        glVertex2d(view_coords.p[i].x, view_coords.p[i].y);
+        glTexCoord2d(texture_coords[i].x, texture_coords[i].y); 
+        glVertex2d(view_coords[i].x, view_coords[i].y);
     }
     glEnd();
     

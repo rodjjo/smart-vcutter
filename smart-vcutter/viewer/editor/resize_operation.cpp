@@ -45,7 +45,7 @@ void ResizeOperation::draw_dragging_points() {
         int w;
         for (char i = 0; i < 4; ++i) {
             w = (i + 1) % 4;
-            resize_point_->draw(view_port(), (b.p[w].x + b.p[i].x) / 2, (b.p[w].y + b.p[i].y) / 2, 1.0);
+            resize_point_->draw(view_port(), (b[w].x + b[i].x) / 2, (b[w].y + b[i].y) / 2, 1.0);
         }
     }
 }
@@ -92,14 +92,14 @@ void ResizeOperation::mouse_changed(char direction) {
 
     for (int i = 0; i < 4; ++i) {
         w = (i + 1) % 4;
-        b.p[i].x = (box.p[w].x + box.p[i].x) / 2;
-        b.p[i].y = (box.p[w].y + box.p[i].y) / 2;
+        b[i].x = (box[w].x + box[i].x) / 2;
+        b[i].y = (box[w].y + box[i].y) / 2;
     }
 
     float mouse_dist = 10000;
     float d;
     for (char c = 0; c < 4; ++c) {
-        d = get_dista(mouse_move_x(), mouse_move_y(), b.p[c].x, b.p[c].y);
+        d = get_dista(mouse_move_x(), mouse_move_y(), b[c].x, b[c].y);
         if (d < mouse_dist) {
             mouse_dist = d;
         }

@@ -205,7 +205,7 @@ void ClippingOperationSet::draw(const int *vp) {
         b = clipping_box(adjust_bounds(operation->get_transformed_key(), cw, ch, vw, vh), cw, ch);
     
         for (char i = 0; i < 4; ++i) {
-            screen_coords(vp, vw, vh, &b.p[i].x, &b.p[i].y);
+            screen_coords(vp, vw, vh, &b[i].x, &b[i].y);
         }
 
         color[0] = 0.0;
@@ -414,7 +414,7 @@ box_t current_clipping_box(const int *vp, PlayerWrapper *player, ClippingKeeper 
     auto b = clipping_box(adjust_bounds(key, cw, ch, vw, vh), cw, ch);
     
     for (char i = 0; i < 4; ++i) {
-        screen_coords(vp, player->info()->w(), player->info()->h(), &b.p[i].x, &b.p[i].y);
+        screen_coords(vp, player->info()->w(), player->info()->h(), &b[i].x, &b[i].y);
     }
 
     return b;
@@ -422,8 +422,8 @@ box_t current_clipping_box(const int *vp, PlayerWrapper *player, ClippingKeeper 
 
 void ClippingOperationSet::draw_box(const int *vp, box_t box, bool invert, float r, float g, float b, float a) {
     for (char i = 0; i < 4; ++i) {
-        box.p[i].x = box.p[i].x * (2.0f / vp[2]) - 1.0f;
-        box.p[i].y = (vp[3] - box.p[i].y) * (2.0f / vp[3]) - 1.0f;
+        box[i].x = box[i].x * (2.0f / vp[2]) - 1.0f;
+        box[i].y = (vp[3] - box[i].y) * (2.0f / vp[3]) - 1.0f;
     }
 
     if (invert) {
@@ -440,7 +440,7 @@ void ClippingOperationSet::draw_box(const int *vp, box_t box, bool invert, float
     int w;
     for (int i = 0; i < 5; ++i) {
         w = i % 4;
-        glVertex2f(box.p[w].x, box.p[w].y);
+        glVertex2f(box[w].x, box[w].y);
     }
     glEnd();
 
