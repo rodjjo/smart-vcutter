@@ -108,30 +108,4 @@ void rescale(const int *vp, uint32_t *w, uint32_t *h, float *oscale) {
     }
 }
 
-float sign(point_t p1, point_t p2, point_t p3) {
-    return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
-}
-
-bool mouse_in_box(const box_t & b, int mouse_x, int mouse_y) {
-    point_t pt;
-    pt.x = mouse_x;
-    pt.y = mouse_y;
-
-    bool b1, b2, b3;
-
-    b1 = sign(pt, b[0], b[1]) < 0.0f;
-    b2 = sign(pt, b[1], b[2]) < 0.0f;
-    b3 = sign(pt, b[2], b[0]) < 0.0f;
-
-    if (b1 == b2 && b2 == b3) {
-        return true;
-    }
-
-    b1 = sign(pt, b[0], b[2]) < 0.0f;
-    b2 = sign(pt, b[2], b[3]) < 0.0f;
-    b3 = sign(pt, b[3], b[0]) < 0.0f;
-
-    return (b1 == b2 && b2 == b3);
-}
-
 }  // namespace vcutter

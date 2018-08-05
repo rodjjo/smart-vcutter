@@ -46,6 +46,10 @@ class box_t {
 
     // trunc floating point of coordinates
     void trunc_precision();
+
+    // return if the coordinates are inside of this box
+    bool contours_point(float x, float y);
+    bool contours_point(const point_t & p);
   private:
     point_t p_[4];
 };

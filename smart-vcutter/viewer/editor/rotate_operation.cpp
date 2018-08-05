@@ -31,7 +31,7 @@ void RotateOperation::draw_dragging_points() {
     }
     
     auto b = current_clipping_box(view_port(), player(), keeper());
-    bool should_draw_points = mouse_in_box(b, mouse_move_x(), mouse_move_y());
+    bool should_draw_points = b.contours_point(mouse_move_x(), mouse_move_y());
     
     int distance = mouse_distance_;
 

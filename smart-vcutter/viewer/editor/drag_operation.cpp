@@ -67,7 +67,7 @@ bool DragOperation::should_redraw() {
 
 void DragOperation::mouse_changed(char direction) {
     auto b = current_clipping_box(view_port(), player(), keeper());
-    bool in_box = mouse_in_box(b, mouse_move_x(), mouse_move_y());
+    bool in_box = b.contours_point(mouse_move_x(), mouse_move_y());
 
     if (direction == 0) {
         if (active_) {
@@ -115,7 +115,7 @@ void DragOperation::cancel() {
 }
 
 Fl_RGB_Image *DragOperation::current_cursor() {
-    if (active_ || mouse_in_box(current_clipping_box(view_port(), player(), keeper()), mouse_move_x(), mouse_move_y())) {
+    if (active_ || current_clipping_box(view_port(), player(), keeper()).contours_point(mouse_move_x(), mouse_move_y())) {
         return cursor_.get();
     }
 

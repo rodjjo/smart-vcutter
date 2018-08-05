@@ -15,8 +15,7 @@ void buffer_coords(const int *vp, uint32_t video_w, uint32_t video_h, float *px,
 void screen_coords(const int *vp, uint32_t video_w, uint32_t video_h, float *px, float *py);
 void raster_coordinates(const int *vp, uint32_t video_w, uint32_t video_h, float *pixel_zoom, float *raster_px, float *raster_py);
 void rescale(const int *vp, uint32_t *w, uint32_t *h, float *oscale=NULL);
-bool mouse_in_box(const box_t & b, int mouse_x, int mouse_y);
-float sign(point_t p1, point_t p2, point_t p3);
+
 
 }  // namespace vcutter
 

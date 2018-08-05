@@ -94,4 +94,38 @@ void box_t::trunc_precision() {
     }
 }
 
+inline float sign(point_t p1, point_t p2, point_t p3) {
+    return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
+}
+
+
+bool box_t::contours_point(float x, float y) {
+    point_t pt;
+    pt.x = x;
+    pt.y = y;
+
+    bool b1, b2, b3;
+
+    b1 = sign(pt, p_[0], p_[1]) < 0.0f;
+    b2 = sign(pt, p_[1], p_[2]) < 0.0f;
+    b3 = sign(pt, p_[2], p_[0]) < 0.0f;
+
+    if (b1 == b2 && b2 == b3) {
+        return true;
+    }
+
+    b1 = sign(pt, p_[0], p_[2]) < 0.0f;
+    b2 = sign(pt, p_[2], p_[3]) < 0.0f;
+    b3 = sign(pt, p_[3], p_[0]) < 0.0f;
+
+    return (b1 == b2 && b2 == b3);
+}
+
+bool box_t::contours_point(const point_t & p) {
+    return contours_point(p.x, p.y);
+}
+
+
+
+
 }  // namespace vcutter
