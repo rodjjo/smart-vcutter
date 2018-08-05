@@ -18,11 +18,9 @@ It was a prototype and needs lots of code improvements, i'm opening the code to 
 * User friendly interface.
 * Multiplatform.
 
-**Example of a generated file**:
+**Example of a generated video clip**:
 
-<video autoplay repeat muted>
-  <source src="https://raw.githubusercontent.com/rodjjo/smart-vcutter/master/docs/video/sample_result.webm">
-</video>
+[![example](http://img.youtube.com/vi/7MCendkxo1I/0.jpg)](http://www.youtube.com/watch?v=7MCendkxo1I)
 
 
 ## Build
@@ -50,7 +48,8 @@ sudo apt-get update -qq && sudo apt-get -y install \
     fluid \
     libfltk1.3-dev \
     libgl-dev \
-    libjsoncpp-dev
+    libjsoncpp-dev \
+    libopencv-dev
 ```
 
 Generate and build the project
@@ -68,3 +67,8 @@ cmake --build .
 * Rename functions and variables to make the project easy to understand.
 * Create documentations.
 * Add tests when it's possible.
+
+
+**TODO:**  
+Generate a debian package (.deb file)  
+Generate a windows installer.
