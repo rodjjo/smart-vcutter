@@ -20,30 +20,26 @@ box_t clipping_box(const clipping_key_t& interpolated_clipping, unsigned int tar
     result[3].y = target_h;
     float half_x = target_w / 2.0;
     float half_y = target_h / 2.0;
-    translate_box(-half_x, -half_y, &result);
-    rotate_box(interpolated_clipping.angle, &result);
-    scale_box(interpolated_clipping.scale, &result);
-    translate_box(interpolated_clipping.px, interpolated_clipping.py, &result);
-
-    for (int i = 0; i < 4; ++i) {
-        result[i].x = static_cast<int>(result[i].x);
-        result[i].y = static_cast<int>(result[i].y);
-    }
+    
+    result.translate(-half_x, -half_y);
+    result.rotate(interpolated_clipping.angle);
+    result.scale(interpolated_clipping.scale);
+    result.translate(interpolated_clipping.px, interpolated_clipping.py);
+    result.trunc_precision();
 
     return result;
 }
 
 clipping_key_t limit_scale(float width, float height, float fw, float fh, const clipping_key_t& interpolated_clipping) {
     clipping_key_t result = interpolated_clipping;
-    box_t area = get_bound_box(clipping_box(result, fw, fh));
+    box_t area = clipping_box(result, fw, fh).occupied_area();
 
-    point_t center = get_box_center(area);
+    point_t center(area.center());
     
-    point_t lt, rb, sz;
+    point_t lt = area.left_top_violation(width, height);
+    point_t rb = area.right_bottom_violation(width, height);
     
-    sz = get_box_size(area);
-
-    compute_xypass(width, height, area, &lt, &rb);
+    point_t sz = area.size();
 
     int xpass = lt.x > rb.x ? lt.x : rb.x;
     int ypass = lt.y > rb.y ? lt.y : rb.y;
@@ -235,7 +231,7 @@ void paint_clipping(
     clipping_key_t safe_clipping = adjust_bounds(interpolated_clipping, target_w, target_h, source_w, source_h);
     
     box_t box = clipping_box(safe_clipping, target_w, target_h);
-    box_t bbox = get_bound_box(box);
+    box_t bbox = box.occupied_area();
     int bbox_w = bbox[1].x - bbox[0].x;
     int bbox_h = bbox[2].y - bbox[0].y;
 
@@ -322,8 +318,8 @@ clipping_key_t magic_tool(
     
     double scale = 1.0;
     if (should_scale) {
-        double source_distance = get_dista(source_rx1, source_ry1, source_rx2, source_ry2);
-        double target_distance = get_dista(curr_rx1, curr_ry1, curr_rx2, curr_ry2);
+        double source_distance = point_t(source_rx1, source_ry1).distance_to(source_rx2, source_ry2);
+        double target_distance = point_t(curr_rx1, curr_ry1).distance_to(curr_rx2, curr_ry2);
         
         if (source_distance != 0) {
             scale = target_distance / source_distance;
@@ -342,8 +338,8 @@ clipping_key_t magic_tool(
     }
 
     if (should_rotate) {
-        float source_angle = get_angle(source_rx2 - source_rx1, source_ry2  - source_ry1);
-        float target_angle = get_angle(curr_rx2 - curr_rx1, curr_ry2 - curr_ry1);
+        float source_angle = point_t(source_rx2 - source_rx1, source_ry2  - source_ry1).angle_0_360();
+        float target_angle = point_t(curr_rx2 - curr_rx1, curr_ry2 - curr_ry1).angle_0_360();
         float diff = target_angle - source_angle;
         if (diff) {
             source.angle = normalize_angle(source.angle + diff);
@@ -351,7 +347,7 @@ clipping_key_t magic_tool(
     }
 
     source = adjust_bounds(source, target_w, target_h, max_w, max_h);
-    box_t bb = get_bound_box(clipping_box(source, target_w, target_h));
+    box_t bb = clipping_box(source, target_w, target_h).occupied_area();
     if (bb[1].x - bb[0].x > 15 && bb[2].y - bb[0].y > 15) {
         result.scale = source.scale;
     }

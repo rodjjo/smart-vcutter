@@ -99,7 +99,7 @@ void ResizeOperation::mouse_changed(char direction) {
     float mouse_dist = 10000;
     float d;
     for (char c = 0; c < 4; ++c) {
-        d = get_dista(mouse_move_x(), mouse_move_y(), b[c].x, b[c].y);
+        d = point_t(mouse_move_x(), mouse_move_y()).distance_to(b[c].x, b[c].y);
         if (d < mouse_dist) {
             mouse_dist = d;
         }

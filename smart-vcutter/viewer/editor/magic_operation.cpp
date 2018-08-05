@@ -218,19 +218,16 @@ void MagicOperation::mouse_changed(char direction) {
 };
 
 bool MagicOperation::near_point_1() {
-    return get_dista(mouse_move_x(), mouse_move_y(), px1_, py1_) < 16;
+    return point_t(mouse_move_x(), mouse_move_y()).distance_to(px1_, py1_) < 16;
 }
 
 bool MagicOperation::near_point_2() {
-    return get_dista(mouse_move_x(), mouse_move_y(), px2_, py2_) < 16;
+    return point_t(mouse_move_x(), mouse_move_y()).distance_to(px2_, py2_) < 16;
 }
 
 bool MagicOperation::near_apply() {
-    return get_dista(
-        mouse_move_x() , 
-        mouse_move_y(), 
-        (px2_ + px1_) / 2.0, 
-        (py2_ + py1_) / 2.0) < 16;
+    return point_t(mouse_move_x(), mouse_move_y())
+        .distance_to((px2_ + px1_) / 2.0, (py2_ + py1_) / 2.0) < 16;
 }
 
 Fl_RGB_Image *MagicOperation::current_cursor() {

@@ -59,8 +59,8 @@ clipping_key_t RotateOperation::get_transformed_key() {
     buffer_coords(view_port(), player()->info()->w(), player()->info()->h(), &mx, &my);
     buffer_coords(view_port(), player()->info()->w(), player()->info()->h(), &dx, &dy);
 
-    float mdown_angle = get_angle(dx - key.px, dy - key.py);
-    float mmove_angle = get_angle(mx - key.px, my - key.py);
+    float mdown_angle = point_t(dx - key.px, dy - key.py).angle_0_360();
+    float mmove_angle = point_t(mx - key.px, my - key.py).angle_0_360();
     float angle = (static_cast<int>((key.angle +  mmove_angle - mdown_angle) * 1000) % 360000) / 1000.0f;
     while (angle < 0) {
         angle += 360;
@@ -85,7 +85,7 @@ void RotateOperation::mouse_changed(char direction) {
     float d;
 
     for (char c = 0; c < 4; ++c) {
-        d = get_dista(mouse_move_x(), mouse_move_y(), b[c].x, b[c].y);
+        d = point_t(mouse_move_x(), mouse_move_y()).distance_to(b[c].x, b[c].y);
         if (d < mouse_dist) {
             mouse_dist = d;
         }

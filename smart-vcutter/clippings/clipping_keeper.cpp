@@ -190,8 +190,7 @@ clipping_key_t ClippingKeeper::get_key(int frame, bool *computed, box_t *bound_b
 
     if (bound_box) {
         auto adjusted_key = adjust_bounds(result, w_, h_, video_w_, video_h_);
-        *bound_box = clipping_box(adjusted_key, w_, h_);
-        *bound_box = get_bound_box(*bound_box);
+        *bound_box = clipping_box(adjusted_key, w_, h_).occupied_area();
     }
     
     return result;
