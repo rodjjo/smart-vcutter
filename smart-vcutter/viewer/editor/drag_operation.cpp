@@ -17,7 +17,7 @@ DragOperation::DragOperation(const char *name) : ClippingOperation(name) {
 }
 
 DragOperation::~DragOperation() {
-};
+}
 
 bool DragOperation::active() {
     return active_;
@@ -64,7 +64,7 @@ clipping_key_t DragOperation::get_transformed_key() {
     }
 
     return key;
-};
+}
 
 bool DragOperation::should_redraw() {
     return should_redraw_;

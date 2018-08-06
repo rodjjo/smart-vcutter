@@ -830,7 +830,7 @@ bool MainWindow::should_handle_key(int value) {
         case FL_Right:
         case FL_Left:
             return true;
-    };
+    }
     return false;
 }
 

@@ -2460,7 +2460,7 @@ class _NamespaceInfo(_BlockInfo):
     # deciding what these nontrivial things are, so this check is
     # triggered by namespace size only, which works most of the time.
     if (linenum - self.starting_linenum < 10
-        and not Match(r'^\s*};*\s*(//|/\*).*\bnamespace\b', line)):
+        and not Match(r'^\s*}*\s*(//|/\*).*\bnamespace\b', line)):
       return
 
     # Look for matching comment at end of namespace.
@@ -2477,7 +2477,7 @@ class _NamespaceInfo(_BlockInfo):
     # expected namespace.
     if self.name:
       # Named namespace
-      if not Match((r'^\s*};*\s*(//|/\*).*\bnamespace\s+' +
+      if not Match((r'^\s*}*\s*(//|/\*).*\bnamespace\s+' +
                     re.escape(self.name) + r'[\*/\.\\\s]*$'),
                    line):
         error(filename, linenum, 'readability/namespace', 5,
@@ -2485,7 +2485,7 @@ class _NamespaceInfo(_BlockInfo):
               self.name)
     else:
       # Anonymous namespace
-      if not Match(r'^\s*};*\s*(//|/\*).*\bnamespace[\*/\.\\\s]*$', line):
+      if not Match(r'^\s*}*\s*(//|/\*).*\bnamespace[\*/\.\\\s]*$', line):
         # If "// namespace anonymous" or "// anonymous namespace (more text)",
         # mention "// anonymous namespace" as an acceptable form
         if Match(r'^\s*}.*\b(namespace anonymous|anonymous namespace)\b', line):
@@ -2591,7 +2591,7 @@ class NestingState(object):
     while linenum < clean_lines.NumLines():
       # Find the earliest character that might indicate a template argument
       line = clean_lines.elided[linenum]
-      match = Match(r'^[^{};=\[\]\.<>]*(.)', line[pos:])
+      match = Match(r'^[^{}=\[\]\.<>]*(.)', line[pos:])
       if not match:
         linenum += 1
         pos = 0
@@ -2758,7 +2758,7 @@ class NestingState(object):
     # after parsing namespaces.  The regexp accounts for decorated classes
     # such as in:
     #   class LOCKABLE API Object {
-    #   };
+    #   }
     class_decl_match = Match(
         r'^(\s*(?:template\s*<[\w\s<>,:=]*>\s*)?'
         r'(class|struct)\s+(?:[A-Z_]+\s+)*(\w+(?:::\w+)*))'
@@ -2769,7 +2769,7 @@ class NestingState(object):
       #   template <class Ignore1,
       #             class Ignore2 = Default<Args>,
       #             template <Args> class Ignore3>
-      #   void Function() {};
+      #   void Function() {}
       #
       # To avoid template argument cases, we scan forward and look for
       # an unmatched '>'.  If we see one, assume we are inside a
@@ -3424,7 +3424,7 @@ def CheckSpacing(filename, clean_lines, linenum, nesting_state, error):
   line = clean_lines.elided[linenum]
 
   # You shouldn't have spaces before your brackets, except maybe after
-  # 'delete []' or 'return []() {};'
+  # 'delete []' or 'return []() {}'
   if Search(r'\w\s+\[', line) and not Search(r'(?:delete|return)\s+\[', line):
     error(filename, linenum, 'whitespace/braces', 5,
           'Extra space before [')
@@ -3621,7 +3621,7 @@ def CheckCommaSpacing(filename, clean_lines, linenum, error):
   # except for few corner cases
   # TODO(unknown): clarify if 'if (1) { return 1;}' is requires one more
   # space after ;
-  if Search(r';[^\s};\\)/]', line):
+  if Search(r';[^\s}\\)/]', line):
     error(filename, linenum, 'whitespace/semicolon', 3,
           'Missing space after ;')
 
@@ -3715,7 +3715,7 @@ def CheckBracesSpacing(filename, clean_lines, linenum, nesting_state, error):
     # happens in one of the following forms:
     #   Constructor() : initializer_list_{} { ... }
     #   Constructor{}.MemberFunction()
-    #   Type variable{};
+    #   Type variable{}
     #   FunctionCall(type{}, ...);
     #   LastArgument(..., type{});
     #   LOG(INFO) << type{} << " ...";
@@ -3734,10 +3734,10 @@ def CheckBracesSpacing(filename, clean_lines, linenum, nesting_state, error):
     #   Silence this:         But not this:
     #     Outer{                if (...) {
     #       Inner{...}            if (...){  // Missing space before {
-    #     };                    }
+    #     }                    }
     #
     # There is a false negative with this approach if people inserted
-    # spurious semicolons, e.g. "if (cond){};", but we will catch the
+    # spurious semicolons, e.g. "if (cond){}", but we will catch the
     # spurious semicolon with a separate check.
     leading_text = match.group(1)
     (endline, endlinenum, endpos) = CloseExpression(
@@ -3814,7 +3814,7 @@ def CheckSectionSpacing(filename, clean_lines, class_info, linenum, error):
   #
   # Also skip checks if we are on the first line.  This accounts for
   # classes that look like
-  #   class Foo { public: ... };
+  #   class Foo { public: ... }
   #
   # If we didn't find the end of the class, last_line would be zero,
   # and the check will be skipped by the first condition.
@@ -3971,7 +3971,7 @@ def CheckBraces(filename, clean_lines, linenum, error):
           # Semicolon isn't the last character, there's something trailing.
           # Output a warning if the semicolon is not contained inside
           # a lambda expression.
-          if not Match(r'^[^{};]*\[[^\[\]]*\][^{}]*\{[^{}]*\}\s*\)*[;,]\s*$',
+          if not Match(r'^[^{}]*\[[^\[\]]*\][^{}]*\{[^{}]*\}\s*\)*[;,]\s*$',
                        endline):
             error(filename, linenum, 'readability/braces', 4,
                   'If/else bodies with multiple statements require braces')
@@ -4007,29 +4007,29 @@ def CheckTrailingSemicolon(filename, clean_lines, linenum, error):
   # Block bodies should not be followed by a semicolon.  Due to C++11
   # brace initialization, there are more places where semicolons are
   # required than not, so we use a whitelist approach to check these
-  # rather than a blacklist.  These are the places where "};" should
+  # rather than a blacklist.  These are the places where "}" should
   # be replaced by just "}":
   # 1. Some flavor of block following closing parenthesis:
-  #    for (;;) {};
-  #    while (...) {};
-  #    switch (...) {};
-  #    Function(...) {};
-  #    if (...) {};
-  #    if (...) else if (...) {};
+  #    for (;;) {}
+  #    while (...) {}
+  #    switch (...) {}
+  #    Function(...) {}
+  #    if (...) {}
+  #    if (...) else if (...) {}
   #
   # 2. else block:
-  #    if (...) else {};
+  #    if (...) else {}
   #
   # 3. const member function:
-  #    Function(...) const {};
+  #    Function(...) const {}
   #
   # 4. Block following some statement:
   #    x = 42;
-  #    {};
+  #    {}
   #
   # 5. Block at the beginning of a function:
   #    Function(...) {
-  #      {};
+  #      {}
   #    }
   #
   #    Note that naively checking for the preceding "{" will also match
@@ -4038,10 +4038,10 @@ def CheckTrailingSemicolon(filename, clean_lines, linenum, error):
   #
   # 6. Block following another block:
   #    while (true) {}
-  #    {};
+  #    {}
   #
   # 7. End of namespaces:
-  #    namespace {};
+  #    namespace {}
   #
   #    These semicolons seems far more common than other kinds of
   #    redundant semicolons, possibly due to people converting classes
@@ -4534,7 +4534,7 @@ def CheckStyle(filename, clean_lines, linenum, file_extension, nesting_state,
 
   if (cleansed_line.count(';') > 1 and
       # allow simple single line lambdas
-      not Match(r'^[^{};]*\[[^\[\]]*\][^{}]*\{[^{}\n\r]*\}',
+      not Match(r'^[^{}]*\[[^\[\]]*\][^{}]*\{[^{}\n\r]*\}',
                 line) and
       # for loops are allowed two ;'s (and may run over two lines).
       cleansed_line.find('for') == -1 and
@@ -4896,10 +4896,10 @@ def CheckLanguage(filename, clean_lines, linenum, file_extension,
 
   # Check if some verboten operator overloading is going on
   # TODO(unknown): catch out-of-line unary operator&:
-  #   class X {};
+  #   class X {}
   #   int operator&(const X& x) { return 42; }  // unary operator&
   # The trick is it's hard to tell apart from binary operator&:
-  #   class Y { int operator&(const Y& x) { return 23; } }; // binary operator&
+  #   class Y { int operator&(const Y& x) { return 23; } } // binary operator&
   if Search(r'\boperator\s*&\s*\(\s*\)', line):
     error(filename, linenum, 'runtime/operator', 4,
           'Unary operator& is dangerous.  Do not use it.')
@@ -5150,7 +5150,7 @@ def IsInitializerList(clean_lines, linenum):
       # A closing brace followed by a comma is probably the end of a
       # brace-initialized member in constructor initializer list.
       return True
-    if Search(r'[{};]\s*$', line):
+    if Search(r'[{}]\s*$', line):
       # Found one of the following:
       # - A closing brace or semicolon, probably the end of the previous
       #   function.

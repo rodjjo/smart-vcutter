@@ -18,7 +18,7 @@ RotateOperation::RotateOperation(const char *name) : ClippingOperation(name) {
 }
 
 RotateOperation::~RotateOperation() {
-};
+}
 
 bool RotateOperation::active() {
     return active_;
@@ -69,7 +69,7 @@ clipping_key_t RotateOperation::get_transformed_key() {
     );
 
     return key;
-};
+}
 
 bool RotateOperation::should_redraw() {
     return should_redraw_;

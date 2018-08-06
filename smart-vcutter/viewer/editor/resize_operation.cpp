@@ -18,7 +18,7 @@ ResizeOperation::ResizeOperation(const char *name) : ClippingOperation(name) {
 }
 
 ResizeOperation::~ResizeOperation() {
-};
+}
 
 bool ResizeOperation::active() {
     return active_;
@@ -77,7 +77,7 @@ clipping_key_t ResizeOperation::get_transformed_key() {
     }
 
     return key;
-};
+}
 
 bool ResizeOperation::should_redraw() {
     return should_redraw_;

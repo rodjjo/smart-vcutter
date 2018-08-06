@@ -365,7 +365,7 @@ unsigned int FFMpegStream::get_picture_buffer_size() {
     if (frame_) {
         return av_image_get_buffer_size(
             static_cast<AVPixelFormat>(frame_->format), frame_width_, frame_height_, 1);
-    };
+    }
     return 0;
 }
 

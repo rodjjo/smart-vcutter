@@ -8,7 +8,7 @@ namespace vs {
 
 StreamInfo::~StreamInfo() {}
 Player::~Player() {}
-Encoder::~Encoder() {};
+Encoder::~Encoder() {}
 // instance creating functions:
 
 std::shared_ptr<vs::Player> open_file(const char* path) {

@@ -22,8 +22,8 @@ class ClippingOperationSet;
 class ClippingOperation {
  public:
     explicit ClippingOperation(const char *name);
-    virtual ~ClippingOperation(){};
-    virtual void activate() {}; // turns active by its menu
+    virtual ~ClippingOperation(){}
+    virtual void activate() {} // turns active by its menu
     const char *name();
     virtual bool active() = 0;
     virtual void draw();

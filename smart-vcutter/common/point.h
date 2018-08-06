@@ -8,9 +8,9 @@ namespace vcutter {
 
 class point_t {
  public:
-    point_t() : x(0), y(0) {};
+    point_t() : x(0), y(0) {}
 
-    point_t(float xx, float yy) : x(xx), y(yy) {};
+    point_t(float xx, float yy) : x(xx), y(yy) {}
 
     // translate this coordinate to base axis
     point_t to_axis(float px, float py);

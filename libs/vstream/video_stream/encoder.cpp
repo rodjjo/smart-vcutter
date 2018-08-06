@@ -369,7 +369,7 @@ bool EncoderImp::encode_frame(AVFrame *frame) {
         if (av_interleaved_write_frame(format_ctx_.get(), &packet) < 0) {
             report_error("Error writing frame");
             return false;
-        };
+        }
     }
 
     return true;
