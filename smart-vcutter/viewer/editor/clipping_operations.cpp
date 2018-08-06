@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <FL/Fl.H>
 #include <GL/gl.h>
 
@@ -40,7 +43,7 @@ void ClippingOperation::draw_dragging_points() {
 }
 
 void ClippingOperation::set_option(const char *opt_name, int value) {
-};
+}
 
 void ClippingOperation::alt_pressed() {
 }

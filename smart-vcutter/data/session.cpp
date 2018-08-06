@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <fstream>
 #include "smart-vcutter/common/utils.h"
 #include "smart-vcutter/data/session.h"

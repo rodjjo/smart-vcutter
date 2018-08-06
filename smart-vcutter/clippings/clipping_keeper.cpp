@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <string.h>
 #include <boost/filesystem.hpp>
 #include "smart-vcutter/clippings/clipping_keeper.h"

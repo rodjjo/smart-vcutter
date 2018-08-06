@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <GL/gl.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/video/video.hpp>

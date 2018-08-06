@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <Fl/Fl.H>
 
 #include "smart-vcutter/wnd_common/common_dialogs.h"

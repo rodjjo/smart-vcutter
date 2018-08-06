@@ -1,4 +1,6 @@
-
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <map>
 #include "smart-vcutter/data/xpm.h"
 

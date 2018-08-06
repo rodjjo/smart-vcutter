@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <strings.h>
 #include <memory>
 #include <Fl/fl_ask.H>

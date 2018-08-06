@@ -141,7 +141,7 @@ clipping_key_t MagicOperation::get_transformed_key() {
         rx1, ry1, rx2, ry2,
         px1, py1, px2, py2,
         opt_rotate_enabled_, opt_scale_enabled_, opt_x_enabled_, opt_y_enabled_);
-};
+}
 
 void MagicOperation::cancel() {
     active_ = false;
@@ -155,7 +155,7 @@ void MagicOperation::cancel() {
 
 bool MagicOperation::should_redraw() {
     return should_redraw_;
-};
+}
 
 void MagicOperation::mouse_changed(char direction) {
     if (active_) {
@@ -215,7 +215,7 @@ void MagicOperation::mouse_changed(char direction) {
     if (direction == 0) {
         should_redraw_ = should_redraw_ || preview_line_;
     }
-};
+}
 
 bool MagicOperation::near_point_1() {
     return point_t(mouse_move_x(), mouse_move_y()).distance_to(px1_, py1_) < 16;
@@ -277,7 +277,7 @@ int MagicOperation::get_option(const char *opt_name) {
         return opt_rotate_enabled_;
     }
     return 0;
-};
+}
 
 void MagicOperation::apply() {
     if (!active_ || !points_defined_) {

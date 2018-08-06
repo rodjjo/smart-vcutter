@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <string.h>
 #include "smart-vcutter/wnd_main/menu.h"
 

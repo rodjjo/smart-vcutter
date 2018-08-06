@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <boost/filesystem.hpp>
 #include <Fl/fl_ask.H>
 

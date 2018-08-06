@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include "smart-vcutter/data/history.h"
 
 namespace vcutter {

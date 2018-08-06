@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <cmath>
 #include <string.h>
 #include "smart-vcutter/common/calcs.h"

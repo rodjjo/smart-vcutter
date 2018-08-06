@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <cstdio>
 #include "smart-vcutter/common/conversions.h"
 

@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include "video_stream/vstream/video_stream.h"
 #include "video_stream/player.h"
 #include "video_stream/encoder.h"

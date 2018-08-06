@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #ifndef SMART_VCUTTER_VIEWER_MAGIC_OPERATION_H
 #define SMART_VCUTTER_VIEWER_MAGIC_OPERATION_H
 

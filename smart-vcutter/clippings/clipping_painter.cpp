@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <cmath>
 #include <cassert>
 #include <string.h>
@@ -65,7 +68,7 @@ clipping_key_t limit_scale(float width, float height, float fw, float fh, const 
     result.scale *= (scalex < scaley ? scalex : scaley);
 
     return result;
-};
+}
 
 clipping_key_t adjust_bounds(
     const clipping_key_t& interpolated_clipping,

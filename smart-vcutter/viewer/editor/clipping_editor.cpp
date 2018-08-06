@@ -1,6 +1,8 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <FL/Fl.H>
 #include <GL/gl.h>
-
 
 #include "smart-vcutter/common/calcs.h"
 #include "smart-vcutter/viewer/editor/clipping_editor.h"
