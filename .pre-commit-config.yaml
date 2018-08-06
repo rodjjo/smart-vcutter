@@ -1,0 +1,10 @@
+repos:
+  - repo: local
+    hooks:
+      - id: cpplint
+        name: cpplint check
+        description: Checks the code style
+        entry: python misc/checks.py
+        language: system
+        types: [text]
+
