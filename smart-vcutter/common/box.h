@@ -39,7 +39,7 @@ class box_t {
 
     // return border boundary violation (right and bottom coordinates)
     point_t right_bottom_violation(float width, float height);
-    
+
     // return the width and the height of the box
     point_t size();
 

@@ -56,7 +56,7 @@ EncoderWindow::EncoderWindow(History* history, const std::string& path) {
 void EncoderWindow::init(History* history, const clipping_t * clip) {
     history_ = history;
     has_clipping_ = clip != NULL;
-    
+
     if (has_clipping_) {
         clip_ = *clip;
     }
@@ -71,7 +71,7 @@ void EncoderWindow::init(History* history, const clipping_t * clip) {
 
     components_group_ = new Fl_Group(0,0, window_->w(), window_->h() - 30);
     components_group_->box(FL_DOWN_BOX);
-    
+
     edt_path_ = new Fl_Input(5,25, window_->w() - 37, 25, has_clipping_ ? "Animation from:" : "Source video path:");
     edt_path_->align(FL_ALIGN_TOP_LEFT);
     edt_path_->readonly(true);
@@ -80,7 +80,7 @@ void EncoderWindow::init(History* history, const clipping_t * clip) {
 
     edt_start_ =  new Fl_Input(5,75, window_->w() * 0.5 - 2, 25, "Start Time:");
     edt_start_->align(FL_ALIGN_TOP_LEFT);
-    
+
     edt_end_ = new Fl_Input(edt_start_->x() + window_->w() * 0.5 + 5, 75, edt_start_->w() - 15, 25, "End Time:");
     edt_end_->align(FL_ALIGN_TOP_LEFT);
 
@@ -118,7 +118,7 @@ void EncoderWindow::init(History* history, const clipping_t * clip) {
     buttons_group_->end();
 
     buttons_group_->position(0, window_->h() - 30);
-    
+
     window_->end();
 
     window_->set_modal();
@@ -139,7 +139,7 @@ void EncoderWindow::init(History* history, const clipping_t * clip) {
     }
 
     cmb_formats_->value(webm_index);
-    
+
     btn_close_->callback(button_callback, this);
     btn_path_->callback(button_callback, this);
     btn_output_->callback(button_callback, this);
@@ -272,13 +272,13 @@ bool EncoderWindow::deserialize(const session_data_t & data) {
         path_.clear();
 
         Project p;
-        
+
         if (!p.load(data.at(kCLIP_VAR_NAME))) {
             return false;
         }
 
         auto clip = p.get_clipping();
-        
+
         if (!clip) {
             return false;
         }
@@ -315,7 +315,7 @@ void EncoderWindow::restore_session(History* history, Fl_Window *parent) {
     }
 
     std::unique_ptr<EncoderWindow> window(new EncoderWindow(history, ""));
-    
+
     if (!window->deserialize(session.get_value_map())) {
         return;
     }
@@ -338,7 +338,7 @@ void EncoderWindow::show_modal(Fl_Window *parent) {
     window_->position(
         (parent->x() + parent->w() / 2) - window_->w() / 2,
         (parent->y() + parent->h() / 2) - window_->h() / 2);
-    
+
     window_->show();
 
     if (has_clipping_ || !path_.empty()) {
@@ -457,7 +457,7 @@ void EncoderWindow::action_convert() {
             choosen_fps(),
             btn_start_backward_->value() != 0
         );
-        
+
         converter.convert(btn_append_reverse_->value() != 0, btn_merge_->value() != 0);
         save_sugestion();
     } else {
@@ -529,7 +529,7 @@ double EncoderWindow::calc_duration() {
     }
 
     double fps = choosen_fps();
-    
+
     if (!fps) {
         duration = 0;
     } else {
@@ -583,7 +583,7 @@ void EncoderWindow::update_bitrate() {
 void EncoderWindow::update_filesize() {
     double size = calc_filesize() / 1024.0;
     const char *label = "KB";
-    
+
     if (size > 999) {
         size /= 1024.0;
         label = "MB";
@@ -614,7 +614,7 @@ void EncoderWindow::copy_original_fps() {
 void EncoderWindow::fill_animation_info(int video_frame_count) {
     char temp[50] = "";
 
-    
+
     double start_time = (clip_.items.begin()->frame / original_fps_) - 1;
     double end_time = (clip_.items.rbegin()->frame / original_fps_) - 1;
 
@@ -688,7 +688,7 @@ void EncoderWindow::action_video_path() {
             edt_fps_->value("");
         }
     }
-    
+
     if (path.empty()) {
          return;
     }
@@ -758,7 +758,7 @@ std::string EncoderWindow::get_sugestion() {
     if (edt_path_->value() != last_filepath_) {
         return std::string();
     }
-    
+
     if (last_sugestion_.empty()) {
         last_sugestion_ = edt_path_->value();
     }

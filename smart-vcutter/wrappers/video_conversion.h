@@ -53,7 +53,7 @@ class VideoConversionWrapper {
  private:
     std::shared_ptr<vs::Player> player_;
     std::unique_ptr<boost::thread> thread_;
-    
+
     std::vector<std::shared_ptr<unsigned char> > buffers_;
     int buffer_size_;
     std::atomic_int buffer_index_;
@@ -61,10 +61,10 @@ class VideoConversionWrapper {
     std::string source_path_;
     std::string codec_name_;
     std::string target_path_;
-    
+
     int target_w_;
     int target_h_;
-    
+
     int start_frame_;
     int end_frame_;
     bool buffering_;

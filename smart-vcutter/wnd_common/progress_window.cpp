@@ -46,7 +46,7 @@ void ProgressWindow::init(bool with_video) {
     window_ = new Fl_Window(0, 0, kWINDOW_WIDTH, window_height);
     window_->color(fl_rgb_color(200, 200, 255));
     window_->label("Wait the task completion");
-   
+
     bottom_group_ = new Fl_Group(0, window_->h() - 37, window_->w(), 37, "");
     bottom_group_->box(FL_DOWN_BOX);
     btn_cancel_ = new Fl_Button(window_->w() / 2 - 50, window_->h() - 27, 100, 23, "Cancel");
@@ -72,7 +72,7 @@ void ProgressWindow::init(bool with_video) {
     window_->end();
 
     window_->set_modal();
-    
+
 
     reset_progress();
 }
@@ -126,7 +126,7 @@ bool ProgressWindow::wait() {
 
 bool ProgressWindow::wait(progress_task_t task) {
     prepare_for_show();
-    
+
     bool result = task();
 
     unprepare_for_show();

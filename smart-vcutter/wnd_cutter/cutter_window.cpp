@@ -30,7 +30,7 @@ CutterWindow::CutterWindow(Fl_Group *parent) {
 
     int parent_x = parent->x();
     int parent_y = parent->y();
-    
+
     parent->position(0, 0);
     parent->begin();
     window_ = new Fl_Group(0, 0, parent->w(), parent->h());
@@ -39,7 +39,7 @@ CutterWindow::CutterWindow(Fl_Group *parent) {
     components_group_ = new Fl_Group(0,0, window_->w(), window_->h() - 30);
     components_group_->box(FL_DOWN_BOX);
     clipping_editor_  = new ClippingEditor(5, 5, window_->w() - CLIPPING_LIST_WIDTH - 10,  window_->h() - 45);
-    
+
     btn_new_key_ = new Fl_Button(clipping_editor_->w() + 7, 3, 25, 25, "");
     btn_del_key_ = new Fl_Button(btn_new_key_->x() + 27, 3, 25, 25, "");
     btn_play_interval_ = new Fl_Button(btn_del_key_->x() + 27, 3, 25, 25, "");
@@ -80,7 +80,7 @@ CutterWindow::CutterWindow(Fl_Group *parent) {
 
     buttons_group_->end();
     buttons_group_->position(0, window_->h() - 30);
-    
+
     btn_speed_->callback(button_callback, this);
     btn_play_->callback(button_callback, this);
     btn_pause_->callback(button_callback, this);
@@ -214,7 +214,7 @@ void CutterWindow::resize_controls() {
     btn_new_key_->size(25, 25);
     btn_del_key_->size(25, 25);
     btn_play_interval_->size(25, 25);
-    
+
     btn_speed_->size(35, 25);
     btn_play_->size(25, 25);
     btn_pause_->size(25, 25);
@@ -248,7 +248,7 @@ void CutterWindow::resize_controls() {
 
     seek_bar_->position(position += 77,  btn_play_->y());
     seek_bar_->size(parent_->w() - seek_bar_->x() - 5, 25);
-    
+
     parent_->position(parent_x, parent_y);
     if (visible()) {
         update_buffers(true);
@@ -422,7 +422,7 @@ void CutterWindow::goto_selected_clipping_key() {
     int index = key_list_->value() - 1;
     if (index < keeper_->get_key_count()) {
         auto frame = keeper_->get_key_at_index(index).frame;
-        
+
         player_->pause();
         player_->seek_frame(frame);
         update_buffers(true);
@@ -507,7 +507,7 @@ void CutterWindow::action_search() {
     if (!player_) {
         return;
     }
-    
+
     const char *timestr = ask_value("Time in format hh:mm:ss or mm:ss or number of seconds");
     if (!timestr) {
         return;
@@ -529,7 +529,7 @@ void CutterWindow::action_search() {
     } else if (sscanf(timestr, "%d", &seconds) != 1) {
         return;
     }
-    
+
     player_->seek_time((seconds + 1) * 1000);
     update_buffers(true);
 }
@@ -573,7 +573,7 @@ void CutterWindow::action_insert() {
 
     bool computed = true;
     auto key = keeper_->get_key(player_->info()->position(), &computed);
-    
+
     if (computed) {
         keeper_->add_key(key);
         update_clipping_list();
@@ -766,7 +766,7 @@ void CutterWindow::swap_wh() {
     if (!is_paused(true)) {
         return;
     }
-    
+
     int video_w = player_->info()->w();
     int video_h = player_->info()->h();
 
@@ -817,7 +817,7 @@ void CutterWindow::swap_wh() {
     }
 
     keeper_->set_dimensions(height, width);
-    
+
     auto keys = keeper_->get_keys();
     for (auto k : keys) {
         k.angle = fix_angle(k.angle + 90);
@@ -855,7 +855,7 @@ void CutterWindow::scale_all() {
     if (!scalestr) {
         return;
     }
-    
+
     float scale = 1.0;
     if (sscanf(scalestr, "%f", &scale) != 1) {
         show_error("The value entered is not a number. The scale must be from 0.25 to 4.0");
@@ -866,7 +866,7 @@ void CutterWindow::scale_all() {
         show_error("The scale must be from 0.25 to 4.0");
         return;
     }
-    
+
     auto keys = keeper_->get_keys();
     for (auto k : keys) {
         k.scale *= scale;

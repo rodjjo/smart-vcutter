@@ -40,7 +40,7 @@ class ClippingKeeper {
     uint32_t get_video_width();
     uint32_t get_video_height();
     void set_video_dimensions(uint32_t w, uint32_t h);
-    
+
     void clear_modified();
     bool modified();
     uint64_t modified_version();

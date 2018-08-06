@@ -119,13 +119,13 @@ int BufferViewer::handle(int event) {
 void BufferViewer::draw() {
     unsigned int w = 0, h = 0;
     const unsigned char *buffer = NULL;
-    
+
     if (!valid()) {
         valid(1);
         glLoadIdentity();
         glViewport(0, 0, this->w(), this->h());
     }
-    
+
     vp_.update();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -173,7 +173,7 @@ void BufferViewer::draw_buffer(const unsigned char* buffer, uint32_t w, uint32_t
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     else
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    
+
     glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, buffer);
 
     glRasterPos2f(0.0f, 0.0f);

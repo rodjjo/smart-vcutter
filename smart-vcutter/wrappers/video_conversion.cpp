@@ -95,7 +95,7 @@ void VideoConversionWrapper::convert(bool append_reverse, bool merge_reverse, bo
         player_.reset();
         return;
     }
-    
+
     encode_error_ = false;
     buffering_ = false;
 
@@ -106,7 +106,7 @@ void VideoConversionWrapper::convert(bool append_reverse, bool merge_reverse, bo
             conversion_thread();
         }
     ));
-    
+
     auto prog_window = std::unique_ptr<ProgressWindow>(new ProgressWindow(true));
 
     prog_window->wait([this, prog_window{prog_window.get()}] () {
@@ -210,7 +210,7 @@ void VideoConversionWrapper::allocate_buffers() {
         count_.store(interval());
         return;
     }
-    
+
     const unsigned int max_memory = 256 * (1024 * 1024); // 256MB of ram of cache
     buffer_size_ = target_w_ * target_h_ * 3;
     int buffered_frames = max_memory / buffer_size_;
@@ -236,7 +236,7 @@ void VideoConversionWrapper::allocate_buffers() {
             clipping_.items.rbegin()->frame = player_->count();
         }
 
-        
+
         if (clipping_start_at_end_) {
             start_frame_ = clipping_.items.rbegin()->frame;
             end_frame_ = clipping_.items.begin()->frame;
@@ -249,7 +249,7 @@ void VideoConversionWrapper::allocate_buffers() {
     if (start_frame_ < end_frame_ && !append_reverse_) {
         buffered_frames = 1;
     }
-    
+
     if (buffered_frames > interval()) {
         buffered_frames = interval();
     }
@@ -258,7 +258,7 @@ void VideoConversionWrapper::allocate_buffers() {
         buffers_.push_back(std::shared_ptr<unsigned char>(
             new unsigned char[buffer_size_], buffer_deallocator));
     }
-    
+
     count_.store(interval() * (append_reverse_ ? 2 : 1));
 }
 
@@ -307,7 +307,7 @@ void VideoConversionWrapper::keep_first_frame() {
 void VideoConversionWrapper::encode_all(vs::Encoder *encoder) {
     int start = start_frame_ < end_frame_ ? start_frame_ : end_frame_;
     int end = start_frame_ < end_frame_ ? end_frame_ : start_frame_;
-    
+
     std::unique_ptr<ClippingKeeper> keeper;
 
     if (has_clipping_) {
@@ -325,7 +325,7 @@ void VideoConversionWrapper::encode_all(vs::Encoder *encoder) {
         if (canceled_) {
             return;
         }
-        
+
         last_frame = i + 1 >= end;
 
         if (!has_clipping_) {
@@ -416,7 +416,7 @@ void VideoConversionWrapper::encode_from_start(vs::Encoder *encoder) {
         ++position_;
 
         player_->next();
-       
+
         ++i;
         if (i >= end_frame_) {
             break;
@@ -454,7 +454,7 @@ void VideoConversionWrapper::encode_from_end(vs::Encoder *encoder) {
         if (canceled_) {
             return;
         }
-        
+
         // fill the buffer
         buffer_index_.store(0);
         buffering_ = true;

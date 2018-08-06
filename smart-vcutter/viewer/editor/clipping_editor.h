@@ -68,7 +68,7 @@ private:
     std::unique_ptr<ViewerTexture> text_first_frame_;
     std::unique_ptr<ViewerTexture> text_curr_frame_;
     std::unique_ptr<ViewerTexture> text_last_frame_;
-    
+
 };
 
 }  // namespace vcutter

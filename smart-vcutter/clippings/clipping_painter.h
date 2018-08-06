@@ -27,7 +27,7 @@ void paint_clipping(
 
 clipping_key_t adjust_bounds(
     const clipping_key_t& interpolated_clipping, unsigned int target_w, unsigned int target_h, unsigned int max_x,  unsigned int max_y);
-    
+
 box_t clipping_box(const clipping_key_t& interpolated_clipping, unsigned int target_w, unsigned int target_h);
 box_t get_bound_box(const box_t& box);
 void rotate_box(float angle, box_t *box);

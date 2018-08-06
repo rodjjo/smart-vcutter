@@ -13,19 +13,19 @@ class BufferViewer;
 
 class BufferSupplier {
  public:
-    virtual ~BufferSupplier() {};
-    virtual void viewer_buffer(BufferViewer *viewer, const unsigned char** buffer, uint32_t *w, uint32_t *h) {};
+    virtual ~BufferSupplier() {}
+    virtual void viewer_buffer(BufferViewer *viewer, const unsigned char** buffer, uint32_t *w, uint32_t *h) {}
 };
 
 class EventHandler {
   public:
-    virtual ~EventHandler() {};
-    virtual void viewer_mouse_cancel(BufferViewer *viewer) {};
-    virtual void viewer_mouse_alt(BufferViewer *viewer) {};
-    virtual void viewer_mouse_down(BufferViewer *viewer, bool left_pressed, bool right_pressed, int x, int y) {};
-    virtual void viewer_mouse_move(BufferViewer *viewer, bool left_pressed, bool right_pressed, int dx, int dy, int x, int y) {};
-    virtual void viewer_mouse_up(BufferViewer *viewer, bool left_pressed, bool right_pressed, int dx, int dy, int ux, int uy) {};
-    virtual void viewer_after_draw(BufferViewer *viewer) {};
+    virtual ~EventHandler() {}
+    virtual void viewer_mouse_cancel(BufferViewer *viewer) {}
+    virtual void viewer_mouse_alt(BufferViewer *viewer) {}
+    virtual void viewer_mouse_down(BufferViewer *viewer, bool left_pressed, bool right_pressed, int x, int y) {}
+    virtual void viewer_mouse_move(BufferViewer *viewer, bool left_pressed, bool right_pressed, int dx, int dy, int x, int y) {}
+    virtual void viewer_mouse_up(BufferViewer *viewer, bool left_pressed, bool right_pressed, int dx, int dy, int ux, int uy) {}
+    virtual void viewer_after_draw(BufferViewer *viewer) {}
 };
 
 class DrawHandler: public EventHandler {

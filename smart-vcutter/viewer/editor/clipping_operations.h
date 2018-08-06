@@ -91,7 +91,7 @@ class ClippingOperationSet {
     void draw_current_box(const viewport_t &vp);
     void draw_next_box(const viewport_t &vp);
     void draw_box(const viewport_t &vp, box_t box, bool invert, float r, float g, float b, float a);
-    
+
     bool has_active_operation();
  private:
     std::list<std::shared_ptr<ClippingOperation> > operations_;

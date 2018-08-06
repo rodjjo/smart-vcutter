@@ -51,7 +51,7 @@ CutterOptionsWindow::CutterOptionsWindow() {
 
     btn_unlock_->clear_visible_focus();
     btn_lock_->clear_visible_focus();
-    
+
     window_->end();
     window_->set_modal();
 
@@ -93,7 +93,7 @@ bool CutterOptionsWindow::edit(
 
     int left = (Fl::w() / 2) - window_->w() / 2;
     int top = (Fl::h() / 2) - window_->h() / 2;
-    
+
     window_->position(left, top);
 
     while (window_->shown()) {

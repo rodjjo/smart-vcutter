@@ -41,7 +41,7 @@ class MainWindow : Fl_Menu_Window {
     void poll_key_repeat();
     bool should_handle_key(int value);
     void repeat_current_key();
-    
+
     int handle(int event) override;
     static void timeout_handler(void* ud);
     static int default_window_width() ;
@@ -119,7 +119,7 @@ class MainWindow : Fl_Menu_Window {
 
     bool save_project(bool create_new_file);
     bool ask_for_save();
-    
+
  private:
     bool run_called_;
     bool sessions_loaded_;

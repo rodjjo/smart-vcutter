@@ -77,7 +77,7 @@ class CutterWindow {
     void action_create_ref();
     void action_use_ref(bool positionate_x, bool positionate_y, bool rotate, bool scale);
     void action_clear_ref();
-    
+
     void action_properties();
     void action_position_top();
     void action_position_left();
@@ -162,7 +162,7 @@ class CutterWindow {
 
     std::shared_ptr<PlayerWrapper> player_;
     ClippingEditor *clipping_editor_;
-    
+
     MiniatureViewer *viewer_;
     std::unique_ptr<ClippingKeeper> keeper_;
  private:

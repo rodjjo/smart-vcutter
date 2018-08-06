@@ -26,7 +26,7 @@ class point_t {
 
     // return the distance to other point
     float distance_to(const point_t& target);
-    
+
     // return the distance to other point
     float distance_to(float x, float y);
 

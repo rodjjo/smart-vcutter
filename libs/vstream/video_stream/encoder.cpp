@@ -114,7 +114,7 @@ bool EncoderImp::frame(const unsigned char* buffer) {
             source_frame.height, 
             frame_->data, 
             frame_->linesize);
-    
+
     if (!encode_frame(frame_.get())) {
         return false;
     }
@@ -154,7 +154,7 @@ bool EncoderImp::finish() {
 
 bool EncoderImp::find_codec() {
     AVCodecID codec_id = AV_CODEC_ID_NONE;
-    
+
     if (strcmp(kMJPEG_CODEC, codec_name_.c_str()) == 0) {
         codec_id = AV_CODEC_ID_MJPEG;
     } else if (strcmp(kX264_CODEC, codec_name_.c_str()) == 0) {
@@ -171,11 +171,11 @@ bool EncoderImp::find_codec() {
     }
 
     codec_ = avcodec_find_encoder(codec_id);
-    
+
     if (!codec_) {
         report_error("Could not find a supported codec");    
     }
-    
+
     return codec_ != NULL;
 }
 
@@ -228,7 +228,7 @@ bool EncoderImp::allocate_stream() {
     } else {
         report_error("Could not allocate the video stream");
     }
-    
+
     return stream_ != NULL;
 }
 
@@ -261,7 +261,7 @@ bool EncoderImp::configure_codec() {
     }
 
     codec_ctx_->gop_size = key_frame_interval_;
-    
+
     codec_ctx_->bit_rate = bit_rate_ ;
      codec_ctx_->bit_rate_tolerance = bit_rate_ * 0.05;
 
@@ -284,7 +284,7 @@ bool EncoderImp::configure_codec() {
         report_error("Could not configure media stream");
         return false;
     }
-    
+
     return true;
 }
 
@@ -353,7 +353,7 @@ bool EncoderImp::encode_frame(AVFrame *frame) {
     av_init_packet(&packet);
     packet.data = NULL;    // packet data will be allocated by the encoder
     packet.size = 0;
-    
+
     if (avcodec_encode_video2(codec_ctx_.get(), &packet, frame, &got_packet_ptr_) < 0) {
         report_error("Error encoding frame");
         return false;
@@ -377,7 +377,7 @@ bool EncoderImp::encode_frame(AVFrame *frame) {
 
 bool EncoderImp::flush_frames() {    
     got_packet_ptr_ = 1;
-    
+
     while (got_packet_ptr_) {
         if (!encode_frame(NULL)) {
             return false;

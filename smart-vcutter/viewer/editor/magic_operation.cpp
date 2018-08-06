@@ -73,7 +73,7 @@ void MagicOperation::draw() {
         float x1 = mouse_down_x(), y1 = mouse_down_y(), x2 = mouse_move_x(), y2 = mouse_move_y();
         to_gl_coords(&x1, &y1);
         to_gl_coords(&x2, &y2);
-        
+
         glBegin(GL_LINES);
         glVertex2f(x1, y1);
         glVertex2f(x2, y2);
@@ -85,7 +85,7 @@ void MagicOperation::draw() {
         float x1 = px1_, y1 = py1_, x2 = px2_, y2 = py2_;
         to_gl_coords(&x1, &y1);
         to_gl_coords(&x2, &y2);
-        
+
         glBegin(GL_LINES);
         glVertex2f(x1, y1);
         glVertex2f(x2, y2);
@@ -118,7 +118,7 @@ clipping_key_t MagicOperation::get_transformed_key() {
     if (!keeper()->get_reference(&ref_frame, &rx1, &ry1, &rx2, &ry2)) {
         return key;
     }
-    
+
     key = keeper()->get_key(ref_frame);
     key.frame = player()->info()->position();
 
@@ -164,7 +164,7 @@ void MagicOperation::mouse_changed(char direction) {
             return;
         }
     }
-    
+
     if (!points_defined_) {
         if (direction > 0) {
             points_defined_ = true;

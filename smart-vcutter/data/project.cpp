@@ -23,7 +23,7 @@ namespace {
     const char *kPROJECT_CLIPPING_SCALE_KEY = "scale";
     const char *kPROJECT_CLIPPING_ANGLE_KEY = "rotation";
 }
-    
+
 Project::Project() {
 }
 
@@ -44,7 +44,7 @@ bool Project::open(const Json::Value& data, const std::string& path) {
 bool Project::load(const std::string& data, const char *path) {
     Json::Reader reader;
     Json::Value temp;
-    
+
     if (!reader.parse(data, temp, false)) {
         last_error_ = "The project file is corrupted or invalid";
         return false;
@@ -71,7 +71,7 @@ bool Project::open(const std::string& path) {
         last_error_ = "could not open the project file";
         return false;
     }
-    
+
     last_error_ = "this directory does not contain a project";
     return false;
 }
@@ -135,7 +135,7 @@ const clipping_t *Project::get_clipping() {
     }
 
     clipping_ = clipping_t();
-    
+
     Json::Value & data = project_[kPROJECT_CLIPPING_KEY];
 
     clipping_.video_path = data[kPROJECT_CLIPPING_PATH_KEY].asString();

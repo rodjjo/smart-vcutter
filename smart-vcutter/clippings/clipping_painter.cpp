@@ -20,7 +20,7 @@ box_t clipping_box(const clipping_key_t& interpolated_clipping, unsigned int tar
     result[3].y = target_h;
     float half_x = target_w / 2.0;
     float half_y = target_h / 2.0;
-    
+
     result.translate(-half_x, -half_y);
     result.rotate(interpolated_clipping.angle);
     result.scale(interpolated_clipping.scale);
@@ -35,10 +35,10 @@ clipping_key_t limit_scale(float width, float height, float fw, float fh, const 
     box_t area = clipping_box(result, fw, fh).occupied_area();
 
     point_t center(area.center());
-    
+
     point_t lt = area.left_top_violation(width, height);
     point_t rb = area.right_bottom_violation(width, height);
-    
+
     point_t sz = area.size();
 
     int xpass = lt.x > rb.x ? lt.x : rb.x;
@@ -53,7 +53,7 @@ clipping_key_t limit_scale(float width, float height, float fw, float fh, const 
 
     float scalex = 1.0;
     float scaley = 1.0;
-    
+
     if (distax) {
         scalex = 1.0 - xpass / static_cast<float>(distax);
     }
@@ -120,7 +120,7 @@ clipping_key_t compute_interpolation(
             right = *begin;
             first_found = true;
         } 
-        
+
         if (begin->frame >= current_frame) {
             right = *begin;
             if (!first_found) {
@@ -143,14 +143,14 @@ clipping_key_t compute_interpolation(
 
     if (left.frame < right.frame) {
         float frame_diff = current_frame - left.frame;
-        
+
         double interpolation = (1.0f / static_cast<double>(right.frame - left.frame)) * frame_diff;
 
         float difx = (right.px - left.px);
         float dify = (right.py - left.py);
         float difs = (right.scale - left.scale);
         float difa = right.angle - left.angle;
-        
+
         if (difa < 0) {
             clockwise = (difa + 360) <= 180;
         } else {
@@ -229,7 +229,7 @@ void paint_clipping(
     bool transparent
 ) {
     clipping_key_t safe_clipping = adjust_bounds(interpolated_clipping, target_w, target_h, source_w, source_h);
-    
+
     box_t box = clipping_box(safe_clipping, target_w, target_h);
     box_t bbox = box.occupied_area();
     int bbox_w = bbox[1].x - bbox[0].x;
@@ -237,7 +237,7 @@ void paint_clipping(
 
     assert(bbox_w >= 15);
     assert(bbox_h >= 15);
-   
+
     assert(bbox[0].y >= 0);
     assert(bbox[0].x >= 0);
 
@@ -267,7 +267,7 @@ void paint_clipping(
     int half_w = bbox_w / 2;
     int half_h = bbox_h / 2;
     cv::Rect roi_input(safe_clipping.px - half_w, safe_clipping.py - half_h, bbox_w, bbox_h);
-    
+
     half_w = rotated.cols / 2;
     half_h = rotated.rows / 2;
     cv::Rect roi_output(half_w - bbox_w / 2, half_h - bbox_h / 2, bbox_w, bbox_h);
@@ -277,7 +277,7 @@ void paint_clipping(
     roi_img_in.copyTo(roi_img_out);
 
     cv::Point2f src_center(half_w, half_h);
-    
+
     cv::Mat rot_mat = cv::getRotationMatrix2D(src_center, safe_clipping.angle - 360, 1.0);
     cv::Mat temp;
     cv::warpAffine(rotated, temp, rot_mat, rotated.size(), CV_INTER_LANCZOS4);
@@ -315,12 +315,12 @@ clipping_key_t magic_tool(
     if (!(should_rotate || should_scale || should_positionate_x || should_positionate_y)) {
         return result;
     }
-    
+
     double scale = 1.0;
     if (should_scale) {
         double source_distance = point_t(source_rx1, source_ry1).distance_to(source_rx2, source_ry2);
         double target_distance = point_t(curr_rx1, curr_ry1).distance_to(curr_rx2, curr_ry2);
-        
+
         if (source_distance != 0) {
             scale = target_distance / source_distance;
         }

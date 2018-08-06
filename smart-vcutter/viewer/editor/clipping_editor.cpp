@@ -98,7 +98,7 @@ void ClippingEditor::viewer_draw(BufferViewer *viewer, bool *handled, const unsi
     if (player_->is_playing()) {
         return;
     }
-    
+
     if (!modified_) {
         if (player_->info()->position() == keeper_->get_first_frame()) {
             frame_numbers_[0] = player_->info()->position();
@@ -149,14 +149,14 @@ void ClippingEditor::draw_compare_box() {
     if (magic_operations) {
         return;
     }
-    
+
     ViewerTexture *texture;
     box_t texture_box;
     box_t drawing_box;
 
     float cw = keeper_->get_width(), ch = keeper_->get_height();
     float vw = player_->info()->w(), vh = player_->info()->h();
-    
+
 
     if (frame == last_frame) {
         texture = text_first_frame_.get();
@@ -171,7 +171,7 @@ void ClippingEditor::draw_compare_box() {
     if (!texture) {
         return;
     }
-    
+
     texture->draw(view_port(), vw, vh, texture_box, drawing_box, 1.0);
 }
 
@@ -283,7 +283,7 @@ void ClippingEditor::wink_compare_box() {
 
 void ClippingEditor::draw_operations() {
     define_cursor();
-    
+
     if (operation_set_.should_redraw(view_port())) {
         redraw();
     }

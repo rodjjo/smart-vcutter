@@ -52,7 +52,7 @@ void MiniatureViewer::update_preview(PlayerWrapper *player, ClippingKeeper *keep
 
     viewport_t vp(0, 0, w(), h());
     float fit_scale = vp.fit(&preview_w, &preview_h);
-        
+
     unsigned int required_size = preview_w * preview_h * 3;
 
     if (required_size < 1) {
@@ -64,7 +64,7 @@ void MiniatureViewer::update_preview(PlayerWrapper *player, ClippingKeeper *keep
         buffer_size_ = required_size;
         clipping_buffer_.reset(new unsigned char[buffer_size_], [](unsigned char *b) { delete[] b;});
     }
-    
+
     miniature_buffer_w_ = preview_w;
     miniature_buffer_h_ = preview_h;
 
@@ -72,7 +72,7 @@ void MiniatureViewer::update_preview(PlayerWrapper *player, ClippingKeeper *keep
     key.scale *= fit_scale;
 
     paint_clipping(player->info()->buffer(),  player->info()->w(), player->info()->h(), key, preview_w, preview_h, clipping_buffer_.get());
-    
+
     modified_ = true;
     redraw();
 }

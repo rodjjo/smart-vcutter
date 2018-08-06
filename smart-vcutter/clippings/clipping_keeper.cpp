@@ -42,7 +42,7 @@ void ClippingKeeper::init(const clipping_t& clipping) {
     w_ = clipping.w;
     h_ = clipping.h;
     video_path_ = clipping.video_path;
-    
+
     has_ref_ = clipping.has_ref;
     ref_frame_ = clipping.ref_frame;
     rx1_ = clipping.rx1;
@@ -133,7 +133,7 @@ void ClippingKeeper::set_reference(int frame, float rx1, float ry1, float rx2, f
 void ClippingKeeper::clear_reference() {
     has_ref_ = false;
 }
-    
+
 void ClippingKeeper::add_key(clipping_key_t key) {
     double last_angle = key.angle;
     modify_version();
@@ -192,7 +192,7 @@ clipping_key_t ClippingKeeper::get_key(int frame, bool *computed, box_t *bound_b
         auto adjusted_key = adjust_bounds(result, w_, h_, video_w_, video_h_);
         *bound_box = clipping_box(adjusted_key, w_, h_).occupied_area();
     }
-    
+
     return result;
 }
 
@@ -312,11 +312,11 @@ void ClippingKeeper::cutoff(int frame, bool from_begin) {
     } else if (!from_begin && frame - 1 < 0) {
         frame = 1;
     }
-    
+
     key_at_frame1.frame = frame;
 
     add_key(key_at_frame1);
-    
+
     if (keys_.size() < 2) {
         --frame;
         if (from_begin)

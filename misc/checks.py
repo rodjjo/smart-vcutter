@@ -12,12 +12,14 @@ def get_sources(dir):
                 yield os.path.join(dir_name, name)
     return generator_stop
 
+
 def get_all_sources():
     for f in get_sources('libs'):
         yield f
     for f in get_sources('smart-vcutter'):
         yield f
     return generator_stop
+
 
 def cpplint_the_sources():
     filters = ','.join([
@@ -40,6 +42,7 @@ def cpplint_the_sources():
         '-runtime/int',
         '-runtime/explicit',
         '-runtime/printf'])
+
     command = [
         'python',
         'misc/cpplint.py',
@@ -48,12 +51,13 @@ def cpplint_the_sources():
         '--linelength=250',
         '--filter={}'.format(filters)
     ] + list(get_all_sources())
+
     try:
         check_call(command)
     except CalledProcessError:
         sys.exit(1)
     sys.exit(0)
-    
+
 
 if __name__ == '__main__':
     cpplint_the_sources()

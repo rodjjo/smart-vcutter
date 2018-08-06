@@ -73,7 +73,7 @@ void ViewerTexture::draw(const viewport_t &vp, float x, float y, float zoom) {
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture_id_);
-    
+
     glDisable(GL_LIGHTING);
     glColor4f(1.0, 1.0, 1.0, 1.0);
 
@@ -83,9 +83,9 @@ void ViewerTexture::draw(const viewport_t &vp, float x, float y, float zoom) {
     glTexCoord2d(1.0, 1.0); glVertex2d(x + tw, y - th);
     glTexCoord2d(0.0, 1.0); glVertex2d(x - tw, y - th);
     glEnd();
-    
+
     glDisable(GL_TEXTURE_2D);
-    
+
     if (rgba_) {
         glDisable(GL_BLEND);
     }
@@ -93,7 +93,7 @@ void ViewerTexture::draw(const viewport_t &vp, float x, float y, float zoom) {
 
 void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int h, bool resize_texture, bool rgba) {
     update_texture(vp, buffer, w, h, resize_texture, rgba);
-    
+
     if (!texture_w_ || !texture_h_ || !texture_id_) {
         return;
     }
@@ -108,7 +108,7 @@ void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture_id_);
-    
+
     glDisable(GL_LIGHTING);
     glColor4f(1.0, 1.0, 1.0, 1.0);
 
@@ -118,7 +118,7 @@ void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int
     glTexCoord2d(1.0, 1.0); glVertex2d(coord_w, -coord_h);
     glTexCoord2d(0.0, 1.0); glVertex2d(-coord_w, -coord_h);
     glEnd();
-    
+
     glDisable(GL_TEXTURE_2D);
 
     if (rgba_) {
@@ -128,7 +128,7 @@ void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int
 
 void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coords, box_t view_coords, float alpha) {
     update_texture(vp, NULL, 0, 0, resize_texture_, rgba_);
-    
+
     if (!texture_w_ || !texture_h_ || !texture_id_) {
         return;
     }
@@ -146,7 +146,7 @@ void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coo
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture_id_);
-    
+
     glDisable(GL_LIGHTING);
     glColor4f(1.0, 1.0, 1.0, alpha);
 
@@ -156,9 +156,9 @@ void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coo
         glVertex2d(view_coords[i].x, view_coords[i].y);
     }
     glEnd();
-    
+
     glDisable(GL_TEXTURE_2D);
-    
+
     glDisable(GL_BLEND);
 }
 
@@ -190,7 +190,7 @@ void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, 
             buffer_.reset();
             return;
         }
-        
+
         view_w_ = vp[2];
         view_h_ = vp[3];
         texture_w_ = w;
@@ -202,7 +202,7 @@ void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, 
     }
 
     glBindTexture(GL_TEXTURE_2D, texture_id_);
-    
+
     if (texture_w_ % 4 == 0) {
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     } else {
@@ -213,7 +213,7 @@ void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
-    
+
     if (w == texture_w_ && h == texture_h_) {
         glTexImage2D(GL_TEXTURE_2D, 0, rgba ? GL_RGBA : GL_RGB , texture_w_, texture_h_, 0, rgba ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, buffer);
     } else {

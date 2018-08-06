@@ -24,7 +24,7 @@ viewport_t::viewport_t(int x, int y, int w, int h) {
 void viewport_t::update() {
     glGetIntegerv(GL_VIEWPORT, vp_);
 }
-    
+
 viewport_t viewport_t::from_gl() {
     int vp[4];
     glGetIntegerv(GL_VIEWPORT, vp);
@@ -124,7 +124,7 @@ float viewport_t::fit(uint32_t *w, uint32_t *h) const {
 
     if (xscale < scale) 
         scale = xscale;
-    
+
     *w *= scale;
     *h *= scale;
 
@@ -142,5 +142,5 @@ float viewport_t::fit(uint32_t *w, uint32_t *h) const {
 
     return (1.0 / scale);
 }
-    
+
 } // vcutter

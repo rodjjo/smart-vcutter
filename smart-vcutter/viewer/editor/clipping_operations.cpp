@@ -174,7 +174,7 @@ void ClippingOperationSet::draw(const viewport_t &vp) {
     auto b = current_clipping_box(vp, *player_, *keeper_, &computed);
 
     ClippingOperation *operation = NULL;
-    
+
     for (auto op : operations_) {
         if (op->active()) {
             operation = op.get();
@@ -191,7 +191,7 @@ void ClippingOperationSet::draw(const viewport_t &vp) {
     }
 
     draw_box(vp, b, false, color[0], color[1], color[2], color[3]);
-    
+
     float cw = (*keeper_)->get_width(), ch = (*keeper_)->get_height();
     float vw = (*player_)->info()->w(), vh = (*player_)->info()->h();
 

@@ -10,8 +10,8 @@ namespace vs {
 FFMpegStream::FFMpegStream(int color_type) {
     color_type_ = color_type;
     init();
-    
-   
+
+
 }
 
 FFMpegStream::FFMpegStream() {
@@ -66,7 +66,7 @@ bool FFMpegStream::open(const char *location) {
     if(avformat_find_stream_info(ctx, NULL) < 0){
         return false;
     }
- 
+
     video_stream_index_ = av_find_best_stream(ctx, AVMEDIA_TYPE_VIDEO, -1, -1, &video_codec_, 0);
 
     if (video_stream_index_ < 0) {
@@ -85,7 +85,7 @@ bool FFMpegStream::is_mjpeg() {
 
 bool FFMpegStream::init_codec() {
     av_read_play(format_ctx_.get());
-    
+
     codec_ctx_ = allocate_codec_context(video_codec_);
 
     AVCodecParameters *codec_par = video_stream_->codecpar;  
@@ -123,7 +123,7 @@ bool FFMpegStream::init_codec() {
         fps_ = r2d(video_stream_->avg_frame_rate);
 
     is_open_ = true;
-    
+
     if (next_frame()) {
         first_frame_ = get_frame_from_pts();
         is_mjpeg_ = video_codec_->id == AV_CODEC_ID_MJPEG;
@@ -142,10 +142,10 @@ bool FFMpegStream::next_frame(bool ignore_capture) {
     if (frame_number_ + 1 == frame_count_) {
         return false;
     }
-   
+
     bool have_frame = false;
     int status = 0;
-    
+
     AVPacket packet;
     av_init_packet(&packet);
     packet.data = NULL;
@@ -178,14 +178,14 @@ bool FFMpegStream::next_frame(bool ignore_capture) {
 
         pts = packet.pts;
         dts = packet.dts;
-        
+
         status = avcodec_send_packet(codec_ctx_.get(), &packet);
 
         av_packet_unref(&packet);
         av_init_packet(&packet);
         packet.data = NULL;
         packet.size = 0;
-        
+
         if (status == AVERROR(EAGAIN)) {
             continue;
         } 
@@ -209,7 +209,7 @@ bool FFMpegStream::next_frame(bool ignore_capture) {
         }
 
     } while (stream_index != video_stream_index_ || have_frame == false);
-        
+
     have_new_frame_ = true;
     frame_count_ = video_stream_->nb_frames;
 

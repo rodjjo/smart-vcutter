@@ -56,6 +56,6 @@ target_link_libraries(smart-vcutter
                       ${JSONCPP_LIBRARY}
                       )
 
-                      
+
 
 SET_TARGET_PROPERTIES(smart-vcutter PROPERTIES LINKER_LANGUAGE C)

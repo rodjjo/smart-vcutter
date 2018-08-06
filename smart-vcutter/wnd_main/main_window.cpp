@@ -120,7 +120,7 @@ void MainWindow::load_sessions() {
             }
         }
     }
-    
+
     cutter_window_->pause();
     EncoderWindow::restore_session(&history_, window_);
 }
@@ -146,7 +146,7 @@ void MainWindow::save_session() {
 
     Project backup;
     backup.set_clipping(cutter_window_->to_clipping());
-    
+
     Json::Value root;
     root[kSESSION_PATH] = project_->get_path();
     root[kSESSION_DATA] = backup.get_data();
@@ -179,7 +179,7 @@ void MainWindow::init_controls() {
 void MainWindow::init_main_menu() {
     menu_ = new Fl_Menu_Bar(0, 0, default_window_width(), kMENU_HEIGHT);
     menu_->align(FL_ALIGN_TOP);
-   
+
     menu_file_.reset(new Menu(menu_, "&File"));
     menu_file_->add("&Open video", "^o", action_file_open(), 0, 0, xpm::film_16x16);
     menu_file_->add("Open &project", "^a", action_file_open_project(), 0, 0, xpm::directory_16x16);
@@ -198,7 +198,7 @@ void MainWindow::init_main_menu() {
     menu_edit_->add("Paste/Position horiz.", "", action_edit_paste_positionx(), 0, GROUP_CLIPPING_OPEN, xpm::left_right_16x16);
     menu_edit_->add("Paste/Position vert.", "", action_edit_paste_positiony(), 0, GROUP_CLIPPING_OPEN, xpm::up_down_16x16);
     menu_edit_->add("&Paste", "^v", action_edit_paste(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::paste_16x16);
-    
+
     menu_edit_->add("Swap width and height", "", action_transformation_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
     menu_edit_->add("Clear all keys", "", action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
     menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), 0, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
@@ -211,8 +211,8 @@ void MainWindow::init_main_menu() {
     // menu_edit_->add("Align/Left", "", action_edit_align_left(), 0, GROUP_CLIPPING_OPEN);
     // menu_edit_->add("Align/Right", "", action_edit_align_right(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
     // menu_edit_->add("Align/All", "", action_edit_align_all(), 0, GROUP_CLIPPING_OPEN);
-    
-    
+
+
     menu_tools_.reset(new Menu(menu_, "&Tools"));
     menu_tools_->add("Magic rule/Create", "^m", action_create_ref(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::magic_16x16);
     menu_tools_->add("Magic rule/Use", "^g", action_use_ref(), 0, GROUP_CLIPPING_OPEN, xpm::green_pin_16x16);
@@ -246,7 +246,7 @@ void MainWindow::init_main_menu() {
     menu_tools_->add("All keys/Rotate +180 degree", "", action_transformation_180(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("All keys/Scale", "", action_transformation_scale(), 0, GROUP_CLIPPING_OPEN);
 
-    
+
     menu_utils_.reset(new Menu(menu_, "Utils"));
 
     menu_utils_->add("Convert video", "^j", action_utils_convert(), 0, 0, xpm::film_16x16);
@@ -277,7 +277,7 @@ menu_callback_t MainWindow::action_utils_clipping() {
             show_error(tmp.get_last_error().c_str());
             return;
         }
-        
+
         cutter_window_->pause();
         EncoderWindow::execute(&history_, window_, *clipping);
     };
@@ -288,7 +288,7 @@ menu_callback_t MainWindow::action_utils_convert_current() {
         if (!cutter_window_->visible()) {
             return;
         }
-        
+
         cutter_window_->pause();
         EncoderWindow::execute(&history_, window_, cutter_window_->get_video_path());
     };
@@ -550,7 +550,7 @@ bool MainWindow::save_project(bool create_new_file) {
     if (create_new_file && filepath_exists(path.c_str()) && !ask("The file already exists. Overwrite it ?")) {
         return false;
     }
-    
+
     project_->set_clipping(cutter_window_->to_clipping());
     project_->save(path);
     cutter_window_->clear_modified();
@@ -863,7 +863,7 @@ int MainWindow::handle(int event) {
         }
         break;
     }
-    
+
     return Fl_Menu_Window::handle(event);
 }
 

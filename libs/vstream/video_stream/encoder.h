@@ -52,7 +52,7 @@ class EncoderImp: public Encoder {
     bool opened_;
     bool finished_;
     bool should_close_file_;
-    
+
     std::string codec_name_;
     std::string path_;
     unsigned int frame_width_;

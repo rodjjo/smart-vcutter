@@ -29,7 +29,7 @@ void DragOperation::draw_dragging_points() {
 
 clipping_key_t DragOperation::get_transformed_key() {
     auto key = keeper()->get_key(player()->info()->position());
-    
+
     point_t n(key.px, key.py);
 
     const viewport_t & vp = view_port();
