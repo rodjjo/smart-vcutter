@@ -55,7 +55,7 @@ void ClippingKeeper::init(const clipping_t& clipping) {
 
     // add items to key the frame sorted
     keys_.clear();
-    for (const auto & key: clipping.items) {
+    for (const auto & key : clipping.items) {
         add_key(key);
     }
     clear_modified();

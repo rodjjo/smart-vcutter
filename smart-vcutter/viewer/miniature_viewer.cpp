@@ -80,4 +80,4 @@ void MiniatureViewer::update_preview(PlayerWrapper *player, ClippingKeeper *keep
     redraw();
 }
 
-}  // namespace viewer
+}  // namespace vcutter

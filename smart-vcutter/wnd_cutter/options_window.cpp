@@ -201,4 +201,4 @@ void CutterOptionsWindow::action_cancel() {
     window_->hide();
 }
 
-}
+}  // namespace vcutter

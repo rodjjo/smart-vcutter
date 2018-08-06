@@ -271,7 +271,7 @@ unsigned char **FFMpegStream::get_picture() {
 }
 
 double FFMpegStream::get_frame_time() {
-  return (double)(frame_pts_ - video_stream_->start_time) * r2d(video_stream_->time_base);
+  return static_cast<double>(frame_pts_ - video_stream_->start_time) * r2d(video_stream_->time_base);
 }
 
 int64_t FFMpegStream::get_frame_from_pts() {
@@ -443,4 +443,4 @@ bool FFMpegStream::is_key_frame() {
     return false;
 }
 
-}  // namespace vstream
+}  // namespace vs

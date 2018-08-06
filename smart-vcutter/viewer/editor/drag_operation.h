@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_VIEWER_DRAG_OPERATION_H_
-#define SMART_VCUTTER_VIEWER_DRAG_OPERATION_H_
+#ifndef SMART_VCUTTER_VIEWER_EDITOR_DRAG_OPERATION_H_
+#define SMART_VCUTTER_VIEWER_EDITOR_DRAG_OPERATION_H_
 
 #include "smart-vcutter/viewer/editor/clipping_operations.h"
 
@@ -30,4 +30,4 @@ class DragOperation: public ClippingOperation {
 
 }  // namespace vcutter
 
-#endif
+#endif  // SMART_VCUTTER_VIEWER_EDITOR_DRAG_OPERATION_H_

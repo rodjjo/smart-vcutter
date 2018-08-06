@@ -36,6 +36,6 @@ class ViewerTexture {
     int view_h_;
 };
 
-}
+}  // namespace vcutter
 
 #endif  // SMART_VCUTTER_VIEWER_VIEWER_TEXTURE_H_

@@ -145,6 +145,6 @@ class MainWindow : Fl_Menu_Window {
     std::unique_ptr<Menu> menu_help_;
 };
 
-}
+}  // namespace vcutter
 
 #endif  // SMART_VCUTTER_WND_MAIN_MAIN_WINDOW_H_

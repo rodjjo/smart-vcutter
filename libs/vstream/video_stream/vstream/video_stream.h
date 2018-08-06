@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef VIDEO_STREAM_VSTREAM_VIDEO_STREAM_H_
-#define VIDEO_STREAM_VSTREAM_VIDEO_STREAM_H_
+#ifndef LIBS_VSTREAM_VIDEO_STREAM_VSTREAM_VIDEO_STREAM_H_
+#define LIBS_VSTREAM_VIDEO_STREAM_VSTREAM_VIDEO_STREAM_H_
 
 #include <inttypes.h>
 #include <memory>
@@ -77,6 +77,6 @@ std::shared_ptr<Encoder> encoder(
 
 void initialize();
 
-}  // namespace vstream
+}  // namespace vs
 
-#endif  // VIDEO_STREAM_VSTREAM_VIDEO_STREAM_H_
+#endif  // LIBS_VSTREAM_VIDEO_STREAM_VSTREAM_VIDEO_STREAM_H_

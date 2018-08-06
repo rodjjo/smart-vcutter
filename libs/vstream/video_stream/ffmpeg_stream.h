@@ -72,6 +72,6 @@ class FFMpegStream {
     FormatContextPtr format_ctx_;
 };
 
-}  // namespace vstream
+}  // namespace vs
 
 #endif  // LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_STREAM_H_

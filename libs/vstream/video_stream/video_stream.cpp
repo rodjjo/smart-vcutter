@@ -43,4 +43,4 @@ void initialize() {
     avformat_network_init();
 }
 
-}
+}  // namespace vs

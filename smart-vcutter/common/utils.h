@@ -17,5 +17,4 @@ bool remove_file(const char *filename);
 
 }  // namespace vcutter
 
-
 #endif  // SMART_VCUTTER_COMMON_UTILS_H_

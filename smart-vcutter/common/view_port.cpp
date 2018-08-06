@@ -69,8 +69,8 @@ float viewport_t::raster_zoom(uint32_t video_w, uint32_t video_h) const {
     double scale_h;
     double scale_w;
 
-    scale = vp_[2] / (double)(video_w);
-    scale_h = vp_[3] / (double)(video_h);
+    scale = vp_[2] / static_cast<double>(video_w);
+    scale_h = vp_[3] / static_cast<double>(video_h);
 
     if (scale_h < scale)
         scale = scale_h;
@@ -146,4 +146,4 @@ float viewport_t::fit(uint32_t *w, uint32_t *h) const {
     return (1.0 / scale);
 }
 
-} // vcutter
+}  // namespace vcutter

@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef VIDEO_STREAM_PLAYER_H_
-#define VIDEO_STREAM_PLAYER_H_
+#ifndef LIBS_VSTREAM_VIDEO_STREAM_PLAYER_H_
+#define LIBS_VSTREAM_VIDEO_STREAM_PLAYER_H_
 
 #include <memory>
 
@@ -44,4 +44,4 @@ class PlayerImp: public vs::Player {
 
 }  // namespace vs
 
-#endif  // VIDEO_STREAM_PLAYER_H_
+#endif  // LIBS_VSTREAM_VIDEO_STREAM_PLAYER_H_

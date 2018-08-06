@@ -161,4 +161,4 @@ void PlayerImp::seek_time(int64_t ms_time) {
     }
 }
 
-}
+}  // namespace vs

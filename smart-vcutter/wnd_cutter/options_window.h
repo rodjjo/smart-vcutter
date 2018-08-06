@@ -50,6 +50,6 @@ class CutterOptionsWindow {
     unsigned int max_h_;
 };
 
-}
+}  // namespace vcutter
 
 #endif  // SMART_VCUTTER_WND_CUTTER_OPTIONS_WINDOW_H_

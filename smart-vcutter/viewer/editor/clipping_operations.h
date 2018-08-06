@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_VIEWER_CLIPPING_OPERATIONS_H_
-#define SMART_VCUTTER_VIEWER_CLIPPING_OPERATIONS_H_
+#ifndef SMART_VCUTTER_VIEWER_EDITOR_CLIPPING_OPERATIONS_H_
+#define SMART_VCUTTER_VIEWER_EDITOR_CLIPPING_OPERATIONS_H_
 
 #include <list>
 #include <memory>
@@ -106,4 +106,4 @@ class ClippingOperationSet {
 }  // namespace vcutter
 
 
-#endif  // SMART_VCUTTER_VIEWER_CLIPPING_OPERATIONS_H_
+#endif  // SMART_VCUTTER_VIEWER_EDITOR_CLIPPING_OPERATIONS_H_

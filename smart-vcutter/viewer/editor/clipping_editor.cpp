@@ -293,4 +293,4 @@ void ClippingEditor::draw_operations() {
     check_key_count();
 }
 
-}
+}  // namespace vcutter

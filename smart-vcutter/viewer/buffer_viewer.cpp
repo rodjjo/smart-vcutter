@@ -214,4 +214,4 @@ void BufferViewer::update_cache(const unsigned char** buffer, uint32_t *w, uint3
     *buffer = buffer_.get();
 }
 
-}  // namespace viewer
+}  // namespace vcutter

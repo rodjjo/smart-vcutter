@@ -17,4 +17,4 @@ float normalize_angle(float angle);
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_COMMON_UTILS_H_
+#endif  // SMART_VCUTTER_COMMON_CALCS_H_

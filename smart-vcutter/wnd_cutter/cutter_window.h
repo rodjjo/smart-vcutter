@@ -9,7 +9,6 @@
 #include <string>
 #include <memory>
 #include <atomic>
-#include <mutex>
 #include <vector>
 #include <FL/Fl.H>
 #include <FL/Fl_Image.H>

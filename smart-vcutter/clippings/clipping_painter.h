@@ -1,14 +1,13 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_CLIPPING_PAINTER_H_
-#define SMART_VCUTTER_CLIPPING_PAINTER_H_
+#ifndef SMART_VCUTTER_CLIPPINGS_CLIPPING_PAINTER_H_
+#define SMART_VCUTTER_CLIPPINGS_CLIPPING_PAINTER_H_
 
 #include "smart-vcutter/data/project.h"
 #include "smart-vcutter/common/calcs.h"
 
 namespace vcutter {
-
 
 clipping_key_t compute_interpolation(
     unsigned int current_frame,
@@ -58,4 +57,4 @@ clipping_key_t magic_tool(
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_CLIPPING_PAINTER_H_
+#endif  // SMART_VCUTTER_CLIPPINGS_CLIPPING_PAINTER_H_

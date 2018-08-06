@@ -220,4 +220,4 @@ bool ProgressWindow::canceled() {
     return canceled_;
 }
 
-}   // namespace vcutter
+}  // namespace vcutter

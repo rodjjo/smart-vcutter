@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_VIEWER_MAGIC_OPERATION_H_
-#define SMART_VCUTTER_VIEWER_MAGIC_OPERATION_H_
+#ifndef SMART_VCUTTER_VIEWER_EDITOR_MAGIC_OPERATION_H_
+#define SMART_VCUTTER_VIEWER_EDITOR_MAGIC_OPERATION_H_
 
 #include "smart-vcutter/viewer/editor/clipping_operations.h"
 #include "smart-vcutter/viewer/viewer_texture.h"
@@ -59,4 +59,4 @@ class MagicOperation: public ClippingOperation {
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_VIEWER_MAGIC_OPERATION_H_
+#endif  // SMART_VCUTTER_VIEWER_EDITOR_MAGIC_OPERATION_H_

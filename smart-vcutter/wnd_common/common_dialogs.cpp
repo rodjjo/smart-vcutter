@@ -23,7 +23,7 @@ const char *kINPUT_PROJECT_FILE_TITLE = "Select a project to open";
 const char *kOUTPUT_PROJECT_FILE_TITLE = "Define a location to save the project";
 const char *kOUTPUT_VIDEO_FILE_TITLE = "Define a location to save the video";
 
-}
+}  // namespace
 
 
 bool ask(const char *message) {

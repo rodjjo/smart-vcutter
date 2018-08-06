@@ -25,7 +25,7 @@ namespace {
     const char *kPROJECT_CLIPPING_REF_KEY = "has_ref";
     const char *kPROJECT_CLIPPING_SCALE_KEY = "scale";
     const char *kPROJECT_CLIPPING_ANGLE_KEY = "rotation";
-}
+}  // namespace
 
 Project::Project() {
 }

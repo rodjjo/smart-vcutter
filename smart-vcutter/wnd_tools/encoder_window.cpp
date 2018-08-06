@@ -1,7 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#include <regex>
+
+#include <regex> // NOLINT
 #include <Fl/Fl.H>
 
 #include "smart-vcutter/common/utils.h"
@@ -37,10 +38,10 @@ const char *kORI_FPS_FIELD = "original_fps";
 const char *kCLIP_VAR_NAME = "clipping";
 const char *kPATH_VAR_NAME = "path";
 
-}
+}  // namespace
 
-std::string EncoderWindow::last_filepath_;
-std::string EncoderWindow::last_sugestion_;
+std::string EncoderWindow::last_filepath_; // NOLINT
+std::string EncoderWindow::last_sugestion_; // NOLINT
 
 EncoderWindow::EncoderWindow(History* history, const clipping_t & clip) {
     init(history, &clip);

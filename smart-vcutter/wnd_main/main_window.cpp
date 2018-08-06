@@ -3,8 +3,6 @@
  */
 #include <stdlib.h>
 #include <memory>
-#include <mutex>
-#include <chrono>
 #include <GL/gl.h>
 #include <FL/Fl.H>
 #include <FL/Fl_Menu_Window.H>
@@ -821,7 +819,7 @@ void MainWindow::repeat_current_key() {
             cutter_window_->prior();
         }
         break;
-    };
+    }
 }
 
 bool MainWindow::should_handle_key(int value) {

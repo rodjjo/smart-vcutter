@@ -231,4 +231,4 @@ void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, 
     }
 }
 
-}
+}  // namespace vcutter

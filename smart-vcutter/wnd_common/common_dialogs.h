@@ -24,7 +24,6 @@ std::string output_webm_file_chooser(std::string* current_dir=NULL, const char *
 std::string input_prj_file_chooser(std::string* current_dir=NULL, const char *default_extension = NULL);
 std::string output_prj_file_chooser(std::string* current_dir=NULL, const char *default_extension = ".vcutter");
 
-
-}
+}  // namespace vcutter
 
 #endif  // SMART_VCUTTER_WND_COMMON_COMMON_DIALOGS_H_

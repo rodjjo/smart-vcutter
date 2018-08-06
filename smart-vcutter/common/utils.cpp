@@ -62,4 +62,4 @@ std::string change_filepath_dir(const std::string& source_path, const std::strin
     return std::string();
 }
 
-}
+}  // namespace vcutter

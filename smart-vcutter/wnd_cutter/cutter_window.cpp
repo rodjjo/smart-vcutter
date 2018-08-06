@@ -2,8 +2,6 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 #include <cmath>
-#include <thread>
-#include <chrono>
 #include <GL/gl.h>
 
 #include "smart-vcutter/common/conversions.h"
@@ -207,7 +205,7 @@ void CutterWindow::resize_controls() {
     btn_del_key_->position(btn_new_key_->x() + 27, 3);
     btn_play_interval_->position(btn_del_key_->x() + 27, 3);
 
-    ((Fl_Widget*) key_list_)->position(btn_new_key_->x(), 33);
+    static_cast<Fl_Widget *>(key_list_)->position(btn_new_key_->x(), 33);
     int key_list_w = parent_->w() - btn_new_key_->x();
     key_list_->size(key_list_w, clipping_editor_->h() - key_list_w - buttons_group_->h() - 38);
 

@@ -43,4 +43,4 @@ int str_to_time(const char *timestr) {
     return 0;
 }
 
-}
+}  // namespace vcutter
