@@ -17,16 +17,16 @@ class VideoConversionWrapper {
         const char *source_path,
         unsigned int start_frame,
         unsigned int end_frame,
-        const char* codec_name, 
-        const char *target_path, 
-        int bitrate, 
+        const char* codec_name,
+        const char *target_path,
+        int bitrate,
         double fps);
 
     VideoConversionWrapper(
         const clipping_t & clipping,
-        const char* codec_name, 
-        const char *target_path, 
-        int bitrate, 
+        const char* codec_name,
+        const char *target_path,
+        int bitrate,
         double fps,
         bool start_at_end);
 

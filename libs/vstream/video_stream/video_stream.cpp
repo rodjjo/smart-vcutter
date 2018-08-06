@@ -16,27 +16,27 @@ std::shared_ptr<vs::Player> open_file(const char* path) {
 }
 
 std::shared_ptr<Encoder> encoder(
-    const char *codec_name, 
-    const char *path, 
-    unsigned int frame_width, 
+    const char *codec_name,
+    const char *path,
+    unsigned int frame_width,
     unsigned int frame_height,
     int fps_numerator,
     int fps_denominator,
     int bit_rate
 ) {
     return std::shared_ptr<vs::Encoder>(new vs::EncoderImp(
-        codec_name, 
-        path, 
-        frame_width, 
+        codec_name,
+        path,
+        frame_width,
         frame_height,
         fps_numerator,
         fps_denominator,
-        bit_rate  
+        bit_rate
     ));
 }
 
 void initialize() {
-    av_register_all();  // linux needs 
+    av_register_all();  // linux needs
     avformat_network_init();
 }
 

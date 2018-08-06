@@ -57,7 +57,7 @@ std::string execute_file_choose(Fl_Native_File_Chooser *fc, std::string* current
     }
 
     if (fc->show() == 0) {
-        path = fc->filename(); 
+        path = fc->filename();
 
         if (current_dir) {
             auto dir = boost::filesystem::path(path).parent_path().string();
@@ -70,7 +70,7 @@ std::string execute_file_choose(Fl_Native_File_Chooser *fc, std::string* current
 
         if (default_extension && (path.size() <= extension_lenght || *(path.rbegin() + extension_lenght) != '.')) {
             path += default_extension;
-        } 
+        }
     }
 
     return path;
@@ -79,7 +79,7 @@ std::string execute_file_choose(Fl_Native_File_Chooser *fc, std::string* current
 std::string input_video_file_chooser(std::string* current_dir, const char *default_extension) {
     Fl_Native_File_Chooser dialog(Fl_Native_File_Chooser::BROWSE_FILE);
     new_video_file_chooser(&dialog, kINPUT_VIDEO_FILE_FILTER, kINPUT_VIDEO_FILE_TITLE, false);
-    return execute_file_choose(&dialog, current_dir, default_extension); 
+    return execute_file_choose(&dialog, current_dir, default_extension);
 }
 
 std::string output_video_file_chooser(std::string* current_dir, const char *default_extension) {
@@ -97,7 +97,7 @@ std::string output_mjpeg_file_chooser(std::string* current_dir, const char *defa
 std::string output_webm_file_chooser(std::string* current_dir, const char *default_extension) {
     Fl_Native_File_Chooser dialog(Fl_Native_File_Chooser::BROWSE_FILE);
     new_video_file_chooser(&dialog, kOUTPUT_WEBM_FILE_FILTER, kOUTPUT_VIDEO_FILE_TITLE);
-    return execute_file_choose(&dialog, current_dir, default_extension); 
+    return execute_file_choose(&dialog, current_dir, default_extension);
 }
 
 std::string input_prj_file_chooser(std::string* current_dir, const char *default_extension) {

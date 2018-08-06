@@ -45,7 +45,7 @@ void ClippingOperation::set_option(const char *opt_name, int value) {
 void ClippingOperation::alt_pressed() {
 }
 
- int ClippingOperation::get_option(const char *opt_name) { 
+ int ClippingOperation::get_option(const char *opt_name) {
     return 0;
 }
 
@@ -393,7 +393,7 @@ bool ClippingOperationSet::should_redraw(const viewport_t &vp) {
         if (op->should_redraw()) {
             return true;
         }
-    } 
+    }
 
     return false;
 }
@@ -418,10 +418,10 @@ void ClippingOperationSet::draw_box(const viewport_t &vp, box_t box, bool invert
     if (invert) {
         glLogicOp(GL_INVERT);
         glEnable(GL_COLOR_LOGIC_OP);
-    } 
+    }
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glColor4f(r, g, b, a);
 
@@ -463,8 +463,8 @@ void ClippingOperationSet::draw_ref_line(const viewport_t &vp) {
 
     glBegin(GL_LINES);
     glColor3f(0, 0, 0);
-    glVertex2f(px1, py1); 
-    glVertex2f(px2, py2); 
+    glVertex2f(px1, py1);
+    glVertex2f(px2, py2);
     glEnd();
 
    glDisable(GL_COLOR_LOGIC_OP);

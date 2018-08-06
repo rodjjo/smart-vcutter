@@ -69,7 +69,7 @@ int BufferViewer::handle(int event) {
                     observer_->viewer_mouse_alt(this);
                 }
             } else {
-                return Fl_Gl_Window::handle(event); 
+                return Fl_Gl_Window::handle(event);
             }
         }
         break;

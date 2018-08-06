@@ -1,5 +1,5 @@
-file(GLOB Sources 
-    "*.cpp" 
+file(GLOB Sources
+    "*.cpp"
     "clippings/*.cpp"
     "common/*.cpp"
     "wrappers/*.cpp"

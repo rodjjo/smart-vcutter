@@ -15,7 +15,7 @@ clipping_key_t compute_interpolation(
 );
 
 void paint_clipping(
-    unsigned char *souce_buffer, 
+    unsigned char *souce_buffer,
     unsigned int source_w,
     unsigned int source_h,
     const clipping_key_t& interpolated_clipping,
@@ -39,16 +39,16 @@ clipping_key_t magic_tool(
     unsigned int target_h,
     unsigned int max_w,
     unsigned int max_h,
-    float source_rx1, 
-    float source_ry1, 
-    float source_rx2, 
-    float source_ry2, 
-    float curr_rx1, 
-    float curr_ry1, 
-    float curr_rx2, 
-    float curr_ry2, 
-    bool should_rotate, 
-    bool should_scale, 
+    float source_rx1,
+    float source_ry1,
+    float source_rx2,
+    float source_ry2,
+    float curr_rx1,
+    float curr_ry1,
+    float curr_rx2,
+    float curr_ry2,
+    bool should_rotate,
+    bool should_scale,
     bool should_positionate_x,
     bool should_positionate_y
 );

@@ -223,42 +223,42 @@ bool EncoderWindow::deserialize(const session_data_t & data) {
         }
     }
 
-    if (data.find(kEDT_PATH_FIELD) != data.end()) 
+    if (data.find(kEDT_PATH_FIELD) != data.end())
         edt_path_->value(data.at(kEDT_PATH_FIELD).c_str());
 
-    if (data.find(kEDT_OUTPUT_FIELD) != data.end()) 
+    if (data.find(kEDT_OUTPUT_FIELD) != data.end())
         edt_output_->value(data.at(kEDT_OUTPUT_FIELD).c_str());
 
     if (data.find(kCMB_FORMATS_FIELD) != data.end()) {
         for (int i = 0; i < cmb_formats_->size(); ++i) {
-            if (strcmp(cmb_formats_->menu()[i].label(), data.at(kCMB_FORMATS_FIELD).c_str())) 
+            if (strcmp(cmb_formats_->menu()[i].label(), data.at(kCMB_FORMATS_FIELD).c_str()))
                 continue;
             cmb_formats_->value(i);
             break;
         }
     }
 
-    if (data.find(kEDT_BITRATE_FIELD) != data.end()) 
+    if (data.find(kEDT_BITRATE_FIELD) != data.end())
         edt_bitrate_->value(data.at(kEDT_BITRATE_FIELD).c_str());
 
-    if (data.find(kEDT_FPS_FIELD) != data.end()) 
+    if (data.find(kEDT_FPS_FIELD) != data.end())
         edt_fps_->value(data.at(kEDT_FPS_FIELD).c_str());
 
-    if (data.find(kCHE_BACKWARD_FIELD) != data.end()) 
+    if (data.find(kCHE_BACKWARD_FIELD) != data.end())
         btn_start_backward_->value(data.at(kCHE_BACKWARD_FIELD) == "yes");
 
-    if (data.find(kCHE_REVERSE_FIELD) != data.end()) 
+    if (data.find(kCHE_REVERSE_FIELD) != data.end())
         btn_append_reverse_->value(data.at(kCHE_REVERSE_FIELD) == "yes");
-    if (data.find(kCHE_MERGE_FIELD) != data.end()) 
+    if (data.find(kCHE_MERGE_FIELD) != data.end())
         btn_merge_->value(data.at(kCHE_MERGE_FIELD) == "yes");
 
-    if (data.find(kEDT_START_FIELD) != data.end()) 
+    if (data.find(kEDT_START_FIELD) != data.end())
         edt_start_->value(data.at(kEDT_START_FIELD).c_str());
 
-    if (data.find(kEDT_END_FIELD) != data.end()) 
+    if (data.find(kEDT_END_FIELD) != data.end())
         edt_end_->value(data.at(kEDT_END_FIELD).c_str());
 
-    if (data.find(kPATH_VAR_NAME) != data.end()) 
+    if (data.find(kPATH_VAR_NAME) != data.end())
         path_ = data.at(kPATH_VAR_NAME);
 
     original_fps_ = 24;
@@ -452,8 +452,8 @@ void EncoderWindow::action_convert() {
         VideoConversionWrapper converter(
             clip_,
             format,
-            edt_output_->value(), 
-            choosen_bitrate(), 
+            edt_output_->value(),
+            choosen_bitrate(),
             choosen_fps(),
             btn_start_backward_->value() != 0
         );
@@ -465,9 +465,9 @@ void EncoderWindow::action_convert() {
             edt_path_->value(),
             start_frame,
             end_frame,
-            format, 
-            edt_output_->value(), 
-            choosen_bitrate(), 
+            format,
+            edt_output_->value(),
+            choosen_bitrate(),
             choosen_fps());
 
         converter.convert(btn_append_reverse_->value() != 0, btn_merge_->value() != 0);
@@ -494,7 +494,7 @@ void EncoderWindow::action_output() {
     const char *key = has_clipping_ ? kCLIPPING_DIR_KEY : kCONVERSION_DIR_KEY;
     std::string directory = history_->get(key);
 
-    std::string path_to_save = 
+    std::string path_to_save =
         strcmp(cmb_formats_->text(), "webm") ?
         output_mjpeg_file_chooser(&directory, sugest_extension()) :
         output_webm_file_chooser(&directory, sugest_extension());
@@ -568,7 +568,7 @@ void EncoderWindow::update_filesize_cb(Fl_Widget* widget, void *userdata) {
 void EncoderWindow::update_bitrate() {
     if (bitrate_action_src_ != btn_bit_
         && bitrate_action_src_ != cmb_formats_
-        && bitrate_action_src_ != edt_fps_ 
+        && bitrate_action_src_ != edt_fps_
         && strlen(edt_bitrate_->value())) {
         update_filesize();
         return;
@@ -596,7 +596,7 @@ void EncoderWindow::update_filesize() {
 
     char buffer[200] = "";
 
-    snprintf(buffer, sizeof(buffer) - 1, 
+    snprintf(buffer, sizeof(buffer) - 1,
         "[%.2lf segs] Output file size estimated in: %0.1lf %s", calc_duration(),  size, label);
     box_file_size_->copy_label(buffer);
 }
@@ -722,7 +722,7 @@ void EncoderWindow::action_video_path() {
         show_error("Não foi possivel obter o fps do video.");
         if (has_clipping_) {
             window_->hide();
-        }   
+        }
         return;
     }
 

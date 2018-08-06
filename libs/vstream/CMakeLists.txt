@@ -15,7 +15,7 @@ find_library(SWSCALE_LIBRARY swscale)
 
 if(FLTK_INCLUDE_DIR)
 else(FLTK_INCLUDE_DIR)
-find_package(FLTK REQUIRED) 
+find_package(FLTK REQUIRED)
 endif(FLTK_INCLUDE_DIR)
 
 find_package(Threads REQUIRED)
@@ -31,8 +31,8 @@ if(LINUX)
 find_package(PkgConfig REQUIRED)
 endif(LINUX)
 
-include_directories(VideoStream 
-                    ${PROJECT_SOURCE_DIR} 
+include_directories(VideoStream
+                    ${PROJECT_SOURCE_DIR}
                     ${AVCODEC_INCLUDE_DIR}
                     ${FLTK_INCLUDE_DIR})
 

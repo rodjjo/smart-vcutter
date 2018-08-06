@@ -31,7 +31,7 @@ class EventHandler {
 class DrawHandler: public EventHandler {
   public:
     virtual ~DrawHandler() {};
-    virtual void viewer_draw(BufferViewer *viewer, bool *handled, const unsigned char* buffer, uint32_t w, uint32_t h) { 
+    virtual void viewer_draw(BufferViewer *viewer, bool *handled, const unsigned char* buffer, uint32_t w, uint32_t h) {
         *handled = false;
     };
 };

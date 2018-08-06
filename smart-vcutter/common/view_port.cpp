@@ -59,7 +59,7 @@ point_t viewport_t::frame_to_screen_coords(uint32_t video_w, uint32_t video_h, c
 }
 
 float viewport_t::raster_zoom(uint32_t video_w, uint32_t video_h) const {
-    if (vp_[2] < 1 || vp_[3] < 1) 
+    if (vp_[2] < 1 || vp_[3] < 1)
         return 0;
 
     double scale;
@@ -86,7 +86,7 @@ float viewport_t::raster_zoom(uint32_t video_w, uint32_t video_h) const {
 
 point_t viewport_t::raster_coords(uint32_t video_w, uint32_t video_h) const {
     double scale = raster_zoom(video_w, video_h);
-    if (scale == 0) 
+    if (scale == 0)
         return point_t(0, 0);
     return point_t(
         (1.0f / vp_[2])  * (vp_[2] - (video_w * scale)),
@@ -122,7 +122,7 @@ float viewport_t::fit(uint32_t *w, uint32_t *h) const {
     float xscale = fx / *w;
     float scale = fy / *h;
 
-    if (xscale < scale) 
+    if (xscale < scale)
         scale = xscale;
 
     *w *= scale;

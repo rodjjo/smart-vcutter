@@ -32,7 +32,7 @@ AVFramePtr allocate_frame(bool free_image_data) {
         tmp->data[0] = NULL;
     }
     return AVFramePtr(tmp, free_image_data ? freeDataAndAVFrame : freeAvFrame);
-} 
+}
 
 AVFrame *alloc_picture(enum AVPixelFormat pix_fmt, int width, int height) {
     AVFrame *picture;
@@ -69,23 +69,23 @@ void freeCodecContext(AVCodecContext *c) {
 
 AVCodecContextPtr allocate_codec_context(AVCodec *codec) {
     return AVCodecContextPtr(
-        avcodec_alloc_context3(codec), 
+        avcodec_alloc_context3(codec),
         freeCodecContext);
 }
 
 SwsContextPtr allocate_sws_rgb_context(const AVFrame* source_frame) {
     return SwsContextPtr(
         sws_getContext(
-            source_frame->width, 
+            source_frame->width,
             source_frame->height,
             static_cast<AVPixelFormat>(source_frame->format),
-            source_frame->width, 
+            source_frame->width,
             source_frame->height,
-            AV_PIX_FMT_RGB24, 
-            SWS_FAST_BILINEAR, 
+            AV_PIX_FMT_RGB24,
+            SWS_FAST_BILINEAR,
             NULL,
-            NULL, 
-            NULL), 
+            NULL,
+            NULL),
         &sws_freeContext);
 }
 
@@ -97,40 +97,40 @@ void free_picture(AVPicture* picture) {
 SwsContextPtr allocate_sws_ycbcr_context(int width, int height) {
     return SwsContextPtr(
         sws_getContext(
-            width, 
+            width,
             height,
             AV_PIX_FMT_RGB24,
-            width, 
+            width,
             height,
-            AV_PIX_FMT_YUV420P, 
-            SWS_FAST_BILINEAR, 
+            AV_PIX_FMT_YUV420P,
+            SWS_FAST_BILINEAR,
             NULL,
-            NULL, 
-            NULL), 
-        &sws_freeContext);  
+            NULL,
+            NULL),
+        &sws_freeContext);
 }
 
 SwsContextPtr allocate_sws_yuvj_context(int width, int height) {
     return SwsContextPtr(
         sws_getContext(
-            width, 
+            width,
             height,
             AV_PIX_FMT_RGB24,
-            width, 
+            width,
             height,
-            AV_PIX_FMT_YUVJ422P, 
-            SWS_FAST_BILINEAR, 
+            AV_PIX_FMT_YUVJ422P,
+            SWS_FAST_BILINEAR,
             NULL,
-            NULL, 
-            NULL), 
-        &sws_freeContext);  
+            NULL,
+            NULL),
+        &sws_freeContext);
 }
 AVPicturePtr allocate_rgb_picture(const AVFrame *source_frame) {
   AVPicturePtr picture(new AVPicture, free_picture);
   avpicture_alloc(
-      picture.get(), 
-      AV_PIX_FMT_RGB24, 
-      source_frame->width, 
+      picture.get(),
+      AV_PIX_FMT_RGB24,
+      source_frame->width,
         source_frame->height);
   return picture;
 }
@@ -138,25 +138,25 @@ AVPicturePtr allocate_rgb_picture(const AVFrame *source_frame) {
 SwsContextPtr allocate_sws_gray_context(const AVFrame* source_frame) {
     return SwsContextPtr(
         sws_getContext(
-            source_frame->width, 
+            source_frame->width,
             source_frame->height,
             static_cast<AVPixelFormat>(source_frame->format),
-            source_frame->width, 
+            source_frame->width,
             source_frame->height,
-            AV_PIX_FMT_RGB24, 
-            SWS_FAST_BILINEAR, 
+            AV_PIX_FMT_RGB24,
+            SWS_FAST_BILINEAR,
             NULL,
-            NULL, 
-            NULL), 
+            NULL,
+            NULL),
         &sws_freeContext);
 }
 
 AVPicturePtr allocate_gray_picture(const AVFrame *source_frame) {
   AVPicturePtr picture(new AVPicture, free_picture);
   avpicture_alloc(
-      picture.get(), 
-      AV_PIX_FMT_RGB24, 
-      source_frame->width, 
+      picture.get(),
+      AV_PIX_FMT_RGB24,
+      source_frame->width,
         source_frame->height);
     return picture;
 }

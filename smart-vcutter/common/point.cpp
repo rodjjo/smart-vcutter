@@ -41,7 +41,7 @@ float point_t::distance_to(float x, float y) {
     float dy = y - this->y;
     dx = dx * dx;
     dy = dy * dy + dx;
-    if (dy > 0) 
+    if (dy > 0)
         return sqrt(dy);
     return ALMOST_INFINITE;
 }

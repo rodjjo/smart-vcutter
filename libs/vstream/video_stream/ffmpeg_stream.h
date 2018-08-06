@@ -37,7 +37,7 @@ class FFMpegStream {
     int64_t get_frame_pts();
     int get_time_base_denominator();
     int get_time_base_numerator();
-    int get_aspect_ratio_numerator(); 
+    int get_aspect_ratio_numerator();
     int get_aspect_ratio_denominator();
     double r2d(const AVRational& r);
     int get_color_type();

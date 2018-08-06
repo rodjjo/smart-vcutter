@@ -178,8 +178,8 @@ void CutterWindow::update_title() {
         return;
     }
     char title[1024] = "";
-    snprintf(title, sizeof(title), "Smart Loop Creator (%dx%d)->(%dx%d) %s", 
-        player_->info()->w(), player_->info()->h(), 
+    snprintf(title, sizeof(title), "Smart Loop Creator (%dx%d)->(%dx%d) %s",
+        player_->info()->w(), player_->info()->h(),
         keeper_->get_width(), keeper_->get_height(),
         video_path_.c_str());
     parent_->window()->copy_label(title);
@@ -441,7 +441,7 @@ void CutterWindow::video_list_callback(Fl_Widget* widget, void *userdata) {
         window->key_list_->select(selected_index);
         window->goto_selected_clipping_key();
     }
-    window->in_key_list_ = false; 
+    window->in_key_list_ = false;
 }
 
 void CutterWindow::action_clear_keys() {
@@ -643,9 +643,9 @@ void CutterWindow::past_position(bool x, bool y) {
         return;
     }
     auto key = keeper_->get_key(player_->info()->position());
-    if (x) 
+    if (x)
         key.px = key_copy_.px;
-    if (y) 
+    if (y)
         key.py = key_copy_.py;
     keeper_->add_key(key);
     redraw_frame(true);
@@ -1110,7 +1110,7 @@ void CutterWindow::update_clipping_list() {
     keeper_->get_reference_frame(&ref_frame);
 
     for (auto it = keeper_->keys_begin(); it != keeper_->keys_end(); ++it) {
-        snprintf(temp_buffer, sizeof(temp_buffer), 
+        snprintf(temp_buffer, sizeof(temp_buffer),
             "%07u s:%4.2f r:%4.2f (%0.1f, %0.1f) %s", it->frame, it->scale, it->angle, it->px, it->py, ref_frame == it->frame ? " <r" : "");
         key_list_->add(temp_buffer);
         ++i;
@@ -1142,7 +1142,7 @@ void CutterWindow::redraw_frame(bool update_key_list) {
     }
 
     clipping_editor_->redraw();
-    viewer_->redraw();  
+    viewer_->redraw();
     update_seek_bar();
 }
 

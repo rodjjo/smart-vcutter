@@ -52,7 +52,7 @@ point_t box_t::left_top_violation(float width, float height) {
     if (p_[0].x < 0)
         coordinate.x = static_cast<int>(-p_[0].x);
 
-    if (p_[0].y < 0) 
+    if (p_[0].y < 0)
         coordinate.y = static_cast<int>(-p_[0].y);
 
     return coordinate;
@@ -61,10 +61,10 @@ point_t box_t::left_top_violation(float width, float height) {
 point_t box_t::right_bottom_violation(float width, float height) {
     point_t coordinate;
 
-    if (p_[1].x > width) 
+    if (p_[1].x > width)
         coordinate.x = static_cast<int>(p_[1].x - width);
 
-    if (p_[2].y > height) 
+    if (p_[2].y > height)
         coordinate.y = static_cast<int>(p_[2].y - height);
 
     return coordinate;
@@ -77,13 +77,13 @@ point_t box_t::size() {
 box_t box_t::occupied_area() {
     box_t result(*this);
     for (char i = 0; i < 4; ++i) {
-        if (p_[i].x > result[1].x) 
+        if (p_[i].x > result[1].x)
             result[1].x = p_[i].x;
-        if (p_[i].x < result[0].x) 
+        if (p_[i].x < result[0].x)
             result[0].x = p_[i].x;
-        if (p_[i].y > result[2].y) 
+        if (p_[i].y > result[2].y)
             result[2].y = p_[i].y;
-        if (p_[i].y < result[0].y) 
+        if (p_[i].y < result[0].y)
             result[0].y = p_[i].y;
     }
 

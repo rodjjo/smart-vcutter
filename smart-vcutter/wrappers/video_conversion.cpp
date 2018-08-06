@@ -13,18 +13,18 @@ namespace vcutter {
 bool check_existence(bool should_check, const char *path) {
     if (should_check && filepath_exists(path) && !ask("The destination filepath already exists. override it ?")) {
         return false;
-    }   
+    }
 
-    return true;    
+    return true;
 }
 
 VideoConversionWrapper::VideoConversionWrapper(
         const char *source_path,
         unsigned int start_frame,
         unsigned int end_frame,
-        const char* codec_name, 
-        const char *target_path, 
-        int bitrate, 
+        const char* codec_name,
+        const char *target_path,
+        int bitrate,
         double fps
 ) {
     has_clipping_ = false;
@@ -36,9 +36,9 @@ VideoConversionWrapper::VideoConversionWrapper(
 
 VideoConversionWrapper::VideoConversionWrapper(
         const clipping_t & clipping,
-        const char* codec_name, 
-        const char *target_path, 
-        int bitrate, 
+        const char* codec_name,
+        const char *target_path,
+        int bitrate,
         double fps,
         bool start_at_end
 ) {
@@ -356,7 +356,7 @@ void VideoConversionWrapper::encode_all(vs::Encoder *encoder) {
 
         ++i;
         ++buffer_index_;
-        if (i >= end) 
+        if (i >= end)
             break;
     }
 

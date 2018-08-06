@@ -132,7 +132,7 @@ void MainWindow::save_session() {
         }
     }
 
-    if (!cutter_window_->visible() || 
+    if (!cutter_window_->visible() ||
         cutter_window_->modified_version() == clipping_session_->get_version()) {
         return;
     }
@@ -805,7 +805,7 @@ void MainWindow::poll_key_repeat() {
     if (key_time_lap_ >= (kKEY_REPEAT_INTERVAL * 1000)) {
         repeat_current_key();
         return;
-    } 
+    }
 
     key_time_lap_ += (kTIMEOUT_INTERVAL * 1000);
 }
@@ -827,8 +827,8 @@ void MainWindow::repeat_current_key() {
 
 bool MainWindow::should_handle_key(int value) {
     switch(value) {
-        case FL_Right: 
-        case FL_Left: 
+        case FL_Right:
+        case FL_Left:
             return true;
     };
     return false;
@@ -839,7 +839,7 @@ int MainWindow::handle(int event) {
         case FL_KEYUP: {
             if (Fl::event_key() == FL_Escape) {
                 return  1;
-            }            
+            }
             if (should_handle_key(Fl::event_key())) {
                 repeat_current_key();
                 key_value_ = 0;
@@ -879,7 +879,7 @@ int main(int argc, char **argv) {
         main_window->open_video_or_project(argv[1]);
     }
 
-    int result = main_window->run(); 
+    int result = main_window->run();
 
     return result;
 }

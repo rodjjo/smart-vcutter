@@ -21,7 +21,7 @@ typedef enum {
 } video_color_type;
 
 
-class StreamInfo { 
+class StreamInfo {
   public:
     virtual ~StreamInfo();
     virtual source_type source() = 0;
@@ -30,7 +30,7 @@ class StreamInfo {
     virtual const char* error() = 0;
     virtual unsigned char *buffer() = 0;
     virtual uint32_t buffer_size() = 0;
-    virtual uint32_t position() = 0; 
+    virtual uint32_t position() = 0;
     virtual uint32_t count() = 0;
     virtual double fps() = 0;
     virtual double duration() = 0;
@@ -65,9 +65,9 @@ class Encoder {
 std::shared_ptr<Player> open_file(const char* path);
 
 std::shared_ptr<Encoder> encoder(
-    const char *codec_name, 
-    const char *path, 
-    unsigned int frame_width, 
+    const char *codec_name,
+    const char *path,
+    unsigned int frame_width,
     unsigned int frame_height,
     int fps_numerator,
     int fps_denominator,

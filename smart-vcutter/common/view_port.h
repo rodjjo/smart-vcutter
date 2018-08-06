@@ -15,7 +15,7 @@ class viewport_t {
     viewport_t(int x, int y, int w, int h);
 
     // do not call outside opengl context
-    static viewport_t from_gl(); 
+    static viewport_t from_gl();
     // refresh view port
     void update();
 

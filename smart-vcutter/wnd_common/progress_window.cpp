@@ -210,7 +210,7 @@ void ProgressWindow::viewer_buffer(BufferViewer *viewer, const unsigned char** b
 void ProgressWindow::set_buffer(const unsigned char *buffer, int w, int h) {
     buffer_ = buffer;
     buffer_w_ = w;
-    buffer_h_ = h; 
+    buffer_h_ = h;
 }
 
 bool ProgressWindow::canceled() {

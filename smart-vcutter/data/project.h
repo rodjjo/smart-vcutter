@@ -55,7 +55,7 @@ typedef struct clipping {
 } clipping_t;
 
 class Project {
- public: 
+ public:
     Project(const std::string& path);
     Project();
     ~Project();

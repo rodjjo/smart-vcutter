@@ -48,7 +48,7 @@ void MagicOperation::activate() {
     }
     cancel();
     active_ = true;
-    frame_ = player()->info()->position(); 
+    frame_ = player()->info()->position();
 }
 
 bool MagicOperation::active() {
@@ -135,11 +135,11 @@ clipping_key_t MagicOperation::get_transformed_key() {
     }
 
     return magic_tool(
-        key, 
+        key,
         keeper()->get_width(), keeper()->get_height(),
         player()->info()->w(), player()->info()->h(),
-        rx1, ry1, rx2, ry2, 
-        px1, py1, px2, py2, 
+        rx1, ry1, rx2, ry2,
+        px1, py1, px2, py2,
         opt_rotate_enabled_, opt_scale_enabled_, opt_x_enabled_, opt_y_enabled_);
 };
 
@@ -189,7 +189,7 @@ void MagicOperation::mouse_changed(char direction) {
         }
         if (drag_point1_) {
             px1_ = mouse_move_x();
-            py1_ = mouse_move_y(); 
+            py1_ = mouse_move_y();
             should_redraw_ = true;
         } else if (drag_point2_) {
             px2_ = mouse_move_x();

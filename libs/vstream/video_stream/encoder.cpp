@@ -48,9 +48,9 @@ int Encoder::default_bitrate(const char *format_name, unsigned int w, unsigned i
 
 
 EncoderImp::EncoderImp(
-    const char *codec_name, 
-    const char *path, 
-    unsigned int frame_width, 
+    const char *codec_name,
+    const char *path,
+    unsigned int frame_width,
     unsigned int frame_height,
     int fps_numerator,
     int fps_denominator,
@@ -107,12 +107,12 @@ bool EncoderImp::frame(const unsigned char* buffer) {
     source_frame.linesize[0] = frame_width_ * 3;
 
     sws_scale(
-            output_color_context_.get(), 
-            source_frame.data, 
-            source_frame.linesize, 
+            output_color_context_.get(),
+            source_frame.data,
+            source_frame.linesize,
             0,
-            source_frame.height, 
-            frame_->data, 
+            source_frame.height,
+            frame_->data,
             frame_->linesize);
 
     if (!encode_frame(frame_.get())) {
@@ -173,7 +173,7 @@ bool EncoderImp::find_codec() {
     codec_ = avcodec_find_encoder(codec_id);
 
     if (!codec_) {
-        report_error("Could not find a supported codec");    
+        report_error("Could not find a supported codec");
     }
 
     return codec_ != NULL;
@@ -186,10 +186,10 @@ const char *EncoderImp::find_format() {
         return "mp4";
     } else if (strcmp(kX265_CODEC, codec_name_.c_str()) == 0) {
         return "mp4";
-    } else if (strcmp(kVP9_CODEC, codec_name_.c_str()) == 0 || 
+    } else if (strcmp(kVP9_CODEC, codec_name_.c_str()) == 0 ||
                strcmp(kAV1_CODEC, codec_name_.c_str()) == 0) {
         return "webm";
-    } 
+    }
     report_error("Could not find a supported output format");
     return NULL;
 }
@@ -375,7 +375,7 @@ bool EncoderImp::encode_frame(AVFrame *frame) {
     return true;
 }
 
-bool EncoderImp::flush_frames() {    
+bool EncoderImp::flush_frames() {
     got_packet_ptr_ = 1;
 
     while (got_packet_ptr_) {

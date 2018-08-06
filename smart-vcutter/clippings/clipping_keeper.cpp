@@ -6,7 +6,7 @@ namespace vcutter {
 
 ClippingKeeper::ClippingKeeper() {
     video_w_  = 0;
-    video_h_  = 0;  
+    video_h_  = 0;
     w_ = 0;
     h_ = 0;
     frame_count_ = 0;
@@ -417,7 +417,7 @@ void ClippingKeeper::positionate_horizontal(int frame) {
 
 void ClippingKeeper::normalize_scale(int frame) {
     auto key = adjust_bounds(
-            get_key(frame), 
+            get_key(frame),
             get_width(),
             get_height(),
             get_video_width(),

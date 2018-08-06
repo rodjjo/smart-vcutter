@@ -94,7 +94,7 @@ int64_t PlayerImp::pts() {
     if (stream_) {
         return stream_->get_frame_pts();
     }
-    return 0; 
+    return 0;
 }
 
 int PlayerImp::ratio_den() {

@@ -88,7 +88,7 @@ bool FFMpegStream::init_codec() {
 
     codec_ctx_ = allocate_codec_context(video_codec_);
 
-    AVCodecParameters *codec_par = video_stream_->codecpar;  
+    AVCodecParameters *codec_par = video_stream_->codecpar;
 
     avcodec_parameters_to_context(codec_ctx_.get(), codec_par);
 
@@ -116,7 +116,7 @@ bool FFMpegStream::init_codec() {
           codec_ctx_->flags |= AV_CODEC_FLAG2_CHUNKS;
     }
 
-    duration_ =  (double)video_stream_->duration * r2d(video_stream_->time_base); 
+    duration_ =  (double)video_stream_->duration * r2d(video_stream_->time_base);
 
     fps_ = r2d(video_stream_->r_frame_rate);
     if (fps_ < 0.000025)
@@ -188,7 +188,7 @@ bool FFMpegStream::next_frame(bool ignore_capture) {
 
         if (status == AVERROR(EAGAIN)) {
             continue;
-        } 
+        }
 
          if (status == AVERROR_EOF) {
             break;
@@ -204,7 +204,7 @@ bool FFMpegStream::next_frame(bool ignore_capture) {
                 break;
             } else if (status < 0) {
                 return false;
-            } 
+            }
             have_frame = true;
         }
 
@@ -254,12 +254,12 @@ unsigned char **FFMpegStream::get_picture() {
     if (have_new_frame_ && picture_) {
         have_new_frame_ = false;
         sws_scale(
-            sws_ctx_.get(), 
-            frame_->data, 
-            frame_->linesize, 
+            sws_ctx_.get(),
+            frame_->data,
+            frame_->linesize,
             0,
-            frame_->height, 
-            picture_->data, 
+            frame_->height,
+            picture_->data,
             picture_->linesize);
     }
 

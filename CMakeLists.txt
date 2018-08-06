@@ -13,7 +13,7 @@ find_library(AVCODEC_LIBRARY avcodec)
 find_library(AVFORMAT_LIBRARY avformat)
 
 
-find_package(FLTK REQUIRED) 
+find_package(FLTK REQUIRED)
 find_package(Threads REQUIRED)
 
 find_package(Boost
@@ -52,9 +52,9 @@ if(LINUX)
 find_package(PkgConfig REQUIRED)
 endif(LINUX)
 
-include_directories(SmartVCutter 
+include_directories(SmartVCutter
                     "${PROJECT_SOURCE_DIR}/libs/vstream"
-                    ${PROJECT_SOURCE_DIR} 
+                    ${PROJECT_SOURCE_DIR}
                     ${AVCODEC_INCLUDE_DIR}
                     ${FLTK_INCLUDE_DIR})
 

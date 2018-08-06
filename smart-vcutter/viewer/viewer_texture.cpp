@@ -68,7 +68,7 @@ void ViewerTexture::draw(const viewport_t &vp, float x, float y, float zoom) {
 
     if (rgba_) {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);    
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     glEnable(GL_TEXTURE_2D);
@@ -103,7 +103,7 @@ void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int
 
     if (rgba) {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);    
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
     glEnable(GL_TEXTURE_2D);
@@ -142,7 +142,7 @@ void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coo
     }
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);    
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture_id_);
@@ -152,7 +152,7 @@ void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coo
 
     glBegin (GL_QUADS);
     for (char i = 0; i < 4; ++i) {
-        glTexCoord2d(texture_coords[i].x, texture_coords[i].y); 
+        glTexCoord2d(texture_coords[i].x, texture_coords[i].y);
         glVertex2d(view_coords[i].x, view_coords[i].y);
     }
     glEnd();
@@ -212,7 +212,7 @@ void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
     if (w == texture_w_ && h == texture_h_) {
         glTexImage2D(GL_TEXTURE_2D, 0, rgba ? GL_RGBA : GL_RGB , texture_w_, texture_h_, 0, rgba ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, buffer);

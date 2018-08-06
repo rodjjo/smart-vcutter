@@ -62,7 +62,7 @@ bool Project::open(const std::string& path) {
             Json::Value temp;
 
             if (!reader.parse(ifile, temp, false)) {
-                last_error_ = "The project file is corrupted or invalid";        
+                last_error_ = "The project file is corrupted or invalid";
                 return false;
             }
 

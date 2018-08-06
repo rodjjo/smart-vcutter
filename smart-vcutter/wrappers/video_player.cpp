@@ -170,7 +170,7 @@ bool PlayerWrapper::grab_frame() {
     }
 
     if (playing_interval_) {
-        if (info()->position() >= end_ || 
+        if (info()->position() >= end_ ||
             info()->position() < start_
         ) {
             player_->seek_frame(start_);

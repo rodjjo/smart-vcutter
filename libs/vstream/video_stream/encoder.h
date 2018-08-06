@@ -17,9 +17,9 @@ namespace vs {
 class EncoderImp: public Encoder {
  public:
     EncoderImp(
-        const char *codec_name, 
-        const char *path, 
-        unsigned int frame_width, 
+        const char *codec_name,
+        const char *path,
+        unsigned int frame_width,
         unsigned int frame_height,
         int fps_numerator,
         int fps_denominator,

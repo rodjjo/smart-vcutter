@@ -46,7 +46,7 @@ int ClippingEditor::operation_option(const char *operation_name, const char *opt
 }
 
 void ClippingEditor::operation_option(const char *operation_name, const char *option_name, int value) {
-    operation_set_.set_option(operation_name, option_name, value);  
+    operation_set_.set_option(operation_name, option_name, value);
 }
 
 void ClippingEditor::activate_operation(const char *operation_name) {
@@ -76,7 +76,7 @@ void ClippingEditor::check_key_count() {
 
     if (prev_key_count_ != keeper_->get_key_count()) {
         modified_ = true;
-        should_update_ =  true;        
+        should_update_ =  true;
         prev_key_count_ = keeper_->get_key_count();
         redraw();
     }
@@ -184,11 +184,11 @@ void ClippingEditor::viewer_buffer(BufferViewer *viewer, const unsigned char** b
 }
 
 bool ClippingEditor::first_frame_cache_initialized() {
-    return initialized_caches_[0];   
+    return initialized_caches_[0];
 }
 
 bool ClippingEditor::last_frame_cache_initialized() {
-    return initialized_caches_[2];   
+    return initialized_caches_[2];
 }
 
 
@@ -239,7 +239,7 @@ Fl_RGB_Image *ClippingEditor::current_cursor() {
     if (Fl::event_x_root() < this->x_root() ||
         Fl::event_y_root() < this->y_root() ||
         this->x_root() + this->w() < Fl::event_x_root() ||
-        this->y_root() + this->h() < Fl::event_y_root() 
+        this->y_root() + this->h() < Fl::event_y_root()
     ) {
         return NULL;
     }

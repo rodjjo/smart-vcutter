@@ -37,14 +37,14 @@ clipping_key_t DragOperation::get_transformed_key() {
     if (active_) {
         if (!mouse_down_) {
             n = vp.screen_to_frame_coords(
-                player()->info()->w(), player()->info()->h(), 
+                player()->info()->w(), player()->info()->h(),
                 point_t(mouse_move_x(), mouse_move_y()));
         } else {
             n = vp.screen_to_frame_coords(
-                player()->info()->w(), player()->info()->h(), 
+                player()->info()->w(), player()->info()->h(),
                 point_t(mouse_move_x(), mouse_move_y()));
             auto d = vp.screen_to_frame_coords(
-                player()->info()->w(), player()->info()->h(), 
+                player()->info()->w(), player()->info()->h(),
                 point_t(mouse_down_x(), mouse_down_y()));
 
             n.x -= d.x;
