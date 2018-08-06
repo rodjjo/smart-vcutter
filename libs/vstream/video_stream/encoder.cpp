@@ -22,7 +22,7 @@ const char *kFORMAT_NAMES[] = {
     NULL
 };
 
-}
+}  // namespace
 
 
 const char **Encoder::format_names() {

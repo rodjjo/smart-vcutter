@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_DATA_VCUTTER_PROJECT_H
-#define SMART_VCUTTER_DATA_VCUTTER_PROJECT_H
+#ifndef SMART_VCUTTER_DATA_VCUTTER_PROJECT_H_
+#define SMART_VCUTTER_DATA_VCUTTER_PROJECT_H_
 
 #include <string.h>
 #include <memory>
@@ -86,4 +86,4 @@ class Project {
 
 }
 
-#endif  // SMART_VCUTTER_DATA_VCUTTER_PROJECT_H
+#endif  // SMART_VCUTTER_DATA_VCUTTER_PROJECT_H_

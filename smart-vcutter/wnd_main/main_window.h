@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_MAIN_WINDOW_H
-#define SMART_VCUTTER_MAIN_WINDOW_H
+#ifndef SMART_VCUTTER_WND_MAIN_MAIN_WINDOW_H_
+#define SMART_VCUTTER_WND_MAIN_MAIN_WINDOW_H_
 
 #include <memory>
 #include <FL/Fl.H>
@@ -147,4 +147,4 @@ class MainWindow : Fl_Menu_Window {
 
 }
 
-#endif  // SMART_VCUTTER_MAIN_WINDOW_H
+#endif  // SMART_VCUTTER_WND_MAIN_MAIN_WINDOW_H_

@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_CLIPPING_PAINTER_H
-#define SMART_VCUTTER_CLIPPING_PAINTER_H
+#ifndef SMART_VCUTTER_CLIPPING_PAINTER_H_
+#define SMART_VCUTTER_CLIPPING_PAINTER_H_
 
 #include "smart-vcutter/data/project.h"
 #include "smart-vcutter/common/calcs.h"
@@ -58,4 +58,4 @@ clipping_key_t magic_tool(
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_CLIPPING_PAINTER_H
+#endif  // SMART_VCUTTER_CLIPPING_PAINTER_H_

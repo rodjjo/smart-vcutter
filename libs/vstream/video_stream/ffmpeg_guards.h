@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef VIDEO_STREAM_FFMPEG_GUARDS_H_
-#define VIDEO_STREAM_FFMPEG_GUARDS_H_
+#ifndef LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_GUARDS_H_
+#define LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_GUARDS_H_
 
 #include <memory>
 #include "video_stream/ffmpeg_headers.h"
@@ -28,6 +28,6 @@ AVPicturePtr allocate_rgb_picture(const AVFrame *source_frame);
 SwsContextPtr allocate_sws_gray_context(const AVFrame* source_frame);
 AVPicturePtr allocate_gray_picture(const AVFrame *source_frame);
 
-}
+}  // namespace vs
 
-#endif  // VIDEO_STREAM_FFMPEG_GUARDS_H_
+#endif  // LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_GUARDS_H_

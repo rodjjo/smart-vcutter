@@ -3,7 +3,6 @@
  */
 #include <stdlib.h>
 #include <memory>
-#include <thread>
 #include <mutex>
 #include <chrono>
 #include <GL/gl.h>

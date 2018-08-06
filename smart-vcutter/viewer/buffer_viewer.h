@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_VIEWER_BUFFER_VIEWER_H
-#define SMART_VCUTTER_VIEWER_BUFFER_VIEWER_H
+#ifndef SMART_VCUTTER_VIEWER_BUFFER_VIEWER_H_
+#define SMART_VCUTTER_VIEWER_BUFFER_VIEWER_H_
 
 #include <inttypes.h>
 #include <memory>
@@ -72,4 +72,4 @@ class BufferViewer: public Fl_Gl_Window {
 
 } //namespace vcutter
 
-#endif  // SMART_VCUTTER_VIEWER_BUFFER_VIEWER_H
+#endif  // SMART_VCUTTER_VIEWER_BUFFER_VIEWER_H_

@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_WRAPPERS_VIDEO_PLAYER_H
-#define SMART_VCUTTER_WRAPPERS_VIDEO_PLAYER_H
+#ifndef SMART_VCUTTER_WRAPPERS_VIDEO_PLAYER_H_
+#define SMART_VCUTTER_WRAPPERS_VIDEO_PLAYER_H_
 
 #include <atomic>
 #include <functional>
@@ -57,4 +57,4 @@ class PlayerWrapper {
 
 }  // namespace vcutter
 
-#endif // SMART_VCUTTER_WRAPPERS_VIDEO_PLAYER_H
+#endif // SMART_VCUTTER_WRAPPERS_VIDEO_PLAYER_H_

@@ -47,7 +47,7 @@ bool FFMpegStream::cancel() {
 }
 
 double FFMpegStream::r2d(const AVRational& r) {
-    return r.num == 0 || r.den == 0 ? 0.0 : (double)r.num / (double)r.den;
+    return r.num == 0 || r.den == 0 ? 0.0 : r.num / static_cast<double>(r.den);
 }
 
 bool FFMpegStream::open(const char *location) {
@@ -116,7 +116,7 @@ bool FFMpegStream::init_codec() {
           codec_ctx_->flags |= AV_CODEC_FLAG2_CHUNKS;
     }
 
-    duration_ =  (double)video_stream_->duration * r2d(video_stream_->time_base);
+    duration_ =  static_cast<double>(video_stream_->duration) * r2d(video_stream_->time_base);
 
     fps_ = r2d(video_stream_->r_frame_rate);
     if (fps_ < 0.000025)
@@ -214,7 +214,7 @@ bool FFMpegStream::next_frame(bool ignore_capture) {
     frame_count_ = video_stream_->nb_frames;
 
     if (frame_count_ == 0) {
-        double duration = (double)format_ctx_->duration / (double)AV_TIME_BASE;
+        double duration = format_ctx_->duration / static_cast<double>(AV_TIME_BASE);
         if (duration < 0.000025) {
             duration = duration_;
         }
@@ -295,7 +295,7 @@ void FFMpegStream::seek_frame(int64_t frame) {
 
     for(;;) {
       int64_t frame2seek_temp = std::max(frame2seek - delta, (int64_t)0);
-      double sec = (double)frame2seek_temp / fps_;
+      double sec = frame2seek_temp / static_cast<double>(fps_);
       int64_t time_stamp = video_stream_->start_time;
       double  time_base  = r2d(video_stream_->time_base);
       time_stamp += (int64_t)(sec / time_base + 0.5);

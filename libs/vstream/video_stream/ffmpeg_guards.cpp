@@ -161,4 +161,4 @@ AVPicturePtr allocate_gray_picture(const AVFrame *source_frame) {
     return picture;
 }
 
-}  // namespace vstream
+}  // namespace vs

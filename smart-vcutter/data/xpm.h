@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_DATA_XPM_H
-#define SMART_VCUTTER_DATA_XPM_H
+#ifndef SMART_VCUTTER_DATA_XPM_H_
+#define SMART_VCUTTER_DATA_XPM_H_
 
 #include <memory>
 #include <FL/Fl_RGB_Image.H>
@@ -81,4 +81,4 @@ std::shared_ptr<Fl_RGB_Image> image(const char *const *xpm_data,  Fl_Color bg=FL
 } // namespace xpm
 } // namespace vcutter
 
-#endif
+#endif  // SMART_VCUTTER_DATA_XPM_H_

@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_WND_COMMON_COMMON_DIALOGS_H
-#define SMART_VCUTTER_WND_COMMON_COMMON_DIALOGS_H
+#ifndef SMART_VCUTTER_WND_COMMON_COMMON_DIALOGS_H_
+#define SMART_VCUTTER_WND_COMMON_COMMON_DIALOGS_H_
 
 #include <string>
 #include <FL/Fl_Native_File_Chooser.H>
@@ -27,4 +27,4 @@ std::string output_prj_file_chooser(std::string* current_dir=NULL, const char *d
 
 }
 
-#endif  // SMART_VCUTTER_WND_COMMON_COMMON_DIALOGS_H
+#endif  // SMART_VCUTTER_WND_COMMON_COMMON_DIALOGS_H_

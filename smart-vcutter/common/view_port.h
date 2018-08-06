@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_COMMON_VIEW_PORT_H
-#define SMART_VCUTTER_COMMON_VIEW_PORT_H
+#ifndef SMART_VCUTTER_COMMON_VIEW_PORT_H_
+#define SMART_VCUTTER_COMMON_VIEW_PORT_H_
 
 #include <inttypes.h>
 #include "smart-vcutter/common/point.h"
@@ -52,4 +52,4 @@ class viewport_t {
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_COMMON_VIEW_PORT_H
+#endif  // SMART_VCUTTER_COMMON_VIEW_PORT_H_

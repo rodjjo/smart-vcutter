@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_COMMON_POINT_H
-#define SMART_VCUTTER_COMMON_POINT_H
+#ifndef SMART_VCUTTER_COMMON_POINT_H_
+#define SMART_VCUTTER_COMMON_POINT_H_
 
 #define PI 3.1415926535897
 #define DEGS (PI / 180.0)
@@ -46,4 +46,4 @@ class point_t {
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_COMMON_POINT_H
+#endif  // SMART_VCUTTER_COMMON_POINT_H_

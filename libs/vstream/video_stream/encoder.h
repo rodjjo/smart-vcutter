@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef VIDEO_STREAM_ENCODER_H_
-#define VIDEO_STREAM_ENCODER_H_
+#ifndef LIBS_VSTREAM_VIDEO_STREAM_ENCODER_H_
+#define LIBS_VSTREAM_VIDEO_STREAM_ENCODER_H_
 
 #include <string>
 #include <memory>
@@ -66,6 +66,6 @@ class EncoderImp: public Encoder {
     int bit_rate_;
 };
 
-}
+}  // namespace vs
 
-#endif  // VIDEO_STREAM_ENCODER_H_
+#endif  // LIBS_VSTREAM_VIDEO_STREAM_ENCODER_H_

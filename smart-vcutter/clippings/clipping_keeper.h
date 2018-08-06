@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_CLIPPING_KEEPER_H
-#define SMART_VCUTTER_CLIPPING_KEEPER_H
+#ifndef SMART_VCUTTER_CLIPPING_KEEPER_H_
+#define SMART_VCUTTER_CLIPPING_KEEPER_H_
 
 #include <inttypes.h>
 #include <string>
@@ -88,4 +88,4 @@ class ClippingKeeper {
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_CLIPPING_KEEPER_H
+#endif  // SMART_VCUTTER_CLIPPING_KEEPER_H_

@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef VIDEO_STREAM_FFMPEG_STREAM_H_
-#define VIDEO_STREAM_FFMPEG_STREAM_H_
+#ifndef LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_STREAM_H_
+#define LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_STREAM_H_
 
 #include <inttypes.h>
 #include <string>
@@ -74,4 +74,4 @@ class FFMpegStream {
 
 }  // namespace vstream
 
-#endif  // VIDEO_STREAM_FFMPEG_STREAM_H_
+#endif  // LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_STREAM_H_

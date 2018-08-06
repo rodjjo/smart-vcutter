@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_COMMON_UTILS_H
-#define SMART_VCUTTER_COMMON_UTILS_H
+#ifndef SMART_VCUTTER_COMMON_UTILS_H_
+#define SMART_VCUTTER_COMMON_UTILS_H_
 
 #include <string>
 
@@ -18,4 +18,4 @@ bool remove_file(const char *filename);
 }  // namespace vcutter
 
 
-#endif  // SMART_VCUTTER_COMMON_UTILS_H
+#endif  // SMART_VCUTTER_COMMON_UTILS_H_

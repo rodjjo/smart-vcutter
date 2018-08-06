@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_VIEWER_MINIATURE_VIEWER_H
-#define SMART_VCUTTER_VIEWER_MINIATURE_VIEWER_H
+#ifndef SMART_VCUTTER_VIEWER_MINIATURE_VIEWER_H_
+#define SMART_VCUTTER_VIEWER_MINIATURE_VIEWER_H_
 
 #include <memory>
 
@@ -37,4 +37,4 @@ private:
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_VIEWER_MINIATURE_VIEWER_H
+#endif  // SMART_VCUTTER_VIEWER_MINIATURE_VIEWER_H_

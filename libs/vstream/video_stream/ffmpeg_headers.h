@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef VIDEO_STREAM_FFMPEG_HEADERS_H_
-#define VIDEO_STREAM_FFMPEG_HEADERS_H_
+#ifndef LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_HEADERS_H_
+#define LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_HEADERS_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,4 +32,4 @@ extern "C" {
 }
 #endif
 
-#endif  // VIDEO_STREAM_FFMPEG_HEADERS_H_
+#endif  // LIBS_VSTREAM_VIDEO_STREAM_FFMPEG_HEADERS_H_

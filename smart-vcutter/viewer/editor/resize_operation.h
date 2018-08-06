@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_VIEWER_RESIZE_OPERATION_H
-#define SMART_VCUTTER_VIEWER_RESIZE_OPERATION_H
+#ifndef SMART_VCUTTER_VIEWER_RESIZE_OPERATION_H_
+#define SMART_VCUTTER_VIEWER_RESIZE_OPERATION_H_
 
 #include "smart-vcutter/viewer/editor/clipping_operations.h"
 #include "smart-vcutter/viewer/viewer_texture.h"
@@ -32,4 +32,4 @@ class ResizeOperation: public ClippingOperation {
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_VIEWER_RESIZE_OPERATION_H
+#endif  // SMART_VCUTTER_VIEWER_RESIZE_OPERATION_H_

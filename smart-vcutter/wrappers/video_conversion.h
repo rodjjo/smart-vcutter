@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_WRAPPERS_VIDEO_CONVERSION_H
-#define SMART_VCUTTER_WRAPPERS_VIDEO_CONVERSION_H
+#ifndef SMART_VCUTTER_WRAPPERS_VIDEO_CONVERSION_H_
+#define SMART_VCUTTER_WRAPPERS_VIDEO_CONVERSION_H_
 
 #include <functional>
 #include <string>
@@ -88,4 +88,4 @@ class VideoConversionWrapper {
 
 }  // namespace vcutter
 
-#endif  // SMART_VCUTTER_TASKS_VIDEO_CONVERSIONS_H
+#endif  // SMART_VCUTTER_WRAPPERS_VIDEO_CONVERSION_H__

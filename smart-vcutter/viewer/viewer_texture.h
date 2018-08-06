@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SMART_VCUTTER_VIEWER_VIEWER_TEXTURE_H
-#define SMART_VCUTTER_VIEWER_VIEWER_TEXTURE_H
+#ifndef SMART_VCUTTER_VIEWER_VIEWER_TEXTURE_H_
+#define SMART_VCUTTER_VIEWER_VIEWER_TEXTURE_H_
 
 #include <inttypes.h>
 #include <memory>
@@ -38,4 +38,4 @@ class ViewerTexture {
 
 }
 
-#endif  // SMART_VCUTTER_VIEWER_VIEWER_TEXTURE_H
+#endif  // SMART_VCUTTER_VIEWER_VIEWER_TEXTURE_H_
