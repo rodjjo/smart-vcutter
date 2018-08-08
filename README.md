@@ -48,7 +48,10 @@ sudo apt-get update -qq && sudo apt-get -y install \
     libfltk1.3-dev \
     libgl-dev \
     libjsoncpp-dev \
-    libopencv-dev
+    libopencv-dev \
+    lcov \
+    python3-pip
+sudo pip3 install setuptools pre-commit
 ```
 
 Generate and build the project
@@ -56,12 +59,25 @@ Generate and build the project
 ```bash
 cmake .
 cmake --build .
+# the test will run after the command above
+```
+
+Run the tests
+```bash
+make test
+# or
+make CTEST_OUTPUT_ON_FAILURE=1 test
+```
+
+Coverage
+```bash
+cmake -DCMAKE_BUILD_TYPE=Debug .
+make coverage
+# you can replace firefox browser if you want to
+firefox coverage/index.html
 ```
 
 # If you are a developer and want to colaborate
-
-Install python 3.5 or above  
-Install pre-commit  
 
 * Turn the functions smaller.
 * Remove repeated code.

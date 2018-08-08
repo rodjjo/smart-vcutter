@@ -2,6 +2,7 @@ project(SmartVCutter C CXX)
 
 cmake_minimum_required(VERSION 3.5.0 FATAL_ERROR)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake-modules)
 set(Boost_USE_STATIC_LIBS ON)
 set(CMAKE_CXX_STANDARD 14)
 set(FLTK_SKIP_FLUID true)
@@ -17,12 +18,14 @@ find_package(FLTK REQUIRED)
 find_package(Threads REQUIRED)
 
 find_package(Boost
-            REQUIRED
-            thread
-            system
+            COMPONENTS
+            chrono
             filesystem
+            system
             timer
-            chrono)
+            thread
+            unit_test_framework
+            REQUIRED)
 
 find_library(AVCODEC_LIBRARY avcodec)
 find_library(AVFORMAT_LIBRARY avformat)
@@ -66,3 +69,4 @@ set(PLATFORM_SPECIFIC_LIBS "-lpthread")
 
 add_subdirectory("smart-vcutter")
 add_subdirectory("libs/vstream")
+add_subdirectory("tests")
