@@ -22,7 +22,6 @@ It was a prototype (XGH) and needs lots of code improvements, i'm opening the co
 
 [![example](http://img.youtube.com/vi/7MCendkxo1I/0.jpg)](http://www.youtube.com/watch?v=7MCendkxo1I)
 
-
 ## Build
 
 Install the building tools
@@ -60,6 +59,9 @@ cmake --build .
 ```
 
 # If you are a developer and want to colaborate
+
+Install python 3.5 or above  
+Install pre-commit  
 
 * Turn the functions smaller.
 * Remove repeated code.
