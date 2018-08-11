@@ -98,6 +98,18 @@ make coverage
 firefox coverage/index.html
 ```
 
+Windows building
+
+```
+# It's necessary mingw
+# The project was successfully compiled with: gcc.exe (i686-posix-dwarf-rev2, Built by MinGW-W64 project) 6.3.0
+cmake -G 'MinGW Makefiles' .
+mingw32-make
+```
+
+You can download ffmpeg libraries from
+`https://ffmpeg.zeranoe.com/builds/`
+
 Help scripts
 
 ```
