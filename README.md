@@ -73,6 +73,14 @@ cmake --build . --clean-first
 # the test will run after the command above
 ```
 
+Install
+
+```bash
+cmake .
+cmake --build .
+sudo make install
+```
+
 Run the tests
 
 ```bash
@@ -82,11 +90,21 @@ make CTEST_OUTPUT_ON_FAILURE=1 test
 ```
 
 Coverage
+
 ```bash
 cmake -DCMAKE_BUILD_TYPE=Debug .
 make coverage
 # you can replace firefox browser if you want to
 firefox coverage/index.html
+```
+
+Help scripts
+
+```
+# install dependencies
+python3 misc/deps.py
+# generate debian package (exec after compilated the project)
+python3 misc/debdist.py
 ```
 
 ## If you are a developer and want to colaborate

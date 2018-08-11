@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-import os
 from subprocess import check_call, CalledProcessError
 
 
@@ -19,7 +18,7 @@ def install_dependencies():
         'libavdevice-dev',
         'libswresample-dev',
         'libswscale-dev',
-        'fluid=1.3.4-6',
+        'fluid',
         'libfltk1.3-dev',
         'libgl-dev',
         'libjsoncpp-dev',

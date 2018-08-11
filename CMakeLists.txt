@@ -65,7 +65,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build/bin)
 set(PLATFORM_SPECIFIC_LIBS "-lpthread")
 
 add_subdirectory("smart-vcutter")
-add_subdirectory("libs/vstream")
+add_subdirectory("libs/vstream" EXCLUDE_FROM_ALL)
 
 enable_testing()
 add_subdirectory("tests")
