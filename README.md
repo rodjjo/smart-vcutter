@@ -1,5 +1,7 @@
 # Smart-Vcutter
 
+[![Build Status](https://travis-ci.com/rodjjo/smart-vcutter.svg?branch=master)](https://travis-ci.com/rodjjo/smart-vcutter)
+
 A multiplatform tool to generate small, silent and short clips from videos.
 
 ![Ubuntu screenshot](https://raw.githubusercontent.com/rodjjo/smart-vcutter/master/docs/images/ubuntu-screen-shot.png)
