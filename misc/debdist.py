@@ -73,6 +73,7 @@ def write_copyright_file():
             for line in infile:
                 licfile.write(line)
 
+
 def write_postrm():
     contents = [
         '#!/bin/bash',
