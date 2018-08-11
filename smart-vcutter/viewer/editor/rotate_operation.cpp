@@ -4,7 +4,6 @@
 #include <FL/Fl.H>
 #include <GL/gl.h>
 
-#include "smart-vcutter/common/calcs.h"
 #include "smart-vcutter/data/xpm.h"
 
 #include "smart-vcutter/viewer/editor/rotate_operation.h"
@@ -67,8 +66,8 @@ clipping_key_t RotateOperation::get_transformed_key() {
     float mdown_angle = point_t(d.x - key.px, d.y - key.py).angle_0_360();
     float mmove_angle = point_t(m.x - key.px, m.y - key.py).angle_0_360();
 
-    key.angle = normalize_angle(
-        (static_cast<int>((key.angle +  mmove_angle - mdown_angle) * 1000) % 360000) / 1000.0f
+    key.angle(
+        (static_cast<int>((key.angle() +  mmove_angle - mdown_angle) * 1000) % 360000) / 1000.0f
     );
 
     return key;

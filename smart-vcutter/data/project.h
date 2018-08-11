@@ -12,21 +12,34 @@
 
 namespace vcutter {
 
-typedef struct clipping_key {
-    clipping_key() {
-        frame = 0;
-        px = 0;
-        py = 0;
-        scale = 0;
-        angle = 0;
-    }
-
+class clipping_key_t {
+ public:
     unsigned int frame;
     double px;
     double py;
     double scale;
-    double angle;
-} clipping_key_t;
+
+    clipping_key_t() {
+        frame = 0;
+        px = 0;
+        py = 0;
+        scale = 0;
+        angle_ = 0;
+    }
+
+    double angle() const {
+        return angle_;
+    }
+
+    void angle(double value) {
+        while(value > 360) value -= 360;
+        while(value < 0) value += 360;
+        angle_ = value;
+    }
+
+    private:
+        double angle_;
+};
 
 typedef std::list<clipping_key_t> clipping_key_list_t;
 

@@ -1,4 +1,5 @@
-# smart-vcutter
+# Smart-Vcutter
+
 A multiplatform tool to generate small, silent and short clips from videos.
 
 ![Ubuntu screenshot](https://raw.githubusercontent.com/rodjjo/smart-vcutter/master/docs/images/ubuntu-screen-shot.png)
@@ -34,7 +35,6 @@ sudo apt-get install -y build-essential cmake
 Install the dependencies:
 
 ```bash
-sudo apt-get update
 sudo apt-get update -qq && sudo apt-get -y install \
     libboost-all-dev \
     libavcodec-dev \
@@ -50,6 +50,7 @@ sudo apt-get update -qq && sudo apt-get -y install \
     libjsoncpp-dev \
     libopencv-dev \
     lcov \
+    libssl-dev \
     python3-pip
 sudo pip3 install setuptools pre-commit
 ```
@@ -62,7 +63,16 @@ cmake --build .
 # the test will run after the command above
 ```
 
+Generate and build clearing first
+
+```bash
+cmake .
+cmake --build . --clean-first
+# the test will run after the command above
+```
+
 Run the tests
+
 ```bash
 make test
 # or
@@ -77,7 +87,7 @@ make coverage
 firefox coverage/index.html
 ```
 
-# If you are a developer and want to colaborate
+## If you are a developer and want to colaborate
 
 * Turn the functions smaller.
 * Remove repeated code.
@@ -86,7 +96,7 @@ firefox coverage/index.html
 * Create documentations.
 * Add tests when it's possible.
 
-# My TODO list
+## My TODO list
 
 * Create a user manual.
 * Generate a .deb package.

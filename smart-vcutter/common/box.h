@@ -37,13 +37,13 @@ class box_t {
     // return the center of the box
     point_t center();
 
-    // return border boundary violation (top and left coordinates)
+    // return border boundary violation (top and left coordinates). The box must not be rotated
     point_t left_top_violation(float width, float height);
 
-    // return border boundary violation (right and bottom coordinates)
+    // return border boundary violation (right and bottom coordinates). The box must not be rotated
     point_t right_bottom_violation(float width, float height);
 
-    // return the width and the height of the box
+    // return the width and the height of the box. The box must not be rotated
     point_t size();
 
     // return the occupied area by the box

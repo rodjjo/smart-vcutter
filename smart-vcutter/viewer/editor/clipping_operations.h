@@ -9,11 +9,12 @@
 #include <string>
 
 #include <FL/Fl_RGB_Image.H>
-#include "smart-vcutter/data/xpm.h"
 
-
-#include "smart-vcutter/wrappers/video_player.h"
+#include "smart-vcutter/common/view_port.h"
 #include "smart-vcutter/clippings/clipping_keeper.h"
+#include "smart-vcutter/data/xpm.h"
+#include "smart-vcutter/wrappers/video_player.h"
+
 
 namespace vcutter {
 

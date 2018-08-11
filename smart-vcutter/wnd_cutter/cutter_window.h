@@ -101,7 +101,6 @@ class CutterWindow {
 
     void resize_controls();
  private:
-    float fix_angle(float angle);
     void clear(bool clear_controls = true);
     //void load(Project* project, unsigned int index);
     bool wait_video_open();

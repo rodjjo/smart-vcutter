@@ -4,7 +4,6 @@
 #include <FL/Fl.H>
 #include <GL/gl.h>
 
-#include "smart-vcutter/common/calcs.h"
 #include "smart-vcutter/viewer/editor/clipping_editor.h"
 #include "smart-vcutter/viewer/editor/drag_operation.h"
 #include "smart-vcutter/viewer/editor/resize_operation.h"

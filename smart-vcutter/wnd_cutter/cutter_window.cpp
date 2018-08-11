@@ -4,7 +4,7 @@
 #include <cmath>
 #include <GL/gl.h>
 
-#include "smart-vcutter/common/conversions.h"
+#include "smart-vcutter/common/utils.h"
 #include "smart-vcutter/data/xpm.h"
 #include "smart-vcutter/wnd_common/common_dialogs.h"
 
@@ -624,7 +624,7 @@ void CutterWindow::past_rotation() {
         return;
     }
     auto key = keeper_->get_key(player_->info()->position());
-    key.angle = key_copy_.angle;
+    key.angle(key_copy_.angle());
     keeper_->add_key(key);
     redraw_frame(true);
 }
@@ -657,7 +657,7 @@ void CutterWindow::clear_rotation() {
         return;
     }
     auto key = keeper_->get_key(player_->info()->position());
-    key.angle = 0;
+    key.angle(0);
     keeper_->add_key(key);
     redraw_frame(true);
 }
@@ -728,7 +728,7 @@ void CutterWindow::rotation_90() {
         return;
     }
     auto key = keeper_->get_key(player_->info()->position());
-    key.angle = 90;
+    key.angle(90);
     keeper_->add_key(key);
     redraw_frame(true);
 }
@@ -738,7 +738,7 @@ void CutterWindow::rotation_180() {
         return;
     }
     auto key = keeper_->get_key(player_->info()->position());
-    key.angle = 180;
+    key.angle(180);
     keeper_->add_key(key);
     redraw_frame(true);
 }
@@ -748,19 +748,9 @@ void CutterWindow::rotation_270() {
         return;
     }
     auto key = keeper_->get_key(player_->info()->position());
-    key.angle = 270;
+    key.angle(270);
     keeper_->add_key(key);
     redraw_frame(true);
-}
-
-float CutterWindow::fix_angle(float angle) {
-    while (angle < 0) {
-        angle += 360.0;
-    }
-    if (angle > 360) {
-        angle = (static_cast<int>(angle * 1000) % 360000) / 1000.0;
-    }
-    return angle;
 }
 
 void CutterWindow::swap_wh() {
@@ -821,7 +811,7 @@ void CutterWindow::swap_wh() {
 
     auto keys = keeper_->get_keys();
     for (auto k : keys) {
-        k.angle = fix_angle(k.angle + 90);
+        k.angle(k.angle() + 90);
         k.scale *= (1.0 / scaled);
         keeper_->add_key(k);
     }
@@ -840,7 +830,7 @@ void CutterWindow::rotate_all_180() {
 
     auto keys = keeper_->get_keys();
     for (auto k : keys) {
-        k.angle = fix_angle(k.angle + 180);
+        k.angle(k.angle() + 180);
         keeper_->add_key(k);
     }
 
@@ -1112,7 +1102,7 @@ void CutterWindow::update_clipping_list() {
 
     for (auto it = keeper_->keys_begin(); it != keeper_->keys_end(); ++it) {
         snprintf(temp_buffer, sizeof(temp_buffer),
-            "%07u s:%4.2f r:%4.2f (%0.1f, %0.1f) %s", it->frame, it->scale, it->angle, it->px, it->py, ref_frame == it->frame ? " <r" : "");
+            "%07u s:%4.2f r:%4.2f (%0.1f, %0.1f) %s", it->frame, it->scale, it->angle(), it->px, it->py, ref_frame == it->frame ? " <r" : "");
         key_list_->add(temp_buffer);
         ++i;
     }
@@ -1165,9 +1155,9 @@ void CutterWindow::update_seek_bar() {
     snprintf(temp, sizeof(temp), "%u", player_->info()->count());
     frame_counter_->copy_label(temp);
 
-    time_to_str(temp, sizeof(temp), player_->info()->time());
+    seconds_to_str(temp, sizeof(temp), player_->info()->time());
     frame_time_->copy_label(temp);
-    time_to_str(temp, sizeof(temp), player_->info()->duration());
+    seconds_to_str(temp, sizeof(temp), player_->info()->duration());
     video_duration_->copy_label(temp);
 
     in_seek_bar_callback_ = false;

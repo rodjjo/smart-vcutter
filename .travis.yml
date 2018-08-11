@@ -1,0 +1,30 @@
+sudo: required
+dist: xenial
+language: cpp
+
+addons:
+  apt:
+    sources:
+      - sourceline: 'deb http://en.archive.ubuntu.com/ubuntu/ artful main universe'
+    packages:
+      - cmake
+      - libboost-chrono-dev 
+      - libboost-filesystem-dev 
+      - libboost-system-dev 
+      - libboost-timer-dev
+      - libboost-thread-dev 
+      - libboost-test-dev 
+      - libavcodec-dev 
+      - libavformat-dev 
+      - libavutil-dev
+      - libavfilter-dev
+      - libavdevice-dev
+      - libswresample-dev
+      - libswscale-dev
+      - fluid 
+      - libfltk1.3-dev 
+      - libgl1-mesa-dev
+      - libjsoncpp-dev
+      - libopencv-dev 
+      - lcov
+script: cmake . && cmake --build .

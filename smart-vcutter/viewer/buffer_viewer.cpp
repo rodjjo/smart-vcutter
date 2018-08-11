@@ -7,7 +7,6 @@
 #include <FL/Fl.H>
 #include <FL/gl.h>
 
-#include "smart-vcutter/common/calcs.h"
 #include "smart-vcutter/viewer/buffer_viewer.h"
 
 namespace vcutter {

@@ -1,10 +1,15 @@
 repos:
   - repo: local
     hooks:
-      - id: cpplint
-        name: cpplint check
-        description: Checks the code style
-        entry: python misc/checks.py
+      - id: checks
+        name: run code checking tools
+        description: Checks the source code
+        entry: python misc/checks.py lint
         language: system
         types: [text]
-
+      - id: cpptest
+        name: run tests
+        description: Run the tests
+        entry: python misc/checks.py tests
+        language: system
+        types: [text]

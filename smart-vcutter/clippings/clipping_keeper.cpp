@@ -138,20 +138,20 @@ void ClippingKeeper::clear_reference() {
 }
 
 void ClippingKeeper::add_key(clipping_key_t key) {
-    double last_angle = key.angle;
+    double last_angle = key.angle();
     modify_version();
     auto it = keys_.begin();
     while (it != keys_.end()) {
         if (it->frame == key.frame) {
             *it = key;
-            last_angle = key.angle;
+            last_angle = key.angle();
             ++it;
             return;
         } else if (it->frame > key.frame) {
             keys_.insert(it, key);
             return;
         }
-        last_angle = it->angle;
+        last_angle = it->angle();
         ++it;
     }
 
@@ -163,13 +163,13 @@ void ClippingKeeper::remove_key(int frame) {
         return;
     }
     modify_version();
-    double last_angle = keys_.begin()->angle;
+    double last_angle = keys_.begin()->angle();
     for(auto it = keys_.begin(); it != keys_.end(); ++it) {
         if (it->frame == frame) {
             keys_.erase(it);
             return;
         } else {
-            last_angle = last_angle = it->angle;
+            last_angle = last_angle = it->angle();
         }
     }
 }
@@ -182,7 +182,7 @@ clipping_key_t ClippingKeeper::get_key(int frame, bool *computed, box_t *bound_b
             *computed = true;
         }
         result.scale = 1.0;
-        result.angle = 0;
+        result.angle(0);
         result.frame = frame;
         result.px = video_w_ / 2;
         result.py = video_h_ / 2;

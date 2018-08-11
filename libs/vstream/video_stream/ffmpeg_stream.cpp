@@ -10,8 +10,6 @@ namespace vs {
 FFMpegStream::FFMpegStream(int color_type) {
     color_type_ = color_type;
     init();
-
-
 }
 
 FFMpegStream::FFMpegStream() {

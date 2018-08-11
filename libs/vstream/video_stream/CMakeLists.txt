@@ -1,4 +1,5 @@
-file(GLOB Sources "*.cpp")
+file(GLOB Sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+
 set(VIDEOSTREAM_HEADERS "vstream/video_stream.h")
 
 add_library(video-stream STATIC ${Sources})

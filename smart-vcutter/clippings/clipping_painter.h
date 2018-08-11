@@ -5,7 +5,7 @@
 #define SMART_VCUTTER_CLIPPINGS_CLIPPING_PAINTER_H_
 
 #include "smart-vcutter/data/project.h"
-#include "smart-vcutter/common/calcs.h"
+#include "smart-vcutter/common/box.h"
 
 namespace vcutter {
 

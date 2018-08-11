@@ -866,6 +866,8 @@ int MainWindow::handle(int event) {
 
 }  // namespace vcutter
 
+#ifndef UNIT_TEST
+
 int main(int argc, char **argv) {
     vs::initialize();
     Fl::scheme("gtk+");
@@ -886,3 +888,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
      return main(__argc, __argv);
 }
 #endif
+
+#endif  // UNIT_TEST

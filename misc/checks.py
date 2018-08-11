@@ -1,5 +1,4 @@
-from __future__ import generator_stop
-
+#!/usr/bin/env python
 import sys
 import os
 from subprocess import check_call, CalledProcessError
@@ -9,8 +8,9 @@ def get_sources(dir):
     for dir_name, dir_list, file_list in os.walk(dir):
         for name in file_list:
             if name.endswith('.h') or name.endswith('.cpp') :
+                if 'cmake' in name.lower():
+                    continue
                 yield os.path.join(dir_name, name)
-    return generator_stop
 
 
 def get_all_sources():
@@ -18,7 +18,6 @@ def get_all_sources():
         yield f
     for f in get_sources('smart-vcutter'):
         yield f
-    return generator_stop
 
 
 def cpplint_the_sources():
@@ -56,8 +55,16 @@ def cpplint_the_sources():
         check_call(command)
     except CalledProcessError:
         sys.exit(1)
-    sys.exit(0)
 
-
+def run_tests():
+    try:
+        check_call(['cmake', '--build', '.', '--target', 'vcutter_test'])
+    except CalledProcessError:
+        sys.exit(1)
+    
 if __name__ == '__main__':
-    cpplint_the_sources()
+    if 'lint' in sys.argv:
+        cpplint_the_sources()
+    if 'tests' in sys.argv:
+        run_tests()
+    sys.exit(0)

@@ -230,7 +230,7 @@ void VideoConversionWrapper::allocate_buffers() {
             key.px = player_->w() / 2.0;
             key.py = player_->h() / 2.0;
             key.scale = 1;
-            key.angle = 0;
+            key.angle(0);
             clipping_.items.push_back(key);
         }
 

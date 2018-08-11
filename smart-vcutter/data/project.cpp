@@ -162,7 +162,7 @@ const clipping_t *Project::get_clipping() {
         key.px = item[kPROJECT_CLIPPING_PX_KEY].asDouble();
         key.py = item[kPROJECT_CLIPPING_PY_KEY].asDouble();
         key.scale = item[kPROJECT_CLIPPING_SCALE_KEY].asDouble();
-        key.angle = item[kPROJECT_CLIPPING_ANGLE_KEY].asDouble();
+        key.angle(item[kPROJECT_CLIPPING_ANGLE_KEY].asDouble());
         clipping_.items.push_back(key);
     }
 
@@ -188,7 +188,7 @@ Json::Value Project::data_from_clipping(const clipping_t& clipping) {
         element[kPROJECT_CLIPPING_PX_KEY] = item.px;
         element[kPROJECT_CLIPPING_PY_KEY] = item.py;
         element[kPROJECT_CLIPPING_SCALE_KEY] = item.scale;
-        element[kPROJECT_CLIPPING_ANGLE_KEY] = item.angle;
+        element[kPROJECT_CLIPPING_ANGLE_KEY] = item.angle();
         data[kPROJECT_CLIPPING_ITEMS_KEY].append(element);
     }
     return data;

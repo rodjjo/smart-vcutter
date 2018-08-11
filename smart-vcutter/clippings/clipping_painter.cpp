@@ -25,7 +25,7 @@ box_t clipping_box(const clipping_key_t& interpolated_clipping, unsigned int tar
     float half_y = target_h / 2.0;
 
     result.translate(-half_x, -half_y);
-    result.rotate(interpolated_clipping.angle);
+    result.rotate(interpolated_clipping.angle());
     result.scale(interpolated_clipping.scale);
     result.translate(interpolated_clipping.px, interpolated_clipping.py);
     result.trunc_precision();
@@ -78,10 +78,6 @@ clipping_key_t adjust_bounds(
     unsigned int max_y
 ) {
     clipping_key_t result = interpolated_clipping;
-
-    while (result.angle < 0) {
-        result.angle += 360;
-    }
 
     if (result.px < 1) {
         result.px = 1;
@@ -152,7 +148,7 @@ clipping_key_t compute_interpolation(
         float difx = (right.px - left.px);
         float dify = (right.py - left.py);
         float difs = (right.scale - left.scale);
-        float difa = right.angle - left.angle;
+        float difa = right.angle() - left.angle();
 
         if (difa < 0) {
             clockwise = (difa + 360) <= 180;
@@ -169,7 +165,7 @@ clipping_key_t compute_interpolation(
         current.px = left.px + difx * interpolation;
         current.py = left.py + dify * interpolation;
         current.scale = left.scale + difs * interpolation;
-        current.angle = normalize_angle(left.angle + (difa * interpolation * (clockwise ? 1 : -1)));
+        current.angle(left.angle() + (difa * interpolation * (clockwise ? 1 : -1)));
     }
 
     return current;
@@ -249,7 +245,7 @@ void paint_clipping(
 
     cv::Mat frame(source_h, source_w, CV_8UC3, souce_buffer);
     cv::Mat output(target_h, target_w, CV_8UC3, target_buffer);
-    if (safe_clipping.angle == 0) {
+    if (safe_clipping.angle() == 0) {
         cv::Rect roi_input(bbox[0].x, bbox[0].y, bbox_w, bbox_h);
         cv::Mat roi_img_in(frame(roi_input));
 
@@ -281,7 +277,7 @@ void paint_clipping(
 
     cv::Point2f src_center(half_w, half_h);
 
-    cv::Mat rot_mat = cv::getRotationMatrix2D(src_center, safe_clipping.angle - 360, 1.0);
+    cv::Mat rot_mat = cv::getRotationMatrix2D(src_center, safe_clipping.angle() - 360, 1.0);
     cv::Mat temp;
     cv::warpAffine(rotated, temp, rot_mat, rotated.size(), CV_INTER_LANCZOS4);
     rotated = cv::Mat(target_h * safe_clipping.scale, target_w * safe_clipping.scale, CV_8UC3);
@@ -345,7 +341,7 @@ clipping_key_t magic_tool(
         float target_angle = point_t(curr_rx2 - curr_rx1, curr_ry2 - curr_ry1).angle_0_360();
         float diff = target_angle - source_angle;
         if (diff) {
-            source.angle = normalize_angle(source.angle + diff);
+            source.angle(source.angle() + diff);
         }
     }
 
@@ -360,7 +356,7 @@ clipping_key_t magic_tool(
         result.py = source.py;
     }
 
-    result.angle = source.angle;
+    result.angle(source.angle());
 
     return result;
 }

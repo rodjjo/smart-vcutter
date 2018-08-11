@@ -6,7 +6,6 @@
 #include <Fl/Fl.H>
 
 #include "smart-vcutter/common/utils.h"
-#include "smart-vcutter/common/conversions.h"
 #include "smart-vcutter/wrappers/video_conversion.h"
 #include "smart-vcutter/wnd_common/common_dialogs.h"
 #include "smart-vcutter/data/project.h"
@@ -402,7 +401,7 @@ void EncoderWindow::action_convert() {
     int start_time = 0;
     int end_time = -1;
     if (strlen(edt_start_->value())) {
-        start_time = str_to_time(edt_start_->value());
+        start_time = str_to_milliseconds(edt_start_->value());
         if (start_time == 0 && strcmp(edt_start_->value(), "00:00:00,000") != 0) {
             show_error("Invalid time format for the start time");
             return;
@@ -410,7 +409,7 @@ void EncoderWindow::action_convert() {
     }
 
     if (strlen(edt_end_->value())) {
-        end_time = str_to_time(edt_end_->value());
+        end_time = str_to_milliseconds(edt_end_->value());
         if (end_time == 0 && strcmp(edt_end_->value(), "00:00:00,000") != 0) {
             show_error("Invalid time format for the end time");
             return;
@@ -521,8 +520,8 @@ double EncoderWindow::calc_fps() {
 double EncoderWindow::calc_duration() {
     double duration = 0;
 
-    double start_time = str_to_time(edt_start_->value());
-    double end_time = str_to_time(edt_end_->value());
+    double start_time = str_to_milliseconds(edt_start_->value());
+    double end_time = str_to_milliseconds(edt_end_->value());
 
     if (end_time > start_time) {
         duration = end_time - start_time;
@@ -634,9 +633,9 @@ void EncoderWindow::fill_animation_info(int video_frame_count) {
         end_time = 0;
     }
 
-    time_to_str(temp, sizeof(temp), start_time, true);
+    seconds_to_str(temp, sizeof(temp), start_time, true);
     edt_start_->value(temp);
-    time_to_str(temp, sizeof(temp), end_time, true);
+    seconds_to_str(temp, sizeof(temp), end_time, true);
     edt_end_->value(temp);
     frame_w_ = clip_.w;
     frame_h_ = clip_.h;
@@ -668,7 +667,7 @@ void EncoderWindow::sugest_output_file() {
     }
 
     edt_output_->value(
-        change_filepath_dir(edt_path_->value(), dir, sugest_extension(), has_clipping_).c_str());
+        change_filepath_dir(edt_path_->value(), dir.c_str(), sugest_extension(), has_clipping_).c_str());
     if (has_clipping_) {
         last_filepath_sug_ = edt_path_->value();
     }
@@ -738,7 +737,7 @@ void EncoderWindow::action_video_path() {
         fill_animation_info(player->count());
     } else {
         char temp[50] = "";
-        time_to_str(temp, sizeof(temp), player->duration(), true);
+        seconds_to_str(temp, sizeof(temp), player->duration(), true);
         edt_start_->value("00:00:00,000");
         edt_end_->value(temp);
         frame_w_ = player->w();
@@ -778,12 +777,12 @@ std::string EncoderWindow::get_sugestion() {
         } else {
             ++index;
         }
-        return generate_path(math_1[1], math_1[3], index);
+        return generate_path(math_1[1].str().c_str(), math_1[3].str().c_str(), index);
     }
 
     std::smatch math_2;
     if (std::regex_search(last_sugestion_, math_2, extension_regex)) {
-        return generate_path(math_2[1], math_2[2], 1);
+        return generate_path(math_2[1].str().c_str(), math_2[2].str().c_str(), 1);
     }
 
     return std::string();

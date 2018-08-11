@@ -1,15 +1,15 @@
-file(GLOB Sources
-    "*.cpp"
-    "clippings/*.cpp"
-    "common/*.cpp"
-    "wrappers/*.cpp"
-    "data/*.cpp"
-    "wnd_common/*.cpp"
-    "viewer/*.cpp"
-    "viewer/editor/*.cpp"
-    "wnd_cutter/*.cpp"
-    "wnd_main/*.cpp"
-    "wnd_tools/*.cpp")
+file(GLOB Sources 
+    "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/clippings/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/data/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/viewer/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/viewer/editor/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/wnd_common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/wnd_cutter/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/wnd_main/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/wnd_tools/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/*.cpp")
 
 if(WIN32)
 add_executable(smart-vcutter WIN32 ${Sources})
@@ -43,19 +43,15 @@ target_link_libraries(smart-vcutter
                       ${OCV_CORE_LIBRARY}
                       ${OCV_FEATURES_LIBRARY}
                       ${OCV_FLANN_LIBRARY}
-#                     ${OCV_HIGHGUI_LIBRARY}
                       ${OCV_IMGPROC_LIBRARY}
                       ${OCV_ML_LIBRARY}
                       ${OCV_OBJDETECT_LIBRARY}
                       ${OCV_PHOTO_LIBRARY}
                       ${OCV_STITCHING_LIBRARY}
                       ${OCV_SUPERRES_LIBRARY}
-                      ${OCV_IMGCODECS_LIBRARY}
-                      ${OCV_SHAPE_LIBRARY}
                       ${OCV_VIDEO_LIBRARY}
                       ${JSONCPP_LIBRARY}
                       )
-
 
 
 SET_TARGET_PROPERTIES(smart-vcutter PROPERTIES LINKER_LANGUAGE C)

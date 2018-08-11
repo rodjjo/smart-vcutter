@@ -7,7 +7,7 @@
 #include <inttypes.h>
 #include <memory>
 
-#include "smart-vcutter/common/calcs.h"
+#include "smart-vcutter/common/view_port.h"
 
 namespace vcutter {
 
