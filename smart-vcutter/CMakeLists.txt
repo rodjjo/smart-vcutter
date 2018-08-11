@@ -55,3 +55,7 @@ target_link_libraries(smart-vcutter
 
 
 SET_TARGET_PROPERTIES(smart-vcutter PROPERTIES LINKER_LANGUAGE C)
+
+install(TARGETS smart-vcutter
+        RUNTIME DESTINATION bin
+        COMPONENT runtime)
