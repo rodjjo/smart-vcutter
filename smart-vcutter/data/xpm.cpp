@@ -136,25 +136,8 @@ std::map<xpm::xpm_t, const char * const*> xpm_db = {
 
 }  // unnamed namespace
 
-const char *const *data(xpm_t xpm_id) {
-    return xpm_db[xpm_id];
-}
-
-std::shared_ptr<Fl_Pixmap> pixmap(const char *const *xpm_data) {
-    return std::shared_ptr<Fl_Pixmap>(new Fl_Pixmap(xpm_data));
-}
-
-std::shared_ptr<Fl_Pixmap> pixmap(xpm_t xpm_id) {
-    return std::shared_ptr<Fl_Pixmap>(new Fl_Pixmap(data(xpm_id)));
-}
-
-std::shared_ptr<Fl_RGB_Image> image(const char *const *xpm_data, Fl_Color bg) {
-    Fl_Pixmap image(xpm_data);
-    return std::shared_ptr<Fl_RGB_Image>(new Fl_RGB_Image(&image, bg));
-}
-
 std::shared_ptr<Fl_RGB_Image> image(xpm_t xpm_id, Fl_Color bg) {
-    Fl_Pixmap image(data(xpm_id));
+    Fl_Pixmap image( xpm_db[xpm_id]);
     return std::shared_ptr<Fl_RGB_Image>(new Fl_RGB_Image(&image, bg));
 }
 

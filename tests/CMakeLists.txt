@@ -16,7 +16,8 @@ file(GLOB ExeSources
 file(GLOB TestSources 
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_vcutter/common/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/test_vstream/common/*.cpp")
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_vcutter/data/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_vstream/*.cpp")
 
 
 set(TestSources ${TestSources} ${LibSources} ${ExeSources})
