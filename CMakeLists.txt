@@ -53,6 +53,10 @@ find_package(PkgConfig REQUIRED)
 endif(LINUX)
 
 include_directories(SmartVCutter
+                    "${PROJECT_SOURCE_DIR}/third-party/googletest/include"
+                    "${PROJECT_SOURCE_DIR}/third-party/googlemock/include"
+                    "${PROJECT_SOURCE_DIR}/third-party/googlemock"
+                    "${PROJECT_SOURCE_DIR}/third-party/googletest"
                     "${PROJECT_SOURCE_DIR}/libs/vstream"
                     ${PROJECT_SOURCE_DIR}
                     ${AVCODEC_INCLUDE_DIR}
