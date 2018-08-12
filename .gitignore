@@ -45,5 +45,7 @@ ffmpeg/
 Testing/
 *coverage/
 *coverage.*
+tmp/
+temp/
 
 install_manifest.txt

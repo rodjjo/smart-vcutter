@@ -15,10 +15,16 @@ class JsonFile {
     virtual ~JsonFile();
     virtual bool loaded();
     virtual bool save(const Json::Value& data);
+    virtual bool save();
+    Json::Value & operator[] (const char *key);
+    const Json::Value & operator[] (const char *key) const;
     virtual const Json::Value & get_data();
+ private:
+    void load();
  private:
     bool loaded_;
     Json::Value root_;
+    std::string path_;
     bool delete_on_close_;
 };
 
