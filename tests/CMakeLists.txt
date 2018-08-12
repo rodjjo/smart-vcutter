@@ -1,17 +1,17 @@
-file(GLOB LibSources "${CMAKE_CURRENT_SOURCE_DIR}/../libs/vstream/video_stream/*.cpp")
 
 file(GLOB ExeSources 
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/common/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/clippings/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/data/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/viewer/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/viewer/editor/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/wnd_common/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/wnd_cutter/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/wnd_main/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/wnd_tools/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../smart-vcutter/wrappers/*.cpp")
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/vstream/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/clippings/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/data/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/viewer/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/viewer/editor/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_cutter/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_main/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_tools/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/wrappers/*.cpp")
 
 file(GLOB TestSources 
     "${CMAKE_CURRENT_SOURCE_DIR}/../third-party/googlemock/src/gmock-all.cc"
@@ -22,7 +22,7 @@ file(GLOB TestSources
     "${CMAKE_CURRENT_SOURCE_DIR}/test_vstream/*.cpp")
 
 
-set(TestSources ${TestSources} ${LibSources} ${ExeSources})
+set(TestSources ${TestSources} ${ExeSources})
 set(OLD_BUILD_TYPE ${CMAKE_BUILD_TYPE})
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")

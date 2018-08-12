@@ -53,11 +53,11 @@ find_package(PkgConfig REQUIRED)
 endif(LINUX)
 
 include_directories(SmartVCutter
+                    "${PROJECT_SOURCE_DIR}/libs/vstream/include"
                     "${PROJECT_SOURCE_DIR}/third-party/googletest/include"
                     "${PROJECT_SOURCE_DIR}/third-party/googlemock/include"
                     "${PROJECT_SOURCE_DIR}/third-party/googlemock"
                     "${PROJECT_SOURCE_DIR}/third-party/googletest"
-                    "${PROJECT_SOURCE_DIR}/libs/vstream"
                     ${PROJECT_SOURCE_DIR}
                     ${AVCODEC_INCLUDE_DIR}
                     ${FLTK_INCLUDE_DIR})
@@ -68,8 +68,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build/bin)
 
 set(PLATFORM_SPECIFIC_LIBS "-lpthread")
 
-add_subdirectory("smart-vcutter")
-add_subdirectory("libs/vstream" EXCLUDE_FROM_ALL)
+add_subdirectory("src")
 
 enable_testing()
 add_subdirectory("tests")

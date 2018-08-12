@@ -1,5 +1,5 @@
 #include "tests/testing.h"
-#include "smart-vcutter/common/box.h"
+#include "src/common/box.h"
 
 BOOST_AUTO_TEST_SUITE(box_test_suite)
 

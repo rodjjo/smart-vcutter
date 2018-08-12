@@ -1,77 +1,77 @@
 #include <map>
+#include <cstring>
 #include "tests/testing.h"
-#include "smart-vcutter/data/xpm.h"
+#include "src/data/xpm.h"
+
+namespace vcutter {
+namespace xpm {
+
+extern std::map<xpm_t, const char * const*> xpm_db;
+
+}  // namespace vcutter
+}  // namespace xpm
+
 
 BOOST_AUTO_TEST_SUITE(xpm_test_suite)
 
-namespace {
-
-bool check_image_size(vcutter::xpm::xpm_t id, int w, int h) {
-    auto img = vcutter::xpm::image(id);
-    return img->w() == w && img->h() == h;
-}
-
-}  // namespace
-
 BOOST_AUTO_TEST_CASE(text_xpm_image_sizes) {
     using namespace vcutter::xpm;
-    BOOST_CHECK(check_image_size(button_add, 24, 24));
-    BOOST_CHECK(check_image_size(button_begin, 24, 24));
-    BOOST_CHECK(check_image_size(button_compare, 24, 24));
-    BOOST_CHECK(check_image_size(button_delete, 24, 24));
-    BOOST_CHECK(check_image_size(button_edit, 24, 24));
-    BOOST_CHECK(check_image_size(button_end, 24, 24));
-    BOOST_CHECK(check_image_size(button_next, 24, 24));
-    BOOST_CHECK(check_image_size(button_pause, 24, 24));
-    BOOST_CHECK(check_image_size(button_play, 24, 24));
-    BOOST_CHECK(check_image_size(button_prior, 24, 24));
-    BOOST_CHECK(check_image_size(button_scissor, 24, 24));
-    BOOST_CHECK(check_image_size(button_seek, 24, 24));
-    BOOST_CHECK(check_image_size(button_stop, 24, 24));
-    BOOST_CHECK(check_image_size(cursor_dot, 32, 32));
-    BOOST_CHECK(check_image_size(cursor_drag, 32, 32));
-    BOOST_CHECK(check_image_size(cursor_resize, 32, 32));
-    BOOST_CHECK(check_image_size(cursor_rotate, 32, 32));
-    BOOST_CHECK(check_image_size(editor_apply, 16, 16));
-    BOOST_CHECK(check_image_size(editor_apply_off, 16, 16));
-    BOOST_CHECK(check_image_size(editor_resize, 16, 16));
-    BOOST_CHECK(check_image_size(editor_rotate, 16, 16));
-    BOOST_CHECK(check_image_size(editor_target1, 16, 16));
-    BOOST_CHECK(check_image_size(editor_target2, 16, 16));
-    BOOST_CHECK(check_image_size(arrow_dwn_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(boss_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(cd_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(clock_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(copy_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(directory_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(eject_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(erase_all_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(eye_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(expand_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(exit_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(film_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(green_pin_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(help_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(hint_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(left_right_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(lock_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(lupe_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(magic_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(move_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(note_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(paste_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(pencil_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(refresh_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(rotate_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(save_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(save_as_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(smile_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(take_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(tune_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(unlock_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(up_down_16x16, 16, 16));
-    BOOST_CHECK(check_image_size(yellow_pin_16x16, 16, 16));
+    BOOST_CHECK(strncmp(xpm_db[button_add][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_begin][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_compare][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_delete][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_edit][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_end][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_next][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_pause][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_play][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_prior][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_scissor][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_seek][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[button_stop][0], "24 24 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[cursor_dot][0], "32 32 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[cursor_drag][0], "32 32 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[cursor_resize][0], "32 32 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[cursor_rotate][0], "32 32 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[editor_apply][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[editor_apply_off][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[editor_resize][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[editor_rotate][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[editor_target1][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[editor_target2][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[arrow_dwn_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[boss_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[cd_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[clock_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[copy_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[directory_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[eject_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[erase_all_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[eye_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[expand_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[exit_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[film_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[green_pin_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[help_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[hint_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[left_right_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[lock_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[lupe_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[magic_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[move_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[note_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[paste_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[pencil_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[refresh_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[rotate_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[save_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[save_as_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[smile_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[take_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[tune_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[unlock_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[up_down_16x16][0], "16 16 ", 6) == 0);
+    BOOST_CHECK(strncmp(xpm_db[yellow_pin_16x16][0], "16 16 ", 6) == 0);
 }
-
 
 BOOST_AUTO_TEST_SUITE_END()
