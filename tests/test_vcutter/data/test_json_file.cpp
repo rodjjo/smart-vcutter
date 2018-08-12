@@ -1,7 +1,5 @@
 #include <cstdio>
 #include <fstream>
-#include <map>
-#include <cstring>
 #include <boost/filesystem.hpp>
 #include "tests/testing.h"
 #include "src/data/json_file.h"

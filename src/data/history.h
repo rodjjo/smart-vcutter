@@ -4,17 +4,24 @@
 #ifndef SRC_DATA_HISTORY_H_
 #define SRC_DATA_HISTORY_H_
 
+#include <memory>
 #include <string>
-#include "src/data/session.h"
+
+#include "src/data/json_file.h"
 
 namespace vcutter {
 
-class History : private Session {
+class History {
   public:
-    History();
+    History(const char *path=NULL);
     virtual ~History();
-    std::string get(const char *key);
-    void set(const char *key, const char* value);
+    std::string operator[] (const char *key);
+    void set(const char *key, const char *value);
+
+    static std::string history_file_path();
+
+  private:
+    std::unique_ptr<JsonFile> json_file_;
 };
 
 }  // namespace vcutter

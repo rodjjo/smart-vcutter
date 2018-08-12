@@ -259,7 +259,7 @@ void MainWindow::init_main_menu() {
 menu_callback_t MainWindow::action_utils_clipping() {
     return [this] (Menu *) {
         const char *key = "main-window-project-dir";
-        std::string directory = history_.get(key);
+        std::string directory = history_[key];
         std::string path = input_prj_file_chooser(&directory);
         if (!directory.empty()) {
             history_.set(key, directory.c_str());
@@ -505,7 +505,7 @@ menu_callback_t MainWindow::action_file_open_project() {
             return;
         }
         const char *key = "main-window-project-dir";
-        std::string directory = history_.get(key);
+        std::string directory = history_[key];
         open_video_or_project(input_prj_file_chooser(&directory));
         if (!directory.empty()) {
             history_.set(key, directory.c_str());
@@ -520,7 +520,7 @@ menu_callback_t MainWindow::action_file_open() {
             return;
         }
         const char *key = "main-window-video-dir";
-        std::string directory = history_.get(key);
+        std::string directory = history_[key];
         open_video_or_project(input_video_file_chooser(&directory));
         if (!directory.empty()) {
             history_.set(key, directory.c_str());
@@ -534,7 +534,7 @@ bool MainWindow::save_project(bool create_new_file) {
 
     if (path.empty()) {
         const char *key = "main-window-project-dir";
-        std::string directory = history_.get(key);
+        std::string directory = history_[key];
         path = output_prj_file_chooser(&directory);
         if (!directory.empty()) {
             history_.set(key, directory.c_str());

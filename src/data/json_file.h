@@ -13,14 +13,15 @@ class JsonFile {
  public:
     JsonFile(const char *path, bool delete_on_close=false);
     virtual ~JsonFile();
-    virtual bool loaded();
-    virtual bool save(const Json::Value& data);
-    virtual bool save();
+    bool loaded();
+    bool save(const Json::Value& data);
+    bool save();
     Json::Value & operator[] (const char *key);
     const Json::Value & operator[] (const char *key) const;
-    virtual const Json::Value & get_data();
+    const Json::Value & get_data();
  private:
     void load();
+
  private:
     bool loaded_;
     Json::Value root_;
