@@ -14,9 +14,7 @@ def get_sources(dir):
 
 
 def get_all_sources():
-    for f in get_sources('libs'):
-        yield f
-    for f in get_sources('smart-vcutter'):
+    for f in get_sources('src'):
         yield f
 
 

@@ -1,5 +1,5 @@
 #include "tests/testing.h"
-#include "smart-vcutter/common/point.h"
+#include "src/common/point.h"
 
 BOOST_AUTO_TEST_SUITE(point_test_suite)
 

@@ -3,7 +3,7 @@
 #include <string> 
 #include <boost/filesystem.hpp>
 #include "tests/testing.h"
-#include "smart-vcutter/common/utils.h"
+#include "src/common/utils.h"
 
 BOOST_AUTO_TEST_SUITE(utils_test_suite)
 

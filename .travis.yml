@@ -8,6 +8,7 @@ addons:
       - sourceline: 'deb http://en.archive.ubuntu.com/ubuntu/ artful main universe'
     packages:
       - cmake
+      - python3
       - libboost-chrono-dev 
       - libboost-filesystem-dev 
       - libboost-system-dev 
@@ -27,4 +28,4 @@ addons:
       - libjsoncpp-dev
       - libopencv-dev 
       - lcov
-script: cmake . && cmake --build .
+script: python3 misc/checks.py lint && cmake . && cmake --build .

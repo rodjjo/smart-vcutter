@@ -1,5 +1,5 @@
 #include "tests/testing.h"
-#include "smart-vcutter/common/view_port.h"
+#include "src/common/view_port.h"
 
 BOOST_AUTO_TEST_SUITE(viewport_test_suite)
 

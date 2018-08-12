@@ -8,7 +8,7 @@ A multiplatform tool to generate small, silent and short clips from videos.
 
 Attention: The sound support is not necessary to this project. The focus is to produce video animations instead of GIF images. I hope gif format get out of the internet some day.
 
-It was a prototype (XGH) and needs lots of code improvements, i'm opening the code to get some help with that.
+It was a prototype (spike) and needs lots of code improvements, i'm opening the code to get some help with that.
 
 ## Features
 
