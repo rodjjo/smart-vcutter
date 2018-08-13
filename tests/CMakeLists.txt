@@ -18,6 +18,7 @@ file(GLOB TestSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../third-party/googletest/src/gtest-all.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_vcutter/common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/test_vcutter/clippings/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_vcutter/data/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_vstream/*.cpp")
 
