@@ -27,7 +27,7 @@ class Clipping {
     void add(const ClippingKey & key);
     void save(const char *path);
     Json::Value serialize();
-
+    uint32_t req_buffer_size();
  private:
     void load(const Json::Value & root);
     void load(const char *path);

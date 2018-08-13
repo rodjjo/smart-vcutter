@@ -142,5 +142,9 @@ PlayerWrapper *Clipping::player() {
     return player_.get();
 }
 
+uint32_t Clipping::req_buffer_size() {
+    return output_w_ * output_h_ * 3;
+}
+
 
 }  // namespace vcutter
