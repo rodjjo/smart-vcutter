@@ -1,9 +1,39 @@
+#include <memory>
+
 #include "tests/testing.h"
 #include "src/clippings/clipping_key.h"
 #include "src/clippings/clipping.h"
 
+namespace {
 
-BOOST_AUTO_TEST_SUITE(clipping_key_test_suite)
+std::unique_ptr<vcutter::Clipping> clp;
+
+class SuiteFixture {
+ public:
+    SuiteFixture() {
+        clp.reset(new vcutter::Clipping("data/sample_video.webm", true));
+        clp->w(clp->player()->info()->w());
+        clp->h(clp->player()->info()->h());
+    }
+
+    ~SuiteFixture() {
+        clp.reset();
+    }
+};
+
+class RestoreClp {
+ public:
+    ~RestoreClp() {
+        clp->w(clp->player()->info()->w());
+        clp->h(clp->player()->info()->h());
+    }
+};
+
+}  // namespace
+
+
+BOOST_FIXTURE_TEST_SUITE(clipping_key_test_suite, SuiteFixture)
+
 
 BOOST_AUTO_TEST_CASE(test_clipping_key_constructors) {
     Json::Value data;
@@ -59,5 +89,123 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_angle) {
     BOOST_CHECK_EQUAL(k2.angle(), 10);
     BOOST_CHECK_EQUAL(k3.angle(), 340);
 }
+
+BOOST_AUTO_TEST_CASE(test_clipping_y_constraints) {
+    vcutter::ClippingKey k1;
+    k1.scale = 1;
+    k1.px = clp->player()->info()->w() / 2;
+    k1.py = clp->player()->info()->h() / 4;
+    
+    auto k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 0.5, 1);
+
+    k1.py /= 2;
+    k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 0.25, 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_individual_x_constraints) {
+    vcutter::ClippingKey k1;
+    k1.scale = 1;
+    k1.px = clp->player()->info()->w() / 4;
+    k1.py = clp->player()->info()->h() / 2;
+    
+    auto k2 = k1.constrained(clp.get());
+    
+    k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 0.5, 1);
+
+    k1.px /= 2;
+    k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 0.246, 1);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_individual_xy_constraints) {
+    vcutter::ClippingKey k1;
+    k1.scale = 1;
+    k1.px = clp->player()->info()->w() / 8;
+    k1.py = clp->player()->info()->h() / 4;
+    
+    auto k2 = k1.constrained(clp.get());
+    
+    k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 0.2463, 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_individual_scaled_constraints) {
+    RestoreClp restore;
+
+    vcutter::ClippingKey k1;
+    k1.scale = 5;
+    clp->w(200);
+    clp->h(350);
+    
+    k1.px = clp->player()->info()->w() / 2.0;
+    k1.py = clp->player()->info()->h() / 2.0;
+    
+    auto k2 = k1.constrained(clp.get());
+    
+    k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 2, 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_individual_rotated_constraints) {
+    vcutter::ClippingKey k1;
+
+    k1.angle(90);
+    k1.px = clp->player()->info()->w() / 2.0;
+    k1.py = clp->player()->info()->h() / 2.0;
+   
+    auto k2 = k1.constrained(clp.get());
+    
+    k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 0.56111, 1);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_individual_rotscale_constraints) {
+    vcutter::ClippingKey k1;
+
+    k1.scale = 4;
+    k1.angle(45);
+    k1.px = clp->player()->info()->w() / 2.0;
+    k1.py = clp->player()->info()->h() / 2.0;
+   
+    auto k2 = k1.constrained(clp.get());
+    
+    k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 0.5075, 1);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_individual_rotscale_y_constraints) {
+    vcutter::ClippingKey k1;
+
+    k1.scale = 4;
+    k1.angle(45);
+    k1.px = clp->player()->info()->w() / 2.0;
+    k1.py = clp->player()->info()->h() / 4.0;
+   
+    auto k2 = k1.constrained(clp.get());
+    
+    k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 0.4522, 1);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_individual_rotscale_x_constraints) {
+    vcutter::ClippingKey k1;
+
+    k1.scale = 4;
+    k1.angle(45);
+    k1.px = clp->player()->info()->w() / 4.0;
+    k1.py = clp->player()->info()->h() / 2.0;
+   
+    auto k2 = k1.constrained(clp.get());
+    
+    k2 = k1.constrained(clp.get());
+    BOOST_CHECK_CLOSE(k2.scale, 0.2537, 1);
+}
+
 
 BOOST_AUTO_TEST_SUITE_END()

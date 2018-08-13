@@ -146,5 +146,21 @@ uint32_t Clipping::req_buffer_size() {
     return output_w_ * output_h_ * 3;
 }
 
+void Clipping::w(uint32_t value) {
+    if (value > player_->info()->w()) {
+        return;
+    }
+    inc_version();
+    output_w_ = value;
+}
+
+void Clipping::h(uint32_t value) {
+    if (value > player_->info()->h()) {
+        return;
+    }
+    inc_version();
+    output_h_ = value;
+}
+
 
 }  // namespace vcutter

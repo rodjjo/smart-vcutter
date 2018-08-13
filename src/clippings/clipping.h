@@ -18,10 +18,12 @@ namespace vcutter {
 
 class Clipping {
  public:
-    Clipping(const Json::Value & root);
+    explicit Clipping(const Json::Value & root);
     Clipping(const char *path, bool path_is_video);
     uint32_t w();
     uint32_t h();
+    void w(uint32_t value);
+    void h(uint32_t value);
     PlayerWrapper *player();
     bool good();
     void add(const ClippingKey & key);
