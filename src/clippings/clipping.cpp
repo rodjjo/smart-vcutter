@@ -10,13 +10,9 @@ Clipping::Clipping(const char *path, bool path_is_video) {
     output_w_ = 0;
     output_h_ = 0;
     if (path_is_video) {
-        video_path_ = path;
-        player_.reset(new PlayerWrapper(path));
-        if (good()){
-            after_video_open();
-        }
+        video_open(path);
     } else {
-        load(path);
+        load_file(path);
     }
     version_ = 0;
 }
@@ -24,11 +20,22 @@ Clipping::Clipping(const char *path, bool path_is_video) {
 Clipping::Clipping(const Json::Value * root) {
     output_w_ = 0;
     output_h_ = 0;
-    load(*root);
+    load_json(*root);
     version_ = 0;
 }
 
-void Clipping::after_video_open() {
+void Clipping::video_open(const char *path) {
+    if (!*path) {
+        return;
+    }
+
+    video_path_ = path;
+    player_.reset(new PlayerWrapper(path));
+
+    if (!good()){
+        return;
+    }
+
     if (!output_w_) {
         output_w_ = player_->info()->w();
     }
@@ -38,20 +45,10 @@ void Clipping::after_video_open() {
     }
 }
 
-void Clipping::load(const Json::Value & root) {
+void Clipping::load_json(const Json::Value & root) {
     auto path = root["video_path"].asString();
 
-    if (path.empty()) {
-        return;
-    }
-
-    video_path_ = path;
-    player_.reset(new PlayerWrapper(path));
-    if (!good()){
-        return;
-    }
-
-    after_video_open();
+    video_open(path.c_str());
 
     if (root.isMember("width")) {
         output_w_ = root["width"].asInt();
@@ -87,14 +84,20 @@ Json::Value Clipping::serialize() {
     return data;
 }
 
-void Clipping::load(const char *path) {
+void Clipping::load_file(const char *path) {
     JsonFile jsf(path);
 
     if (!jsf.loaded()) {
         return;
     }
 
-    load(jsf["clipping"]);
+    load_json(jsf["clipping"]);
+}
+
+void Clipping::save(const char *path) {
+    JsonFile jsf(path, false, false);
+    jsf["clipping"] = serialize();
+    jsf.save();
 }
 
 bool Clipping::good() {

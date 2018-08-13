@@ -33,9 +33,9 @@ class Clipping {
     uint32_t req_buffer_size();
     const std::list<ClippingKey> keys() const;
  private:
-    void load(const Json::Value & root);
-    void load(const char *path);
-    void after_video_open();
+    void load_json(const Json::Value & root);
+    void load_file(const char *path);
+    void video_open(const char *path);
     void inc_version();
     ClippingKey compute_interpolation(uint32_t frame);
  private:

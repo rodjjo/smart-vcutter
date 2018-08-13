@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <memory>
 
 #include "tests/testing.h"
@@ -137,6 +138,22 @@ BOOST_AUTO_TEST_CASE(test_clipping_get_keys) {
     BOOST_CHECK_EQUAL(k4.scale, k3.scale);
     BOOST_CHECK_EQUAL(k4.px, k3.px);
     BOOST_CHECK_EQUAL(k4.py, k3.py);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
+    const char *temp_path = "data/tmp/test_clipping_save.vcutter";
+    std::remove(temp_path);
+
+    clp->save(temp_path);
+    
+    vcutter::Clipping clp2(temp_path, false);
+    
+    BOOST_CHECK_EQUAL(clp2.good(), true);
+    BOOST_CHECK_EQUAL(clp2.w(), 80);
+    BOOST_CHECK_EQUAL(clp2.h(), 180);
+    BOOST_CHECK_EQUAL(clp2.keys().size(), 2);
+
+    std::remove(temp_path);
 }
 
 

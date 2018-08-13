@@ -12,10 +12,12 @@ BOOST_AUTO_TEST_CASE(test_json_file_loads) {
     vcutter::JsonFile jf1("data/not_existing_json.json");
     vcutter::JsonFile jf2("data/test_json_file.json");
     vcutter::JsonFile jf3("data/test_json_broken.json");
+    vcutter::JsonFile jf4("data/test_json_file.json", false, false);
 
     BOOST_CHECK(!jf1.loaded());
     BOOST_CHECK(jf2.loaded());
     BOOST_CHECK(!jf3.loaded());
+    BOOST_CHECK(!jf4.loaded());
 }
 
 BOOST_AUTO_TEST_CASE(test_json_file_delete) {

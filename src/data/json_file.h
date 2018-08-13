@@ -11,7 +11,7 @@ namespace vcutter {
 
 class JsonFile {
  public:
-    JsonFile(const char *path, bool delete_on_close=false);
+    JsonFile(const char *path, bool delete_on_close=false, bool should_load=true);
     virtual ~JsonFile();
     bool loaded();
     bool save(const Json::Value& data);
