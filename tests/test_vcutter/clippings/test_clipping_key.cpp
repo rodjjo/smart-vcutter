@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_angle) {
     BOOST_CHECK_EQUAL(k3.angle(), 340);
 }
 
-BOOST_AUTO_TEST_CASE(test_clipping_y_constraints) {
+BOOST_AUTO_TEST_CASE(test_clipping_key_y_constraints) {
     vcutter::ClippingKey k1;
     k1.scale = 1;
     k1.px = clp->player()->info()->w() / 2;
@@ -104,7 +104,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_y_constraints) {
     BOOST_CHECK_CLOSE(k2.scale, 0.25, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_clipping_individual_x_constraints) {
+BOOST_AUTO_TEST_CASE(test_clipping_key_individual_x_constraints) {
     vcutter::ClippingKey k1;
     k1.scale = 1;
     k1.px = clp->player()->info()->w() / 4;
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_individual_x_constraints) {
 }
 
 
-BOOST_AUTO_TEST_CASE(test_clipping_individual_xy_constraints) {
+BOOST_AUTO_TEST_CASE(test_clipping_key_individual_xy_constraints) {
     vcutter::ClippingKey k1;
     k1.scale = 1;
     k1.px = clp->player()->info()->w() / 8;
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_individual_xy_constraints) {
     BOOST_CHECK_CLOSE(k2.scale, 0.2463, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_clipping_individual_scaled_constraints) {
+BOOST_AUTO_TEST_CASE(test_clipping_key_individual_scaled_constraints) {
     RestoreClp restore;
 
     vcutter::ClippingKey k1;
@@ -150,7 +150,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_individual_scaled_constraints) {
     BOOST_CHECK_CLOSE(k2.scale, 2, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_clipping_individual_rotated_constraints) {
+BOOST_AUTO_TEST_CASE(test_clipping_key_individual_rotated_constraints) {
     vcutter::ClippingKey k1;
 
     k1.angle(90);
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_individual_rotated_constraints) {
     BOOST_CHECK_CLOSE(k2.scale, 0.56111, 1);
 }
 
-BOOST_AUTO_TEST_CASE(test_clipping_individual_rotscale_constraints) {
+BOOST_AUTO_TEST_CASE(test_clipping_key_individual_rotscale_constraints) {
     vcutter::ClippingKey k1;
 
     k1.scale = 4;
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_individual_rotscale_constraints) {
 }
 
 
-BOOST_AUTO_TEST_CASE(test_clipping_individual_rotscale_y_constraints) {
+BOOST_AUTO_TEST_CASE(test_clipping_key_individual_rotscale_y_constraints) {
     vcutter::ClippingKey k1;
 
     k1.scale = 4;
@@ -192,8 +192,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_individual_rotscale_y_constraints) {
     BOOST_CHECK_CLOSE(k2.scale, 0.4522, 1);
 }
 
-
-BOOST_AUTO_TEST_CASE(test_clipping_individual_rotscale_x_constraints) {
+BOOST_AUTO_TEST_CASE(test_clipping_key_individual_rotscale_x_constraints) {
     vcutter::ClippingKey k1;
 
     k1.scale = 4;
@@ -207,5 +206,37 @@ BOOST_AUTO_TEST_CASE(test_clipping_individual_rotscale_x_constraints) {
     BOOST_CHECK_CLOSE(k2.scale, 0.2537, 1);
 }
 
+BOOST_AUTO_TEST_CASE(test_clipping_key_clipping_box) {
+    vcutter::ClippingKey k1;
+
+    k1.frame = 120;
+    k1.px = 2;
+    k1.py = 3;
+    k1.scale = 4;
+    k1.angle(75);
+
+    vcutter::ClippingKey k2 = k1.constrained(clp.get());
+
+    vcutter::box_t b1 = k1.clipping_box(clp.get());
+    vcutter::box_t b2 = k2.clipping_box(clp.get());
+
+    BOOST_CHECK_EQUAL(b1[0].x, 1182);
+    BOOST_CHECK_EQUAL(b1[0].y, -1154);
+    BOOST_CHECK_EQUAL(b1[1].x, 1603);
+    BOOST_CHECK_EQUAL(b1[1].y, 414);
+    BOOST_CHECK_EQUAL(b1[2].x, -1178);
+    BOOST_CHECK_EQUAL(b1[2].y, 1160);
+    BOOST_CHECK_EQUAL(b1[3].x, -1599);
+    BOOST_CHECK_EQUAL(b1[3].y, -408);
+
+    BOOST_CHECK_EQUAL(b2[0].x, 3);
+    BOOST_CHECK_EQUAL(b2[0].y, 1);
+    BOOST_CHECK_EQUAL(b2[1].x, 4);
+    BOOST_CHECK_EQUAL(b2[1].y, 3);
+    BOOST_CHECK_EQUAL(b2[2].x, 0);
+    BOOST_CHECK_EQUAL(b2[2].y, 4);
+    BOOST_CHECK_EQUAL(b2[3].x, 0);
+    BOOST_CHECK_EQUAL(b2[3].y, 2);
+}
 
 BOOST_AUTO_TEST_SUITE_END()

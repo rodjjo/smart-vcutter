@@ -27,6 +27,7 @@ class Clipping {
     PlayerWrapper *player();
     bool good();
     void add(const ClippingKey & key);
+    ClippingKey operator[] (uint32_t frame);
     void save(const char *path);
     Json::Value serialize();
     uint32_t req_buffer_size();
@@ -36,6 +37,7 @@ class Clipping {
     void load(const char *path);
     void after_video_open();
     void inc_version();
+    ClippingKey compute_interpolation(uint32_t frame);
  private:
     std::string video_path_;
     int64_t version_;

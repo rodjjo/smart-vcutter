@@ -79,10 +79,6 @@ ClippingKey ClippingKey::constrained(Clipping *owner) {
     return result;
 }
 
-box_t ClippingKey::occupied_area(Clipping *owner) {
-    return clipping_box(owner).occupied_area();
-}
-
 box_t ClippingKey::clipping_box(Clipping *owner) {
     box_t result;
     result[0].x = 0;
@@ -109,7 +105,7 @@ void ClippingKey::limit_scale(Clipping *owner) {
     int width = owner->player()->info()->w() - 1;
     int height = owner->player()->info()->h() - 1;
 
-    box_t area = occupied_area(owner);
+    box_t area = clipping_box(owner).occupied_area();
 
     point_t center(area.center());
 

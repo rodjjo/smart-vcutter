@@ -22,7 +22,6 @@ class ClippingKey {
     box_t clipping_box(Clipping *owner);
     bool computed();
 private:
-    box_t occupied_area(Clipping *owner);
     void limit_scale(Clipping *owner);
 
 private:

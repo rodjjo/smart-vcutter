@@ -130,6 +130,7 @@ void Clipping::add(const ClippingKey & key) {
     }
 
     keys_.push_back(key);
+    keys_.rbegin()->computed_ = false;
 }
 
 uint32_t Clipping::w() {
@@ -166,6 +167,96 @@ void Clipping::h(uint32_t value) {
 
 const std::list<ClippingKey> Clipping::keys() const {
     return keys_;
+}
+
+ClippingKey Clipping::compute_interpolation(uint32_t frame) {
+    bool first_found = false;
+    ClippingKey left, right;
+
+    auto begin = keys_.begin();
+    auto end = keys_.end();
+
+    left = *begin;
+    right = *begin;
+
+    while (begin != end)  {
+        if (begin->frame <= frame) {
+            left = *begin;
+            right = *begin;
+            first_found = true;
+        }
+
+        if (begin->frame >= frame) {
+            right = *begin;
+            if (!first_found) {
+                left = *begin;
+                first_found = true;
+            }
+            break;
+        }
+        ++begin;
+    }
+
+    if (left.frame == frame) {
+        return left;
+    }
+
+    if (right.frame == frame) {
+        return right;
+    }
+
+    ClippingKey current = left;
+    current.frame = frame;
+
+    bool clockwise = true;
+
+    if (left.frame < right.frame) {
+        float frame_diff = frame - left.frame;
+
+        double interpolation = (1.0f / static_cast<double>(right.frame - left.frame)) * frame_diff;
+
+        float difx = (right.px - left.px);
+        float dify = (right.py - left.py);
+        float difs = (right.scale - left.scale);
+        double difa = right.angle() - left.angle();
+
+        if (difa < 0) {
+            clockwise = (difa + 360) <= 180;
+        } else {
+            clockwise = difa <= 180;
+        }
+
+        if (!clockwise) {
+            difa = -difa;
+        }
+        if (difa < 0) {
+            difa += 360;
+        }
+
+        current.px = left.px + difx * interpolation;
+        current.py = left.py + dify * interpolation;
+        current.scale = left.scale + difs * interpolation;
+        current.angle(left.angle() + (difa * interpolation * (clockwise ? 1 : -1)));
+    }
+
+    current.computed_ = true;
+    return current;
+}
+
+ClippingKey Clipping::operator[] (uint32_t frame) {
+    if (!keys_.empty()) {
+        return compute_interpolation(frame);
+    }
+
+    ClippingKey result;
+
+    result.scale = 1.0;
+    result.angle(0);
+    result.frame = frame;
+    result.px = player_->info()->w() / 2;
+    result.py = player_->info()->h() / 2;
+
+    return result;
 }
 
 }  // namespace vcutter
