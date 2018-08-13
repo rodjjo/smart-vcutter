@@ -13,6 +13,7 @@ ClippingKey::ClippingKey(const Json::Value & data) {
     py = data["py"].asInt();
     scale = data["scale"].asInt();
     angle_ = data["angle"].asInt();
+    computed_ = true;
 }
 
 ClippingKey::ClippingKey() {
@@ -21,6 +22,11 @@ ClippingKey::ClippingKey() {
     py = 0;
     scale = 1;
     angle_ = 0;
+    computed_ = true;
+}
+
+bool ClippingKey::computed() {
+    return computed_;
 }
 
 Json::Value ClippingKey::serialize() const {

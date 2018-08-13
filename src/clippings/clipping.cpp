@@ -117,9 +117,11 @@ void Clipping::add(const ClippingKey & key) {
     while (it != keys_.end()) {
         if (it->frame == key.frame) {
             *it = key;
+            it->computed_ = false;
             return;
         } else if (it->frame > key.frame) {
-            keys_.insert(it, key);
+            auto nk = keys_.insert(it, key);
+            nk->computed_ = false;
             return;
         }
         ++it;

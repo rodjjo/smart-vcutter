@@ -20,10 +20,14 @@ class ClippingKey {
     void angle(double value);
     ClippingKey constrained(Clipping *owner);
     box_t clipping_box(Clipping *owner);
+    bool computed();
 private:
     box_t occupied_area(Clipping *owner);
     void limit_scale(Clipping *owner);
 
+private:
+    friend class Clipping;
+    bool computed_;
 public:
     unsigned int frame;
     uint32_t px;
@@ -33,7 +37,6 @@ public:
 private:
     uint32_t angle_;
 };
-
 
 }  // namespace vcutter
 
