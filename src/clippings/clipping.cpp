@@ -21,10 +21,10 @@ Clipping::Clipping(const char *path, bool path_is_video) {
     version_ = 0;
 }
 
-Clipping::Clipping(const Json::Value & root) {
+Clipping::Clipping(const Json::Value * root) {
     output_w_ = 0;
     output_h_ = 0;
-    load(root);
+    load(*root);
     version_ = 0;
 }
 
@@ -76,11 +76,13 @@ Json::Value Clipping::serialize() {
     data["width"] = output_w_;
     data["height"] = output_h_;
 
-    auto & keys = data["keys"];
+    Json::Value keys;
 
     for (auto & k : keys_) {
         keys.append(k.serialize());
     }
+
+    data["keys"] = keys;
 
     return data;
 }
@@ -162,5 +164,8 @@ void Clipping::h(uint32_t value) {
     output_h_ = value;
 }
 
+const std::list<ClippingKey> Clipping::keys() const {
+    return keys_;
+}
 
 }  // namespace vcutter

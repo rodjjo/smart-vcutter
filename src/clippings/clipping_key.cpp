@@ -7,6 +7,7 @@
 
 namespace vcutter {
 
+
 ClippingKey::ClippingKey(const Json::Value & data) {
     frame = data["frame"].asInt();
     px = data["px"].asInt();
@@ -52,7 +53,7 @@ void ClippingKey::angle(double value) {
 }
 
 ClippingKey ClippingKey::constrained(Clipping *owner) {
-    ClippingKey result = *this;
+    ClippingKey result(*this);
 
     int max_x = owner->player()->info()->w() - 1;
     int max_y = owner->player()->info()->h() - 1;

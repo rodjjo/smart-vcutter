@@ -18,7 +18,7 @@ namespace vcutter {
 
 class Clipping {
  public:
-    explicit Clipping(const Json::Value & root);
+    explicit Clipping(const Json::Value * root);
     Clipping(const char *path, bool path_is_video);
     uint32_t w();
     uint32_t h();
@@ -30,6 +30,7 @@ class Clipping {
     void save(const char *path);
     Json::Value serialize();
     uint32_t req_buffer_size();
+    const std::list<ClippingKey> keys() const;
  private:
     void load(const Json::Value & root);
     void load(const char *path);

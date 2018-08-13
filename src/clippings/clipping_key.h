@@ -13,7 +13,7 @@ class Clipping;
 
 class ClippingKey {
  public:
-    ClippingKey(const Json::Value & data);
+    explicit ClippingKey(const Json::Value & data);
     ClippingKey();
     Json::Value serialize() const;
     double angle() const;
