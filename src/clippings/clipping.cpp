@@ -55,7 +55,7 @@ void copy_center(cv::Mat& source, cv::Mat& target) {
   roi_img_in.copyTo(roi_img_out);
 }
 
-}  // namespace
+}  // namespace tmp
 
 Clipping::Clipping(const char *path, bool path_is_video) {
     clear_reference();
@@ -300,7 +300,7 @@ ClippingKey Clipping::compute_interpolation(uint32_t frame) {
     return current;
 }
 
-ClippingKey Clipping::operator[] (uint32_t frame) {
+ClippingKey Clipping::at(uint32_t frame) {
     if (!keys_.empty()) {
         return compute_interpolation(frame);
     }
@@ -334,7 +334,7 @@ void Clipping::remove(uint32_t frame) {
 void Clipping::remove_before(uint32_t frame) {
     inc_version();
 
-    auto key_at_frame1 = (*this)[frame];
+    auto key_at_frame1 = at(frame);
 
     auto it = keys_.begin();
     while (it != keys_.end()) {
@@ -355,7 +355,7 @@ void Clipping::remove_before(uint32_t frame) {
 
     if (keys_.size() < 2) {
         frame += 1;
-        auto key_at_frame2 = (*this)[frame];
+        auto key_at_frame2 = at(frame);
         add(key_at_frame2);
     }
 }
@@ -363,7 +363,7 @@ void Clipping::remove_before(uint32_t frame) {
 void Clipping::remove_after(uint32_t frame) {
     inc_version();
 
-    auto key_at_frame1 = (*this)[frame];
+    auto key_at_frame1 = at(frame);
 
     auto it = keys_.begin();
     while (it != keys_.end()) {
@@ -384,14 +384,14 @@ void Clipping::remove_after(uint32_t frame) {
 
     if (keys_.size() < 2) {
         --frame;
-        auto key_at_frame2 = (*this)[frame];
+        auto key_at_frame2 = at(frame);
         add(key_at_frame2);
     }
 }
 
 void Clipping::remove_others(uint32_t frame_to_keep) {
     inc_version();
-    auto key = (*this)[frame_to_keep];
+    auto key = at(frame_to_keep);
     keys_.clear();
     add(key);
 }
@@ -448,7 +448,7 @@ uint64_t Clipping::version() {
 }
 
 void Clipping::positionate_left(uint32_t frame) {
-    auto key = (*this)[frame];
+    auto key = at(frame);
 
     auto bb = key.constrained(this).clipping_box(this).occupied_area();
 
@@ -461,7 +461,7 @@ void Clipping::positionate_left(uint32_t frame) {
 }
 
 void Clipping::positionate_right(uint32_t frame) {
-    auto key = (*this)[frame];
+    auto key = at(frame);
 
     auto bb = key.constrained(this).clipping_box(this).occupied_area();
 
@@ -474,7 +474,7 @@ void Clipping::positionate_right(uint32_t frame) {
 }
 
 void Clipping::positionate_top(uint32_t frame) {
-    auto key = (*this)[frame];
+    auto key = at(frame);
 
     auto bb = key.constrained(this).clipping_box(this).occupied_area();
 
@@ -487,7 +487,7 @@ void Clipping::positionate_top(uint32_t frame) {
 }
 
 void Clipping::positionate_bottom(uint32_t frame) {
-    auto key = (*this)[frame];
+    auto key = at(frame);
 
     auto bb = key.constrained(this).clipping_box(this).occupied_area();
 
@@ -500,19 +500,19 @@ void Clipping::positionate_bottom(uint32_t frame) {
 }
 
 void Clipping::positionate_vertical(uint32_t frame) {
-    auto key = (*this)[frame];
+    auto key = at(frame);
     key.py = player_->info()->h() / 2.0;
     add(key);
 }
 
 void Clipping::positionate_horizontal(uint32_t frame) {
-    auto key = (*this)[frame];
+    auto key = at(frame);
     key.px = player_->info()->w() / 2.0;
     add(key);
 }
 
 void Clipping::normalize_scale(uint32_t frame) {
-    add((*this)[frame].constrained(this));
+    add(at(frame).constrained(this));
 }
 
 void Clipping::align_left(uint32_t frame) {
@@ -536,7 +536,7 @@ void Clipping::align_all(uint32_t frame) {
 }
 
 ClippingKey Clipping::current_key() {
-    return (*this)[player_->info()->position()];
+    return at(player_->info()->position());
 }
 
 void Clipping::render(ClippingKey key, uint8_t *source_buffer, uint32_t target_w, uint32_t target_h, uint8_t *buffer, bool transparent) {

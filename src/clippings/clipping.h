@@ -27,7 +27,7 @@ class Clipping {
     PlayerWrapper *player();
     bool good();
     void add(const ClippingKey & key);
-    ClippingKey operator[] (uint32_t frame);
+    ClippingKey at(uint32_t frame);
     void save(const char *path);
     Json::Value serialize();
     uint32_t req_buffer_size();

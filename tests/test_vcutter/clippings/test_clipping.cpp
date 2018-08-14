@@ -97,11 +97,11 @@ BOOST_AUTO_TEST_CASE(test_clipping_buffer_size) {
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_get_keys) {
-    auto k0 = (*clp)[119];  // before first key frame
-    auto k1 = (*clp)[120];  // key
-    auto k2 = (*clp)[500];  // intermediate
-    auto k3 = (*clp)[1200]; // key
-    auto k4 = (*clp)[1201]; // after last key frame
+    auto k0 = clp->at(119);  // before first key frame
+    auto k1 = clp->at(120);  // key
+    auto k2 = clp->at(500);  // intermediate
+    auto k3 = clp->at(1200); // key
+    auto k4 = clp->at(1201); // after last key frame
 
     BOOST_CHECK_EQUAL(k0.computed(), true);
     BOOST_CHECK_EQUAL(k1.computed(), false);
