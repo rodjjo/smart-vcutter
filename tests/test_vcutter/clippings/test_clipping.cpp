@@ -14,7 +14,7 @@ class SuiteFixture {
         clp.reset(new vcutter::Clipping("data/sample_video.webm", true));
         clp->w(80);
         clp->h(180);
-        
+
         vcutter::ClippingKey k1;
 
         k1.frame = 120;
@@ -22,7 +22,7 @@ class SuiteFixture {
         k1.py = 60;
         k1.scale = 1;
         k1.angle(360);
-        
+
         clp->add(k1);
 
         k1.angle(180);
@@ -30,7 +30,7 @@ class SuiteFixture {
         k1.px = 80;
         k1.py = 120;
         k1.scale = 0.5;
-        
+
         clp->add(k1);
     }
 
@@ -58,13 +58,13 @@ BOOST_AUTO_TEST_CASE(test_clipping_deserialize) {
     data["video_path"] = "data/sample_video.webm";
     data["width"] = 100;
     data["height"] = 200;
-   
+
     key["frame"] = 120;
     key["px"] = 2;
     key["py"] = 3;
     key["scale"] = 4;
     key["angle"] = 360000;
-    
+
     data["keys"].append(key);
 
     vcutter::Clipping clp2(&data);
@@ -80,7 +80,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_serialize) {
     BOOST_CHECK_EQUAL(clp->keys().size(), 2);
 
     auto data = clp->serialize();
-   
+
     BOOST_CHECK_EQUAL(data["video_path"].asString(), "data/sample_video.webm");
     BOOST_CHECK_EQUAL(data["width"].asInt(), 80);
     BOOST_CHECK_EQUAL(data["height"].asInt(), 180);
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_buffer_size) {
 BOOST_AUTO_TEST_CASE(test_clipping_get_keys) {
     auto k0 = (*clp)[119];  // before first key frame
     auto k1 = (*clp)[120];  // key
-    auto k2 = (*clp)[500];  // intermediate 
+    auto k2 = (*clp)[500];  // intermediate
     auto k3 = (*clp)[1200]; // key
     auto k4 = (*clp)[1201]; // after last key frame
 
@@ -145,9 +145,9 @@ BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
     std::remove(temp_path);
 
     clp->save(temp_path);
-    
+
     vcutter::Clipping clp2(temp_path, false);
-    
+
     BOOST_CHECK_EQUAL(clp2.good(), true);
     BOOST_CHECK_EQUAL(clp2.w(), 80);
     BOOST_CHECK_EQUAL(clp2.h(), 180);
@@ -156,5 +156,34 @@ BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
     std::remove(temp_path);
 }
 
+/*
+    functions to test:
+    render
+    render overloaded
+    remove
+    remove_before
+    remove_after
+    remove_others
+    remove_all
+    first_frame
+    last_frame
+    wh
+    at_index
+    find_index
+    video_path
+    version
+    positionate_left
+    positionate_right
+    positionate_top
+    positionate_bottom
+    positionate_vertical
+    positionate_horizontal
+    normalize_scale
+    align_left
+    align_right
+    align_top
+    align_bottom
+    align_all
+*/
 
 BOOST_AUTO_TEST_SUITE_END()
