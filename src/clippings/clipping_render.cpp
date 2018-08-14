@@ -69,19 +69,10 @@ void ClippingRender::render(ClippingKey key, uint8_t *source_buffer, uint32_t ta
 
     key = key.constrained(this);
 
-    box_t box =  key.clipping_box(this);
-    box_t bbox = box.occupied_area();
+    box_t bbox = key.clipping_box(this).occupied_area();
+
     int bbox_w = bbox[1].x - bbox[0].x;
     int bbox_h = bbox[2].y - bbox[0].y;
-
-    assert(bbox_w >= 15); // TODO(Rodrigo): garantee on tests and remove these assertions
-    assert(bbox_h >= 15);
-
-    assert(bbox[0].y >= 0);
-    assert(bbox[0].x >= 0);
-
-    assert(bbox[0].y + bbox_h < source_h);
-    assert(bbox[0].x + bbox_w < source_w);
 
     cv::Mat frame(source_h, source_w, CV_8UC3, source_buffer);
     cv::Mat output(target_h, target_w, CV_8UC3, buffer);

@@ -9,6 +9,7 @@
 #include <string>
 #include <list>
 
+#include <boost/core/noncopyable.hpp>
 #include <jsoncpp/json/json.h>
 
 #include "src/wrappers/video_player.h"
@@ -16,7 +17,7 @@
 
 namespace vcutter {
 
-class ClippingData {
+class ClippingData: private boost::noncopyable {
  public:
     explicit ClippingData(const Json::Value * root);
     explicit ClippingData(const char *path);

@@ -6,16 +6,13 @@
 #define SRC_CLIPPINGS_CLIPPING_REF_H_
 
 #include <inttypes.h>
-#include <string>
-#include <list>
-
-#include <jsoncpp/json/json.h>
+#include <boost/core/noncopyable.hpp>
 
 namespace vcutter {
 
 class ClippingFrame;
 
-class ClippingRef {
+class ClippingRef: private boost::noncopyable {
  public:
     ClippingRef(ClippingFrame *clipping);
     bool has_ref();

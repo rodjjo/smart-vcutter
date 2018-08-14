@@ -6,10 +6,6 @@
 #define SRC_CLIPPINGS_CLIPPING_FRAME_H_
 
 #include <inttypes.h>
-#include <string>
-#include <list>
-
-#include <jsoncpp/json/json.h>
 
 #include "src/wrappers/video_player.h"
 #include "src/clippings/clipping_data.h"
