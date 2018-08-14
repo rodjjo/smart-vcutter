@@ -9,7 +9,8 @@
 
 namespace vcutter {
 
-class Clipping;
+class ClippingFrame;
+class ClippingData;
 
 class ClippingKey {
  public:
@@ -18,14 +19,14 @@ class ClippingKey {
     Json::Value serialize() const;
     double angle() const;
     void angle(double value);
-    ClippingKey constrained(Clipping *owner);
-    box_t clipping_box(Clipping *owner);
+    ClippingKey constrained(ClippingFrame *owner);
+    box_t clipping_box(ClippingFrame *owner);
     bool computed();
 private:
-    void limit_scale(Clipping *owner);
+    void limit_scale(ClippingFrame *owner);
 
 private:
-    friend class Clipping;
+    friend class ClippingData;
     bool computed_;
 public:
     unsigned int frame;

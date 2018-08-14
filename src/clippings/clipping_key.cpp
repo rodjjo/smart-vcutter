@@ -3,7 +3,7 @@
  */
 #include <cmath>
 #include "src/clippings/clipping_key.h"
-#include "src/clippings/clipping.h"
+#include "src/clippings/clipping_frame.h"
 
 namespace vcutter {
 
@@ -52,7 +52,7 @@ void ClippingKey::angle(double value) {
     angle_ = floor(value * 1000.0 + 0.5);
 }
 
-ClippingKey ClippingKey::constrained(Clipping *owner) {
+ClippingKey ClippingKey::constrained(ClippingFrame *owner) {
     ClippingKey result(*this);
 
     int max_x = owner->player()->info()->w() - 1;
@@ -79,7 +79,7 @@ ClippingKey ClippingKey::constrained(Clipping *owner) {
     return result;
 }
 
-box_t ClippingKey::clipping_box(Clipping *owner) {
+box_t ClippingKey::clipping_box(ClippingFrame *owner) {
     box_t result;
     result[0].x = 0;
     result[0].y = 0;
@@ -101,7 +101,7 @@ box_t ClippingKey::clipping_box(Clipping *owner) {
     return result;
 }
 
-void ClippingKey::limit_scale(Clipping *owner) {
+void ClippingKey::limit_scale(ClippingFrame *owner) {
     int width = owner->player()->info()->w() - 1;
     int height = owner->player()->info()->h() - 1;
 
