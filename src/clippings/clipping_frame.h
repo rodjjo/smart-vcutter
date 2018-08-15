@@ -17,6 +17,7 @@ class ClippingFrame: public ClippingData {
  public:
     explicit ClippingFrame(const Json::Value * root);
     ClippingFrame(const char *path, bool path_is_video);
+    virtual ~ClippingFrame(){}
     PlayerWrapper *player();
     bool good();
     ClippingKey current_key();

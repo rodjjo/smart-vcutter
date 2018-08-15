@@ -12,7 +12,6 @@
 #include <boost/core/noncopyable.hpp>
 #include <jsoncpp/json/json.h>
 
-#include "src/wrappers/video_player.h"
 #include "src/clippings/clipping_key.h"
 
 namespace vcutter {
