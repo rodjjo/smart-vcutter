@@ -11,6 +11,8 @@
 
 namespace vcutter {
 
+// TODO(Rodrigo): REMOVE IN VERSION 1.1
+
 class ClippingKeeper {
  public:
     ClippingKeeper();

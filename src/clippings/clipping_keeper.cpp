@@ -7,6 +7,8 @@
 
 namespace vcutter {
 
+// TODO(Rodrigo): REMOVE IN VERSION 1.1
+
 ClippingKeeper::ClippingKeeper() {
     video_w_  = 0;
     video_h_  = 0;

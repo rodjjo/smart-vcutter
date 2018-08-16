@@ -9,6 +9,8 @@
 
 namespace vcutter {
 
+// TODO(Rodrigo): REMOVE IN VERSION 1.1
+
 clipping_key_t compute_interpolation(
     unsigned int current_frame,
     clipping_key_list_t::const_iterator begin,
