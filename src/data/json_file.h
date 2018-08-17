@@ -11,14 +11,21 @@ namespace vcutter {
 
 class JsonFile {
  public:
-    JsonFile(const char *path, bool delete_on_close=false);
+    JsonFile(const char *path, bool delete_on_close=false, bool should_load=true);
     virtual ~JsonFile();
-    virtual bool loaded();
-    virtual bool save(const Json::Value& data);
-    virtual const Json::Value & get_data();
+    bool loaded();
+    bool save(const Json::Value& data);
+    bool save();
+    Json::Value & operator[] (const char *key);
+    const Json::Value & operator[] (const char *key) const;
+    const Json::Value & get_data();
+ private:
+    void load();
+
  private:
     bool loaded_;
     Json::Value root_;
+    std::string path_;
     bool delete_on_close_;
 };
 

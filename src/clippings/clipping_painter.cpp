@@ -9,6 +9,8 @@
 
 #include "src/clippings/clipping_painter.h"
 
+// TODO(Rodrigo): REMOVE IN VERSION 1.1
+
 namespace vcutter {
 
 box_t clipping_box(const clipping_key_t& interpolated_clipping, unsigned int target_w, unsigned int target_h) {

@@ -24,6 +24,7 @@
 #include "src/wnd_cutter/options_window.h"
 #include "src/wrappers/video_player.h"
 #include "src/clippings/clipping_painter.h"
+#include "src/clippings/clipping_session.h"
 #include "src/viewer/miniature_viewer.h"
 #include "src/viewer/editor/clipping_editor.h"
 
@@ -160,9 +161,9 @@ class CutterWindow {
     Fl_Button *btn_del_key_;
     Fl_Button *btn_play_interval_;
     Fl_Select_Browser *key_list_;
-
-    std::shared_ptr<PlayerWrapper> player_;
     ClippingEditor *clipping_editor_;
+
+    std::unique_ptr<ClippingSession> clipping_;
 
     MiniatureViewer *viewer_;
     std::unique_ptr<ClippingKeeper> keeper_;

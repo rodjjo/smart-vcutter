@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE(test_generate_path) {
 }
 
 BOOST_AUTO_TEST_CASE(test_remove_file) {
-    const char *existing_path = "./data/file_to_remove_vcutter.test";
+    const char *existing_path = "./data/tmp/file_to_remove_vcutter.test";
     {
         std::ofstream ofile;
         ofile.open(existing_path);
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(test_remove_file) {
     } // ofile scope
 
     BOOST_CHECK(vcutter::remove_file(existing_path));
-    BOOST_CHECK(vcutter::remove_file("./data/this_path_does_not_exists.txt"));
+    BOOST_CHECK(vcutter::remove_file("./data/tmp/this_path_does_not_exists.txt"));
     BOOST_CHECK(!boost::filesystem::exists(existing_path));
 }
 

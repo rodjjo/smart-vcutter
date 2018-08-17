@@ -9,6 +9,8 @@
 
 namespace vcutter {
 
+// TODO(Rodrigo): REMOVE IN VERSION 1.1
+
 clipping_key_t compute_interpolation(
     unsigned int current_frame,
     clipping_key_list_t::const_iterator begin,
@@ -31,9 +33,10 @@ clipping_key_t adjust_bounds(
     const clipping_key_t& interpolated_clipping, unsigned int target_w, unsigned int target_h, unsigned int max_x,  unsigned int max_y);
 
 box_t clipping_box(const clipping_key_t& interpolated_clipping, unsigned int target_w, unsigned int target_h);
-box_t get_bound_box(const box_t& box);
-void rotate_box(float angle, box_t *box);
-void translate_box(float px, float py, box_t *box);
+
+//box_t get_bound_box(const box_t& box);
+//void rotate_box(float angle, box_t *box);
+// void translate_box(float px, float py, box_t *box);
 
 clipping_key_t magic_tool(
     clipping_key_t source,

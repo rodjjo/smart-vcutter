@@ -495,7 +495,7 @@ const char *EncoderWindow::sugest_extension() {
 
 void EncoderWindow::action_output() {
     const char *key = has_clipping_ ? kCLIPPING_DIR_KEY : kCONVERSION_DIR_KEY;
-    std::string directory = history_->get(key);
+    std::string directory = (*history_)[key];
 
     std::string path_to_save =
         strcmp(cmb_formats_->text(), "webm") ?
@@ -661,7 +661,7 @@ void EncoderWindow::sugest_output_file() {
         }
     }
 
-    std::string dir = history_->get(has_clipping_ ? kCLIPPING_DIR_KEY : kCONVERSION_DIR_KEY);
+    std::string dir = (*history_)[has_clipping_ ? kCLIPPING_DIR_KEY : kCONVERSION_DIR_KEY];
     if (dir.empty() || !filepath_exists(dir.c_str())) {
         return;
     }
@@ -682,7 +682,7 @@ void EncoderWindow::action_video_path() {
         path = path_;
         path_.clear();
     } else {
-        std::string directory = history_->get(kSOURCE_DIR_KEY);
+        std::string directory = (*history_)[kSOURCE_DIR_KEY];
         path = input_video_file_chooser(&directory);
         if (!directory.empty()) {
             history_->set(kSOURCE_DIR_KEY, directory.c_str());
