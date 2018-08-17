@@ -21,7 +21,9 @@ ClippingData::ClippingData(const Json::Value * root) {
 }
 
 ClippingData::ClippingData() {
-
+    version_ = 0;
+    output_w_ = 0;
+    output_h_ = 0;
 }
 
 ClippingData::~ClippingData() {
@@ -244,14 +246,37 @@ void ClippingData::remove(uint32_t frame) {
     }
 }
 
-void ClippingData::remove_after(uint32_t frame) {
+void ClippingData::define_start(uint32_t frame) {
     inc_version();
 
     auto key_at_frame1 = at(frame);
 
     auto it = keys_.begin();
     while (it != keys_.end()) {
-        if (it->frame >= frame || (!keys_.empty() && it->frame == keys_.begin()->frame && frame <= it->frame)) {
+        if ((it->frame <= frame) || (it->frame == keys_.rbegin()->frame && frame > it->frame)) {
+            it = keys_.erase(it);
+            continue;
+        }
+        ++it;
+    }
+
+    if (frame + 1 >= frame_count()) {
+        frame = frame_count() -2;
+    }
+
+    key_at_frame1.frame = frame;
+
+    add(key_at_frame1);
+}
+
+void ClippingData::define_end(uint32_t frame) {
+    inc_version();
+
+    auto key_at_frame1 = at(frame);
+
+    auto it = keys_.begin();
+    while (it != keys_.end()) {
+        if (it->frame >= frame || (it->frame == keys_.begin()->frame && frame < it->frame)) {
             it = keys_.erase(it);
             continue;
         }
@@ -265,15 +290,9 @@ void ClippingData::remove_after(uint32_t frame) {
     key_at_frame1.frame = frame;
 
     add(key_at_frame1);
-
-    if (keys_.size() < 2) {
-        --frame;
-        auto key_at_frame2 = at(frame);
-        add(key_at_frame2);
-    }
 }
 
-void ClippingData::remove_others(uint32_t frame_to_keep) {
+void ClippingData::remove_all(uint32_t frame_to_keep) {
     inc_version();
     auto key = at(frame_to_keep);
     keys_.clear();
@@ -294,6 +313,10 @@ uint32_t ClippingData::first_frame() {
 }
 
 uint32_t ClippingData::last_frame() {
+    if (keys_.empty()) {
+        return frame_count();
+    }
+
     return keys_.rbegin()->frame;
 }
 
