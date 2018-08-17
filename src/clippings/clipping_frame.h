@@ -21,8 +21,6 @@ class ClippingFrame: public ClippingData {
     PlayerWrapper *player();
     bool good();
     ClippingKey current_key();
-    uint32_t last_frame() override;
-
     void positionate_left(uint32_t frame);
     void positionate_right(uint32_t frame);
     void positionate_top(uint32_t frame);

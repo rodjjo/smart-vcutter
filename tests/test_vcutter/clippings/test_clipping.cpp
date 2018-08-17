@@ -387,7 +387,6 @@ BOOST_AUTO_TEST_CASE(test_clipping_video_path) {
     positionate_vertical
     positionate_horizontal
     normalize_scale
-
     align_left
     align_right
     align_top

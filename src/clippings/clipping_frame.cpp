@@ -58,13 +58,6 @@ PlayerWrapper *ClippingFrame::player() {
     return player_.get();
 }
 
-uint32_t ClippingFrame::last_frame() {
-    if (keys_.empty()) {
-        return player_->info()->count();
-    }
-    return ClippingData::last_frame();
-}
-
 uint32_t ClippingFrame::frame_count() {
     return player_->info()->count();
 }
