@@ -58,40 +58,15 @@ PlayerWrapper *ClippingFrame::player() {
     return player_.get();
 }
 
-void ClippingFrame::remove_before(uint32_t frame) {
-    inc_version();
-
-    auto key_at_frame1 = at(frame);
-
-    auto it = keys_.begin();
-    while (it != keys_.end()) {
-        if ((it->frame <= frame) || (!keys_.empty() && it->frame == keys_.rbegin()->frame && frame >= it->frame)) {
-            it = keys_.erase(it);
-            continue;
-        }
-        ++it;
-    }
-
-    if (frame + 1 >= player_->info()->count()) {
-        frame = player_->info()->count() -2;
-    }
-
-    key_at_frame1.frame = frame;
-
-    add(key_at_frame1);
-
-    if (keys_.size() < 2) {
-        frame += 1;
-        auto key_at_frame2 = at(frame);
-        add(key_at_frame2);
-    }
-}
-
 uint32_t ClippingFrame::last_frame() {
     if (keys_.empty()) {
         return player_->info()->count();
     }
     return ClippingData::last_frame();
+}
+
+uint32_t ClippingFrame::frame_count() {
+    return player_->info()->count();
 }
 
 void ClippingFrame::positionate_left(uint32_t frame) {

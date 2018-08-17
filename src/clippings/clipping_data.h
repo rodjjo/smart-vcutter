@@ -33,8 +33,9 @@ class ClippingData: private boost::noncopyable {
     uint32_t req_buffer_size();
     const std::list<ClippingKey> keys() const;
     void remove(uint32_t frame);
-    void remove_after(uint32_t frame);  // cutoff from end
-    void remove_others(uint32_t frame_to_keep); // cutoff_center
+    void define_start(uint32_t frame);
+    void define_end(uint32_t frame);
+    void remove_all(uint32_t frame_to_keep);
     void remove_all(); // clear
     uint32_t first_frame();
     virtual uint32_t last_frame();
@@ -49,7 +50,7 @@ class ClippingData: private boost::noncopyable {
     void inc_version();
     virtual uint32_t default_w() = 0;
     virtual uint32_t default_h() = 0;
-
+    virtual uint32_t frame_count() = 0;
  private:
     void load_json(const Json::Value & root);
     void load_file(const char *path);

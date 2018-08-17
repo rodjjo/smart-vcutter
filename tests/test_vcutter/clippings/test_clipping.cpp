@@ -39,6 +39,21 @@ class SuiteFixture {
     }
 };
 
+class ClippingDataStub: public vcutter::ClippingData {
+ public:
+    uint32_t default_w() override {
+        return 1280;
+    }
+
+    virtual uint32_t default_h() override {
+        return 720;
+    }
+
+    uint32_t frame_count() override {
+        return 10000;
+    }
+};
+
 }  // namespace
 
 
@@ -156,22 +171,215 @@ BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
     std::remove(temp_path);
 }
 
+BOOST_AUTO_TEST_CASE(test_clipping_wh) {
+    clp->wh(90, 91);
+
+    BOOST_CHECK_EQUAL(clp->w(), 90);
+    BOOST_CHECK_EQUAL(clp->h(), 91);
+
+    clp->w(80);
+    clp->h(180);
+
+    BOOST_CHECK_EQUAL(clp->w(), 80);
+    BOOST_CHECK_EQUAL(clp->h(), 180);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_remove) {
+    ClippingDataStub clipping;
+
+    vcutter::ClippingKey k1;
+    k1.frame = 120;
+
+    clipping.add(k1);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 1);
+    clipping.remove(120);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_define_start) {
+    ClippingDataStub clipping;
+
+    vcutter::ClippingKey k1;
+    k1.frame = 120;
+    
+    for (int i = 0; i < 10; ++i) {
+        clipping.add(k1);
+        ++k1.frame;
+    }
+
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
+    
+    clipping.define_start(119);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 11);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 119);
+    
+    clipping.define_start(120);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 120);
+
+    clipping.define_start(125);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 5);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 125);
+
+    clipping.define_start(140);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 1);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 140);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_define_end) {
+    ClippingDataStub clipping;
+
+    vcutter::ClippingKey k1;
+    k1.frame = 120;
+    
+    for (int i = 0; i < 10; ++i) {
+        clipping.add(k1);
+        ++k1.frame;
+    }
+
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
+    
+    clipping.define_end(131);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 11);
+    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 131);
+    
+    clipping.define_end(129);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
+    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 129);
+
+    clipping.define_end(124);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 5);
+    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 124);
+
+    clipping.define_end(100);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 1);
+    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 100);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_remove_all) {
+    ClippingDataStub clipping;
+
+    vcutter::ClippingKey k1;
+    k1.frame = 120;
+    
+    for (int i = 0; i < 10; ++i) {
+        clipping.add(k1);
+        ++k1.frame;
+    }
+
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
+    
+    clipping.remove_all(100);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 1);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 100);
+
+    clipping.remove_all();
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 0);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_first_last_frame) {
+    ClippingDataStub clipping;
+
+    vcutter::ClippingKey k1;
+    k1.frame = 120;
+
+    BOOST_CHECK(clipping.keys().empty());
+    BOOST_CHECK_EQUAL(clipping.first_frame(), 1);
+    BOOST_CHECK_EQUAL(clipping.last_frame(), 10000);
+    
+    for (int i = 0; i < 10; ++i) {
+        clipping.add(k1);
+        ++k1.frame;
+    }
+
+    BOOST_CHECK_EQUAL(clipping.first_frame(), 120);
+    BOOST_CHECK_EQUAL(clipping.last_frame(), 129);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_at_index) {
+    ClippingDataStub clipping;
+
+    vcutter::ClippingKey k1;
+    k1.frame = 120;
+    
+    for (int i = 0; i < 10; ++i) {
+        clipping.add(k1);
+        ++k1.frame;
+    }
+
+    BOOST_CHECK_EQUAL(clipping.at_index(0).frame, 120);
+    BOOST_CHECK_EQUAL(clipping.at_index(9).frame, 129);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_find_index) {
+    ClippingDataStub clipping;
+
+    vcutter::ClippingKey k1;
+    k1.frame = 120;
+
+    for (int i = 0; i < 10; ++i) {
+        clipping.add(k1);
+        ++k1.frame;
+    }
+
+    BOOST_CHECK_EQUAL(clipping.find_index(100), -1);
+    BOOST_CHECK_EQUAL(clipping.find_index(120), 0);
+    BOOST_CHECK_EQUAL(clipping.find_index(125), 5);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_version) {
+    ClippingDataStub clipping;
+
+    vcutter::ClippingKey k1;
+    k1.frame = 120;
+
+    BOOST_CHECK_EQUAL(clipping.version(), 0);
+    
+    
+    for (int i = 0; i < 10; ++i) {
+        clipping.add(k1);
+        ++k1.frame;
+    }
+
+    BOOST_CHECK_EQUAL(clipping.version(), 10);
+
+    clipping.remove(120);
+
+    BOOST_CHECK_EQUAL(clipping.version(), 11);
+
+    clipping.define_start(120);
+
+    BOOST_CHECK_EQUAL(clipping.version(), 13);
+
+    clipping.define_end(120);
+    
+    BOOST_CHECK_EQUAL(clipping.version(), 15);
+
+    clipping.remove_all(100);
+
+    BOOST_CHECK_EQUAL(clipping.version(), 17);
+
+    clipping.remove_all();
+
+    BOOST_CHECK_EQUAL(clipping.version(), 18);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_video_path) {
+    BOOST_CHECK_EQUAL(clp->video_path(), "data/sample_video.webm");
+}
+
+
 /*
+
     functions to test:
     render
     render overloaded
-    remove
-    remove_before
-    remove_after
-    remove_others
-    remove_all
-    first_frame
-    last_frame
-    wh
-    at_index
-    find_index
-    video_path
-    version
+
     positionate_left
     positionate_right
     positionate_top
@@ -179,6 +387,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
     positionate_vertical
     positionate_horizontal
     normalize_scale
+
     align_left
     align_right
     align_top

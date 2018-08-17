@@ -21,7 +21,6 @@ class ClippingFrame: public ClippingData {
     PlayerWrapper *player();
     bool good();
     ClippingKey current_key();
-    void remove_before(uint32_t frame);
     uint32_t last_frame() override;
 
     void positionate_left(uint32_t frame);
@@ -39,7 +38,7 @@ class ClippingFrame: public ClippingData {
  protected:
     uint32_t default_w() override;
     uint32_t default_h() override;
-
+    uint32_t frame_count() override;
  private:
     void video_open();
 

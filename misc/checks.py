@@ -54,12 +54,14 @@ def cpplint_the_sources():
     except CalledProcessError:
         sys.exit(1)
 
+
 def run_tests():
     try:
         check_call(['cmake', '--build', '.', '--target', 'vcutter_test'])
     except CalledProcessError:
         sys.exit(1)
-    
+
+
 if __name__ == '__main__':
     if 'lint' in sys.argv:
         cpplint_the_sources()
