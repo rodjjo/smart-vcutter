@@ -47,7 +47,7 @@ class CutterWindow {
     bool save_as(History * history);
 
     void close();
-    clipping_t to_clipping();
+    Clipping *to_clipping();
     void poll_actions();
     bool visible();
     bool modified();

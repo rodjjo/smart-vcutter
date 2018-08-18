@@ -414,8 +414,8 @@ void CutterWindow::open_video() {
 
 }
 
-clipping_t CutterWindow::to_clipping() {
-    return keeper_->to_clipping();
+Clipping *CutterWindow::to_clipping() {
+    return clipping_.get();
 }
 
 void CutterWindow::button_callback(Fl_Widget* widget, void *userdata) {

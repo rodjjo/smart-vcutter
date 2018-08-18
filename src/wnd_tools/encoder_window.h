@@ -19,6 +19,7 @@
 #include <FL/Fl_Check_Button.H>
 
 #include "src/data/project.h"
+#include "src/clippings/clipping.h"
 #include "src/vstream/video_stream.h"
 #include "src/data/session.h"
 #include "src/data/history.h"
@@ -32,7 +33,7 @@ class EncoderWindow {
     EncoderWindow(History* history, const clipping_t & clip);
     virtual ~EncoderWindow();
     static void execute(History* history, Fl_Window *parent);
-    static void execute(History* history, Fl_Window *parent, const clipping_t & clip);
+    static void execute(History* history, Fl_Window *parent, Clipping *clip);
     static void execute(History* history, Fl_Window *parent, const std::string& path);
     static void restore_session(History* history, Fl_Window *parent);
 

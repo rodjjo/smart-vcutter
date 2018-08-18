@@ -294,19 +294,22 @@ bool EncoderWindow::deserialize(const session_data_t & data) {
     return true;
 }
 
-void EncoderWindow::execute(History* history, Fl_Window *parent, const clipping_t & clip) {
-    if (clip.video_path.empty()) {
+void EncoderWindow::execute(History* history, Fl_Window *parent, Clipping *clip) {
+    if (clip->video_path().empty()) {
         show_error("The clip must define a path to de video");
         return;
     }
 
-    if (static_cast<int>(clip.w) % 2) {
+    if (static_cast<int>(clip->w()) % 2) {
         show_error("Invalid clip width. The width must be multiple of 2");
         return;
     }
 
+    /*
+    TODO: uncomment after constructor be modified
     std::unique_ptr<EncoderWindow> window(new EncoderWindow(history, clip));
     window->show_modal(parent);
+    */
 }
 
 
