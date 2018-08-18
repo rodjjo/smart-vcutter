@@ -6,7 +6,6 @@
 #include "src/common/utils.h"
 #include "src/wnd_common/common_dialogs.h"
 #include "src/wnd_common/progress_window.h"
-#include "src/clippings/clipping_keeper.h"
 
 #include "src/wrappers/video_conversion.h"
 
