@@ -20,7 +20,6 @@ CutterWindow::CutterWindow(Fl_Group *parent) {
     keeper_.reset(new ClippingKeeper());
 
     parent_ = parent;
-    video_opened_ = false;
     open_failure_ = false;
     in_key_list_ = false;
     wink_comparison_ = false;
@@ -182,7 +181,7 @@ void CutterWindow::update_title() {
     snprintf(title, sizeof(title), "Smart Loop Creator (%dx%d)->(%dx%d) %s",
         clipping_->player()->info()->w(), clipping_->player()->info()->h(),
         keeper_->get_width(), keeper_->get_height(),
-        video_path_.c_str());
+        clipping_->video_path().c_str());
     parent_->window()->copy_label(title);
 }
 
@@ -274,8 +273,6 @@ void CutterWindow::next() {
 
 void CutterWindow::clear(bool clear_controls) {
     clipping_.reset();
-    video_path_ = std::string();
-    video_opened_ = false;
     open_failure_ = false;
     has_key_copy_ = false;
     wink_lap_ = 0;
@@ -294,7 +291,10 @@ void CutterWindow::clear(bool clear_controls) {
 }
 
 std::string CutterWindow::get_video_path() {
-    return video_path_;
+    if (clipping_) {
+        return clipping_->video_path();
+    }
+    return "";
 }
 
 bool CutterWindow::modified() {
@@ -316,61 +316,19 @@ void CutterWindow::clear_modified() {
 bool CutterWindow::open_video(const std::string& video_path) {
     clear();
 
-    video_path_ = video_path;
-    bool opened = wait_video_open();
+    clipping_.reset(new ClippingSession("cwnd", video_path.c_str(), true));
+    return handle_opened_clipping();
 }
 
-bool CutterWindow::open_clipping(const clipping_t & clip) {
-    clear();
-    keeper_->load(clip);
-    video_path_ = clip.video_path;
-    if (video_path_.empty()) {
-        show_error("Could not open the project video file");
+bool CutterWindow::handle_opened_clipping() {
+    if (!clipping_->good()) {
+        open_failure_ = true;
+        clear(true);
+        show_error("Não foi possivel abrir o arquivo de video.");
         return false;
     }
-    open_video();
-    return wait_video_open();
-}
 
-void CutterWindow::close() {
-    clear(true);
-}
-
-bool CutterWindow::wait_video_open() {
-    open_video();
-
-    while (!video_opened_ && !open_failure_) {
-        Fl::wait(0.1);
-        poll_actions();
-    }
-
-    if (video_opened_) {
-        keeper_->clear_modified();
-        window_->show();
-        update_title();
-        return true;
-    } else {
-        show_error("Não foi possivel abrir o arquivo de video.");
-    }
-
-    clear(true);
-
-    return false;
-}
-
-bool CutterWindow::visible() {
-    return window_->visible();
-}
-
-void CutterWindow::open_video() {
-    clipping_.reset(new ClippingSession("cwnd", video_path_.c_str(), true));
-    if (clipping_->player()->info()->error()) {
-        open_failure_ = true;
-        clipping_.reset();
-        return;
-    }
-
-    keeper_->set_video_path(video_path_, clipping_->player()->info()->count());
+    keeper_->set_video_path(clipping_->video_path(), clipping_->player()->info()->count());
     keeper_->set_video_dimensions(clipping_->player()->info()->w(), clipping_->player()->info()->h());
 
     clipping_->player()->seek_frame(keeper_->get_first_frame());
@@ -378,7 +336,43 @@ void CutterWindow::open_video() {
     update_buffers(true);
     update_seek_bar();
     redraw_frame();
-    video_opened_ = true;
+
+    keeper_->clear_modified();
+    window_->show();
+    update_title();
+    return true;
+}
+
+bool CutterWindow::restore_session() {
+    std::unique_ptr<ClippingSession> restored(std::move(ClippingSession::restore_session("cwnd")));
+
+    if (!restored) {
+        return false;
+    }
+
+    clipping_.swap(restored);
+
+    return handle_opened_clipping();
+}
+
+bool CutterWindow::open_clipping(const std::string& path) {
+    clear();
+    clipping_.reset(new ClippingSession("cwnd", path.c_str(), false));
+    return handle_opened_clipping();
+}
+
+
+void CutterWindow::close() {
+    clear(true);
+}
+
+
+bool CutterWindow::visible() {
+    return window_->visible();
+}
+
+void CutterWindow::open_video() {
+
 }
 
 clipping_t CutterWindow::to_clipping() {

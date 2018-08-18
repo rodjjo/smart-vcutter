@@ -18,7 +18,6 @@
 
 #include "src/data/project.h"
 #include "src/wnd_cutter/cutter_window.h"
-#include "src/data/session.h"
 #include "src/data/history.h"
 #include "src/wnd_main/menu.h"
 
@@ -37,8 +36,6 @@ class MainWindow : Fl_Menu_Window {
     void init_tool_bar();
     void init_controls();
     void poll_actions();
-    void save_session();
-    void close_session();
     void load_sessions();
 
     void poll_key_repeat();
@@ -131,7 +128,6 @@ class MainWindow : Fl_Menu_Window {
     uint64_t key_time_lap_;
  private:
     std::unique_ptr<CutterWindow> cutter_window_;
-    std::unique_ptr<Session> clipping_session_;
  private:
     History history_;
     Fl_Window *window_;

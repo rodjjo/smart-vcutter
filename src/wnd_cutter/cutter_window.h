@@ -36,8 +36,13 @@ class CutterWindow {
  public:
     CutterWindow(Fl_Group *parent);
     virtual ~CutterWindow();
-    bool open_clipping(const clipping_t & clip);
+
+//    bool open_clipping(const clipping_t & clip);
+    bool restore_session();
+    bool open_clipping(const std::string& path);
     bool open_video(const std::string& video_path);
+
+
     void close();
     clipping_t to_clipping();
     void poll_actions();
@@ -103,8 +108,8 @@ class CutterWindow {
     void resize_controls();
  private:
     void clear(bool clear_controls = true);
+    bool handle_opened_clipping();
     //void load(Project* project, unsigned int index);
-    bool wait_video_open();
     void open_video();
     void update_clipping_list();
     void update_seek_bar();
@@ -136,7 +141,6 @@ class CutterWindow {
     void action_insert();
     void action_play_interval();
  private:
-    std::string video_path_;
     Fl_Group *parent_;
     Fl_Group *window_;
     Fl_Group *components_group_;
@@ -175,7 +179,6 @@ class CutterWindow {
     unsigned int wink_lap_;
     unsigned int selected_clip_;
     bool wink_comparison_;
-    bool video_opened_;
     bool open_failure_;
     bool in_key_list_;
     bool in_seek_bar_callback_;
