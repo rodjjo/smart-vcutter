@@ -70,6 +70,7 @@ typedef struct clipping {
     clipping_key_list_t items;
 } clipping_t;
 
+
 class Project {
  public:
     Project(const std::string& path);

@@ -362,6 +362,45 @@ bool CutterWindow::open_clipping(const std::string& path) {
 }
 
 
+bool CutterWindow::save(History *history) {
+    if (!visible() || !clipping_) {
+        return true;
+    }
+
+    if (clipping_->saved_path().empty()) {
+        return save_as(history);
+    }
+
+    clipping_->save(clipping_->saved_path().c_str());
+    return true;
+}
+
+bool CutterWindow::save_as(History *history) {
+    if (!visible() || !clipping_) {
+        return true;
+    }
+
+    const char *key = "main-window-project-dir";
+    std::string directory = (*history)[key];
+    std::string path = output_prj_file_chooser(&directory);
+
+    if (!directory.empty()) {
+        history->set(key, directory.c_str());
+    }
+
+    if (path.empty()) {
+        return false;
+    }
+
+    if (filepath_exists(path.c_str()) && !ask("The file already exists. Overwrite it ?")) {
+        return false;
+    }
+
+    clipping_->save(path.c_str());
+    return true;
+}
+
+
 void CutterWindow::close() {
     clear(true);
 }

@@ -21,6 +21,7 @@
 #include <FL/Fl_Select_Browser.H>
 
 #include "src/data/project.h"
+#include "src/data/history.h"
 #include "src/wnd_cutter/options_window.h"
 #include "src/wrappers/video_player.h"
 #include "src/clippings/clipping_painter.h"
@@ -42,6 +43,8 @@ class CutterWindow {
     bool open_clipping(const std::string& path);
     bool open_video(const std::string& video_path);
 
+    bool save(History * history);
+    bool save_as(History * history);
 
     void close();
     clipping_t to_clipping();

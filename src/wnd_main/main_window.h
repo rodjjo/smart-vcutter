@@ -16,7 +16,6 @@
 #include <FL/Fl_Native_File_Chooser.H>
 #include <FL/fl_ask.H>
 
-#include "src/data/project.h"
 #include "src/wnd_cutter/cutter_window.h"
 #include "src/data/history.h"
 #include "src/wnd_main/menu.h"
@@ -133,7 +132,6 @@ class MainWindow : Fl_Menu_Window {
     Fl_Window *window_;
     Fl_Menu_Bar *menu_;
     Fl_Group *bottom_group_;
-    std::unique_ptr<Project> project_;
     std::unique_ptr<Menu> menu_file_;
     std::unique_ptr<Menu> menu_edit_;
     std::unique_ptr<Menu> menu_tools_;
