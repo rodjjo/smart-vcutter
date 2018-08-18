@@ -173,7 +173,11 @@ BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
 
     clp->save(temp_path);
 
+    BOOST_CHECK_EQUAL(clp->saved_path(), temp_path);
+
     vcutter::Clipping clp2(temp_path, false);
+
+    BOOST_CHECK_EQUAL(clp2.saved_path(), temp_path);
 
     BOOST_CHECK_EQUAL(clp2.good(), true);
     BOOST_CHECK_EQUAL(clp2.w(), 80);
