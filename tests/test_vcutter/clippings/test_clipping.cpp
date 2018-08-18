@@ -8,30 +8,35 @@ namespace {
 
 std::unique_ptr<vcutter::Clipping> clp;
 
+void restore_clipping() {
+    clp->remove_all();
+    clp->w(80);
+    clp->h(180);
+
+    vcutter::ClippingKey k1;
+
+    k1.frame = 120;
+    k1.px = 40;
+    k1.py = 60;
+    k1.scale = 1;
+    k1.angle(360);
+
+    clp->add(k1);
+
+    k1.angle(180);
+    k1.frame = 1200;
+    k1.px = 80;
+    k1.py = 120;
+    k1.scale = 0.5;
+
+    clp->add(k1);
+}
+
 class SuiteFixture {
  public:
     SuiteFixture() {
         clp.reset(new vcutter::Clipping("data/sample_video.webm", true));
-        clp->w(80);
-        clp->h(180);
-
-        vcutter::ClippingKey k1;
-
-        k1.frame = 120;
-        k1.px = 40;
-        k1.py = 60;
-        k1.scale = 1;
-        k1.angle(360);
-
-        clp->add(k1);
-
-        k1.angle(180);
-        k1.frame = 1200;
-        k1.px = 80;
-        k1.py = 120;
-        k1.scale = 0.5;
-
-        clp->add(k1);
+        restore_clipping();
     }
 
     ~SuiteFixture() {
@@ -51,6 +56,13 @@ class ClippingDataStub: public vcutter::ClippingData {
 
     uint32_t frame_count() override {
         return 10000;
+    }
+};
+
+class ClippingTearDown {
+ public:
+    ~ClippingTearDown() {
+        restore_clipping();
     }
 };
 
@@ -201,18 +213,18 @@ BOOST_AUTO_TEST_CASE(test_clipping_define_start) {
 
     vcutter::ClippingKey k1;
     k1.frame = 120;
-    
+
     for (int i = 0; i < 10; ++i) {
         clipping.add(k1);
         ++k1.frame;
     }
 
     BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
-    
+
     clipping.define_start(119);
     BOOST_CHECK_EQUAL(clipping.keys().size(), 11);
     BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 119);
-    
+
     clipping.define_start(120);
     BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
     BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 120);
@@ -231,18 +243,18 @@ BOOST_AUTO_TEST_CASE(test_clipping_define_end) {
 
     vcutter::ClippingKey k1;
     k1.frame = 120;
-    
+
     for (int i = 0; i < 10; ++i) {
         clipping.add(k1);
         ++k1.frame;
     }
 
     BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
-    
+
     clipping.define_end(131);
     BOOST_CHECK_EQUAL(clipping.keys().size(), 11);
     BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 131);
-    
+
     clipping.define_end(129);
     BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
     BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 129);
@@ -262,14 +274,14 @@ BOOST_AUTO_TEST_CASE(test_clipping_remove_all) {
 
     vcutter::ClippingKey k1;
     k1.frame = 120;
-    
+
     for (int i = 0; i < 10; ++i) {
         clipping.add(k1);
         ++k1.frame;
     }
 
     BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
-    
+
     clipping.remove_all(100);
     BOOST_CHECK_EQUAL(clipping.keys().size(), 1);
     BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 100);
@@ -288,7 +300,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_first_last_frame) {
     BOOST_CHECK(clipping.keys().empty());
     BOOST_CHECK_EQUAL(clipping.first_frame(), 1);
     BOOST_CHECK_EQUAL(clipping.last_frame(), 10000);
-    
+
     for (int i = 0; i < 10; ++i) {
         clipping.add(k1);
         ++k1.frame;
@@ -303,7 +315,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_at_index) {
 
     vcutter::ClippingKey k1;
     k1.frame = 120;
-    
+
     for (int i = 0; i < 10; ++i) {
         clipping.add(k1);
         ++k1.frame;
@@ -338,8 +350,8 @@ BOOST_AUTO_TEST_CASE(test_clipping_version) {
     k1.frame = 120;
 
     BOOST_CHECK_EQUAL(clipping.version(), 0);
-    
-    
+
+
     for (int i = 0; i < 10; ++i) {
         clipping.add(k1);
         ++k1.frame;
@@ -356,7 +368,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_version) {
     BOOST_CHECK_EQUAL(clipping.version(), 13);
 
     clipping.define_end(120);
-    
+
     BOOST_CHECK_EQUAL(clipping.version(), 15);
 
     clipping.remove_all(100);
@@ -373,6 +385,124 @@ BOOST_AUTO_TEST_CASE(test_clipping_video_path) {
     BOOST_CHECK_EQUAL(clp->video_path(), "data/sample_video.webm");
 }
 
+BOOST_AUTO_TEST_CASE(test_clipping_positionate_left) {
+    ClippingTearDown teardown;
+
+    vcutter::ClippingKey start_pos = clp->at(120);
+
+    start_pos.px = clp->player()->info()->w() / 2;
+    start_pos.py = clp->player()->info()->h() / 2;
+
+    clp->add(start_pos);
+    clp->positionate_left(120);
+
+    vcutter::ClippingKey k1 = clp->at(120);
+    BOOST_CHECK_EQUAL(k1.px, clp->w() / 2);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_positionate_right) {
+    ClippingTearDown teardown;
+
+    vcutter::ClippingKey start_pos = clp->at(120);
+
+    start_pos.px = clp->player()->info()->w() / 2;
+    start_pos.py = clp->player()->info()->h() / 2;
+
+    clp->add(start_pos);
+    clp->positionate_right(120);
+
+    vcutter::ClippingKey k1 = clp->at(120);
+
+    BOOST_CHECK_EQUAL(k1.px, clp->player()->info()->w() - clp->w() / 2);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_positionate_top) {
+    ClippingTearDown teardown;
+
+    vcutter::ClippingKey start_pos = clp->at(120);
+
+    start_pos.px = clp->player()->info()->w() / 2;
+    start_pos.py = clp->player()->info()->h() / 2;
+
+    clp->add(start_pos);
+    clp->positionate_top(120);
+    vcutter::ClippingKey k1 = clp->at(120);
+    BOOST_CHECK_EQUAL(k1.py, clp->h() / 2);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_positionate_bottom) {
+    ClippingTearDown teardown;
+
+    vcutter::ClippingKey start_pos = clp->at(120);
+
+    start_pos.px = clp->player()->info()->w() / 2;
+    start_pos.py = clp->player()->info()->h() / 2;
+
+    clp->add(start_pos);
+    clp->positionate_bottom(120);
+    vcutter::ClippingKey k1 = clp->at(120);
+    BOOST_CHECK_EQUAL(k1.py, clp->player()->info()->h() - clp->h() / 2);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_center_vertical) {
+    ClippingTearDown teardown;
+
+    vcutter::ClippingKey start_pos = clp->at(120);
+
+    start_pos.px = clp->player()->info()->w() / 2;
+    start_pos.py = clp->player()->info()->h() / 2;
+
+    start_pos.py = 0;
+    clp->add(start_pos);
+    clp->center_vertical(120);
+    vcutter::ClippingKey k1 = clp->at(120);
+    BOOST_CHECK_EQUAL(k1.py, clp->player()->info()->h() / 2);
+}
+
+BOOST_AUTO_TEST_CASE(test_clipping_center_horizontal) {
+    ClippingTearDown teardown;
+
+    vcutter::ClippingKey start_pos = clp->at(120);
+
+    start_pos.px = clp->player()->info()->w() / 2;
+    start_pos.py = clp->player()->info()->h() / 2;
+
+    start_pos.px = 0;
+    clp->add(start_pos);
+    clp->center_horizontal(120);
+    vcutter::ClippingKey k1 = clp->at(120);
+    BOOST_CHECK_EQUAL(k1.px, clp->player()->info()->w() / 2);
+}
+
+
+BOOST_AUTO_TEST_CASE(test_clipping_normalize_scale) {
+    ClippingTearDown teardown;
+
+    vcutter::ClippingKey start_pos = clp->at(120);
+
+    start_pos.px = clp->player()->info()->w() / 2;
+    start_pos.py = clp->player()->info()->h() / 2;
+    start_pos.scale = 2;
+
+    clp->add(start_pos);
+
+    clp->wh(clp->player()->info()->w(), clp->player()->info()->h());
+
+    clp->normalize_scale(120);
+    vcutter::ClippingKey k1 = clp->at(120);
+
+    BOOST_CHECK_CLOSE(k1.scale, 0.995073, 0.01);
+
+    clp->wh(clp->player()->info()->w() * 2, clp->player()->info()->h() * 2);
+    clp->normalize_scale(120);
+    k1 = clp->at(120);
+
+    BOOST_CHECK_CLOSE(k1.scale, 0.497536, 0.01);
+}
+
 
 /*
 
@@ -380,18 +510,11 @@ BOOST_AUTO_TEST_CASE(test_clipping_video_path) {
     render
     render overloaded
 
-    positionate_left
-    positionate_right
-    positionate_top
-    positionate_bottom
-    positionate_vertical
-    positionate_horizontal
-    normalize_scale
-    align_left
-    align_right
-    align_top
-    align_bottom
-    align_all
+    fit_left
+    fit_right
+    fit_top
+    fit_bottom
+    fit_all
 */
 
 BOOST_AUTO_TEST_SUITE_END()

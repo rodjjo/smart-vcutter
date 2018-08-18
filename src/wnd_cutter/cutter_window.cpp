@@ -1023,7 +1023,7 @@ void CutterWindow::action_position_vertical() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->positionate_vertical(clipping_->player()->info()->position());
+    keeper_->center_vertical(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1031,7 +1031,7 @@ void CutterWindow::action_position_horizontal() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->positionate_horizontal(clipping_->player()->info()->position());
+    keeper_->center_horizontal(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 

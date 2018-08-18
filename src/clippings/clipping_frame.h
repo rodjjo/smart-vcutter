@@ -25,14 +25,16 @@ class ClippingFrame: public ClippingData {
     void positionate_right(uint32_t frame);
     void positionate_top(uint32_t frame);
     void positionate_bottom(uint32_t frame);
-    void positionate_vertical(uint32_t frame);
-    void positionate_horizontal(uint32_t frame);
+    void center_vertical(uint32_t frame);
+    void center_horizontal(uint32_t frame);
     void normalize_scale(uint32_t frame);
-    void align_left(uint32_t frame);
-    void align_right(uint32_t frame);
-    void align_top(uint32_t frame);
-    void align_bottom(uint32_t frame);
-    void align_all(uint32_t frame);
+    void fit_left(uint32_t frame);
+    void fit_right(uint32_t frame);
+    void fit_top(uint32_t frame);
+    void fit_bottom(uint32_t frame);
+    void fit_all(uint32_t frame);
+    void fit_vertical(uint32_t frame);
+    void fit_horizontal(uint32_t frame);
  protected:
     uint32_t default_w() override;
     uint32_t default_h() override;

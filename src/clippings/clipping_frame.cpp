@@ -114,13 +114,13 @@ void ClippingFrame::positionate_bottom(uint32_t frame) {
     add(key);
 }
 
-void ClippingFrame::positionate_vertical(uint32_t frame) {
+void ClippingFrame::center_vertical(uint32_t frame) {
     auto key = at(frame);
     key.py = player_->info()->h() / 2.0;
     add(key);
 }
 
-void ClippingFrame::positionate_horizontal(uint32_t frame) {
+void ClippingFrame::center_horizontal(uint32_t frame) {
     auto key = at(frame);
     key.px = player_->info()->w() / 2.0;
     add(key);
@@ -130,24 +130,66 @@ void ClippingFrame::normalize_scale(uint32_t frame) {
     add(at(frame).constrained(this));
 }
 
-void ClippingFrame::align_left(uint32_t frame) {
-    normalize_scale(frame);  // TODO(Rodrigo): Implement this operation
-}
+void ClippingFrame::fit_vertical(uint32_t frame) {
+    center_vertical(frame);
 
-void ClippingFrame::align_right(uint32_t frame) {
-    normalize_scale(frame);  // TODO(Rodrigo): Implement this operation
-}
+    auto key = at(frame);
+    auto b = key.clipping_box(this).occupied_area();
 
-void ClippingFrame::align_top(uint32_t frame) {
-    normalize_scale(frame);  // TODO(Rodrigo): Implement this operation
-}
+    if (b[0].y > 0) {
+        int count = (h() / static_cast<double>(b[2].y - b[0].y)) + 1;
+        key.scale *= count;
+        add(key);
+    }
 
-void ClippingFrame::align_bottom(uint32_t frame) {
-    normalize_scale(frame);  // TODO(Rodrigo): Implement this operation
-}
 
-void ClippingFrame::align_all(uint32_t frame) {
     normalize_scale(frame);
+}
+
+void ClippingFrame::fit_horizontal(uint32_t frame) {
+    center_horizontal(frame);
+
+    auto key = at(frame);
+    auto b = key.clipping_box(this).occupied_area();
+
+    if (b[0].y > 0) {
+        int count = (w() / static_cast<double>(b[1].x - b[0].x)) + 1;
+        key.scale *= count;
+        add(key);
+    }
+
+    normalize_scale(frame);
+}
+
+void ClippingFrame::fit_left(uint32_t frame) {
+    center_horizontal(frame);
+    fit_vertical(frame);
+    positionate_left(frame);
+}
+
+void ClippingFrame::fit_right(uint32_t frame) {
+    center_horizontal(frame);
+    fit_vertical(frame);
+    positionate_right(frame);
+}
+
+void ClippingFrame::fit_top(uint32_t frame) {
+    center_vertical(frame);
+    fit_horizontal(frame);
+    positionate_top(frame);
+}
+
+void ClippingFrame::fit_bottom(uint32_t frame) {
+    center_vertical(frame);
+    fit_horizontal(frame);
+    positionate_bottom(frame);
+}
+
+void ClippingFrame::fit_all(uint32_t frame) {
+    center_vertical(frame);
+    center_vertical(frame);
+    fit_vertical(frame);
+    fit_horizontal(frame);
 }
 
 ClippingKey ClippingFrame::current_key() {
