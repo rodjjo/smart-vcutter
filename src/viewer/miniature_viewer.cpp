@@ -23,7 +23,7 @@ void MiniatureViewer::invalidate() {
     clipping_buffer_.reset();
 }
 
-void MiniatureViewer::viewer_draw(BufferViewer *viewer, bool *handled, const unsigned char* buffer, uint32_t w, uint32_t h) {
+void MiniatureViewer::viewer_draw(BufferViewer *viewer, bool *handled, const uint8_t* buffer, uint32_t w, uint32_t h) {
     if (!clipping_) {
         return;
     }
@@ -42,7 +42,7 @@ void MiniatureViewer::viewer_draw(BufferViewer *viewer, bool *handled, const uns
     modified_ = false;
 }
 
-void MiniatureViewer::viewer_buffer(BufferViewer *viewer, const unsigned char** buffer, uint32_t *w, uint32_t *h) {
+void MiniatureViewer::viewer_buffer(BufferViewer *viewer, const uint8_t** buffer, uint32_t *w, uint32_t *h) {
     *buffer = clipping_buffer_.get();
     *w = miniature_buffer_w_;
     *h = miniature_buffer_h_;
@@ -67,7 +67,7 @@ void MiniatureViewer::update_preview(Clipping *clipping) {
 
     if (buffer_size_ < required_size || !clipping_buffer_) {
         buffer_size_ = required_size;
-        clipping_buffer_.reset(new unsigned char[buffer_size_], [](unsigned char *b) { delete[] b;});
+        clipping_buffer_.reset(new uint8_t[buffer_size_], [](uint8_t *b) { delete[] b;});
     }
 
     miniature_buffer_w_ = preview_w;

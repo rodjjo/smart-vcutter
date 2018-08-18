@@ -329,13 +329,15 @@ bool CutterWindow::handle_opened_clipping() {
 
     clipping_->player()->seek_frame(clipping_->first_frame());
 
-    update_buffers(true);
     update_seek_bar();
     redraw_frame();
 
     window_->show();
     update_title();
     clipping_version_ = clipping_->version();
+
+    update_buffers(true);
+
     return true;
 }
 

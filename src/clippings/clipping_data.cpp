@@ -20,12 +20,6 @@ ClippingData::ClippingData(const Json::Value * root) {
     version_ = 0;
 }
 
-ClippingData::ClippingData() {
-    version_ = 0;
-    output_w_ = 0;
-    output_h_ = 0;
-}
-
 ClippingData::~ClippingData() {
 
 }

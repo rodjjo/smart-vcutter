@@ -12,9 +12,12 @@ ClippingKey::ClippingKey(const Json::Value & data) {
     frame = data["frame"].asInt();
     px = data["px"].asInt();
     py = data["py"].asInt();
-    scale = data["scale"].asInt();
+    scale = data["scale"].asDouble();
     angle_ = data["angle"].asInt();
     computed_ = true;
+    if (scale <= 0) {
+        scale = 1;
+    }
 }
 
 ClippingKey::ClippingKey() {

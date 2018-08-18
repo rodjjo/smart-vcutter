@@ -83,7 +83,9 @@ void MainWindow::timeout_handler(void* ud) {
 
 int MainWindow::run() {
     run_called_ = true;
-    return Fl::run();
+    int result = Fl::run();
+    cutter_window_.reset();
+    return result;
 }
 
 void MainWindow::poll_actions() {

@@ -20,7 +20,6 @@ class ClippingData: private boost::noncopyable {
  public:
     explicit ClippingData(const Json::Value * root);
     explicit ClippingData(const char *path);
-    ClippingData();
     virtual ~ClippingData();
     uint32_t w();
     uint32_t h();

@@ -22,12 +22,13 @@ class ClippingSession: public Clipping {
     virtual ~ClippingSession();
     static void fltk_timeout_handler(void* clipping_session);
     static std::unique_ptr<ClippingSession> restore_session(const char *session_name);
-    void remove_session(const char *session_name);
  private:
     std::string session_path();
     void save_session();
+    void remove_session();
  private:
     uint64_t last_version_;
+    bool should_clear_session_;
     std::string session_name_;
 };
 

@@ -46,6 +46,9 @@ class SuiteFixture {
 
 class ClippingDataStub: public vcutter::ClippingData {
  public:
+    ClippingDataStub(): ClippingData("") {
+    }
+
     uint32_t default_w() override {
         return 1280;
     }
@@ -178,6 +181,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
     vcutter::Clipping clp2(temp_path, false);
 
     BOOST_CHECK_EQUAL(clp2.saved_path(), temp_path);
+    BOOST_CHECK_EQUAL(clp2.video_path(), "data/sample_video.webm");
 
     BOOST_CHECK_EQUAL(clp2.good(), true);
     BOOST_CHECK_EQUAL(clp2.w(), 80);
