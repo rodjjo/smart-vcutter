@@ -10,7 +10,7 @@
 #include <memory>
 #include <boost/thread.hpp>
 #include "src/vstream/video_stream.h"
-#include "src/data/project.h"
+#include "src/clippings/clipping.h"
 
 namespace vcutter {
 
@@ -26,7 +26,7 @@ class VideoConversionWrapper {
         double fps);
 
     VideoConversionWrapper(
-        const clipping_t & clipping,
+        std::shared_ptr<Clipping> clipping,
         const char* codec_name,
         const char *target_path,
         int bitrate,
@@ -78,10 +78,9 @@ class VideoConversionWrapper {
     bool clipping_start_at_end_;
     bool append_reverse_;
     bool merge_frames_;
-    clipping_key_t first_key_;
+    ClippingKey first_key_;
     std::shared_ptr<unsigned char> first_frame_;
-    bool has_clipping_;
-    clipping_t clipping_;
+    std::shared_ptr<Clipping> clipping_;
     std::atomic_int position_;
     std::atomic_int count_;
 };

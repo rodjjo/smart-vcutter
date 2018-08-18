@@ -439,7 +439,7 @@ void EncoderWindow::action_convert() {
     session.save(1, serialize());
 
     if (clip_) {
-/*        VideoConversionWrapper converter(
+        VideoConversionWrapper converter(
             clip_,
             format,
             edt_output_->value(),
@@ -449,7 +449,7 @@ void EncoderWindow::action_convert() {
         );
 
         converter.convert(btn_append_reverse_->value() != 0, btn_merge_->value() != 0);
-        save_sugestion(); */
+        save_sugestion();
     } else {
         VideoConversionWrapper converter(
             edt_path_->value(),
