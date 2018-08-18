@@ -20,10 +20,13 @@
 
 #include "src/clippings/clipping.h"
 #include "src/vstream/video_stream.h"
-#include "src/data/session.h"
+#include "src/data/json_file.h"
 #include "src/data/history.h"
 
 namespace vcutter {
+
+
+typedef std::map<std::string,std::string> string_map_t;
 
 class EncoderWindow {
  public:
@@ -37,8 +40,8 @@ class EncoderWindow {
     static void restore_session(History* history, Fl_Window *parent);
 
  private:
-    std::map<std::string,std::string> serialize();
-    bool deserialize(const session_data_t & data);
+    string_map_t serialize();
+    bool deserialize(const string_map_t & data);
 
     void init(History* history, std::shared_ptr<Clipping> clip);
     void show_modal(Fl_Window *parent);

@@ -14,7 +14,6 @@ namespace vcutter {
 
 namespace {
 
-const char *kSESSION_ENCODER_WINDOW = "ews";
 const char *kSOURCE_DIR_KEY = "ews-source-dir";
 const char *kCLIPPING_DIR_KEY = "ews-clipping-dir";
 const char *kCONVERSION_DIR_KEY = "ews-conversion-dir";
@@ -206,7 +205,7 @@ std::map<std::string, std::string> EncoderWindow::serialize() {
     return result;
 }
 
-bool EncoderWindow::deserialize(const session_data_t & data) {
+bool EncoderWindow::deserialize(const string_map_t & data) {
     auto path_param = data.find(kEDT_PATH_FIELD);
     auto clip_param = data.find(kCLIP_VAR_NAME);
 
@@ -297,7 +296,7 @@ void EncoderWindow::execute(History* history, Fl_Window *parent, std::shared_ptr
 
 
 void EncoderWindow::restore_session(History* history, Fl_Window *parent) {
-    Session session(kSESSION_ENCODER_WINDOW);
+    JsonFile session(temp_filepath("vcutter-recovery-ews").c_str(), true, true);
 
     if (!session.loaded()) {
         return;
@@ -305,7 +304,37 @@ void EncoderWindow::restore_session(History* history, Fl_Window *parent) {
 
     std::unique_ptr<EncoderWindow> window(new EncoderWindow(history, ""));
 
-    if (!window->deserialize(session.get_value_map())) {
+    const char *keys[] = {
+        kEDT_PATH_FIELD,
+        kEDT_OUTPUT_FIELD,
+        kCMB_FORMATS_FIELD,
+        kEDT_BITRATE_FIELD,
+        kEDT_FPS_FIELD,
+        kCHE_BACKWARD_FIELD,
+        kCHE_REVERSE_FIELD,
+        kCHE_MERGE_FIELD,
+        kEDT_START_FIELD,
+        kEDT_END_FIELD,
+        kORI_FPS_FIELD,
+        kCLIP_VAR_NAME,
+        kPATH_VAR_NAME,
+        NULL
+    };
+
+    Json::Value root = session["recovery"];
+    string_map_t data;
+
+    const char *key = NULL;
+    for(int index = 0; ; ++index) {
+        key = keys[index];
+        if (!key)
+            break;
+        if (root.isMember(key)) {
+            data[key] = root[key].asString();
+        }
+    }
+
+    if (!window->deserialize(data)) {
         return;
     }
 
@@ -434,8 +463,18 @@ void EncoderWindow::action_convert() {
 
     const char *format = cmb_formats_->text();
 
-    Session session(kSESSION_ENCODER_WINDOW);
-    session.save(1, serialize());
+    JsonFile session(temp_filepath("vcutter-recovery-ews").c_str(), true, false);
+
+    string_map_t data = serialize();
+
+    Json::Value recovery_data;
+    for (auto it = data.begin(); it != data.end(); ++it) {
+        recovery_data[it->first] = it->second;
+    }
+
+    session["recovery"] = recovery_data;
+
+    session.save();
 
     if (clip_) {
         VideoConversionWrapper converter(
