@@ -8,8 +8,6 @@
 #include <string>
 #include <atomic>
 #include <memory>
-#include <boost/thread.hpp>
-#include "src/vstream/video_stream.h"
 #include "src/clippings/clipping.h"
 
 namespace vcutter {
@@ -36,12 +34,11 @@ class VideoConversionWrapper {
     void convert(bool append_reverse = false, bool merge_reverse = false, bool ask_exists = true);
  private:
     void init(
-        const char *source_path,
         const char* codec_name,
         const char *target_path,
         int bitrate,
         double fps);
-    void conversion_thread();
+    void conversion_thread(vs::Player *player);
     void allocate_buffers();
     void release_buffers();
     const unsigned char* preview_buffer();
@@ -49,19 +46,15 @@ class VideoConversionWrapper {
     int preview_h();
     uint32_t interval();
     void flush_buffers(vs::Encoder *encoder, int count, bool from_start, bool discart_first);
-    void encode_all(vs::Encoder *encoder);
-    void encode_from_start(vs::Encoder *encoder);
-    void encode_from_end(vs::Encoder *encoder);
-    void keep_first_frame();
+    void encode_all(vs::Player *player, vs::Encoder *encoder);
+    void encode_from_start(vs::Player *player, vs::Encoder *encoder);
+    void encode_from_end(vs::Player *player, vs::Encoder *encoder);
+    void keep_first_frame(vs::Player *player);
  private:
-    std::shared_ptr<vs::Player> player_;
-    std::unique_ptr<boost::thread> thread_;
-
     std::vector<std::shared_ptr<unsigned char> > buffers_;
     uint32_t buffer_size_;
     std::atomic_int buffer_index_;
 
-    std::string source_path_;
     std::string codec_name_;
     std::string target_path_;
 

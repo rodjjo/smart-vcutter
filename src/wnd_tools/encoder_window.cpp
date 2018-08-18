@@ -266,7 +266,13 @@ bool EncoderWindow::deserialize(const string_map_t & data) {
     if (clip_param != data.end()) {
         path_.clear();
 
-        clip_.reset(new Clipping(data.at(kCLIP_VAR_NAME).c_str(), false));
+        Json::Value clipping_data;
+
+        if (!Json::Reader().parse(data.at(kCLIP_VAR_NAME), clipping_data, false)) {
+            return false;
+        }
+
+        clip_.reset(new Clipping(&clipping_data));
 
         if (!clip_->good()) {
             clip_.reset();
@@ -296,7 +302,7 @@ void EncoderWindow::execute(History* history, Fl_Window *parent, std::shared_ptr
 
 
 void EncoderWindow::restore_session(History* history, Fl_Window *parent) {
-    JsonFile session(temp_filepath("vcutter-recovery-ews").c_str(), true, true);
+    JsonFile session(temp_filepath("vcutter-recovery-ews.json").c_str(), true, true);
 
     if (!session.loaded()) {
         return;
@@ -463,7 +469,7 @@ void EncoderWindow::action_convert() {
 
     const char *format = cmb_formats_->text();
 
-    JsonFile session(temp_filepath("vcutter-recovery-ews").c_str(), true, false);
+    JsonFile session(temp_filepath("vcutter-recovery-ews.json").c_str(), true, false);
 
     string_map_t data = serialize();
 

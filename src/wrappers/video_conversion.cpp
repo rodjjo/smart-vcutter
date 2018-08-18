@@ -32,7 +32,8 @@ VideoConversionWrapper::VideoConversionWrapper(
     clipping_start_at_end_ = false;
     start_frame_ = start_frame;
     end_frame_ = end_frame;
-    init(source_path, codec_name, target_path, bitrate, fps);
+    clipping_.reset(new Clipping(source_path, true));
+    init(codec_name, target_path, bitrate, fps);
 }
 
 VideoConversionWrapper::VideoConversionWrapper(
@@ -47,11 +48,10 @@ VideoConversionWrapper::VideoConversionWrapper(
     end_frame_ = 0;
     clipping_start_at_end_ = start_at_end;
     clipping_ = clipping;
-    init(clipping_->video_path().c_str(), codec_name, target_path, bitrate, fps);
+    init(codec_name, target_path, bitrate, fps);
 }
 
 void VideoConversionWrapper::init(
-        const char *source_path,
         const char* codec_name,
         const char *target_path,
         int bitrate,
@@ -66,7 +66,6 @@ void VideoConversionWrapper::init(
     buffering_ = false;
     encode_error_ = false;
     buffer_index_.store(0);
-    source_path_ = source_path;
     codec_name_ = codec_name;
     target_path_ = target_path;
     bitrate_ = bitrate;
@@ -81,6 +80,11 @@ void VideoConversionWrapper::convert(bool append_reverse, bool merge_reverse, bo
         return;
     }
 
+    if (!clipping_->good()) {
+        show_error("Could not open source video");
+        return;
+    }
+
     append_reverse_ = append_reverse;
     merge_frames_ = merge_reverse && clipping_ && !append_reverse;
 
@@ -88,11 +92,9 @@ void VideoConversionWrapper::convert(bool append_reverse, bool merge_reverse, bo
     position_.store(0);
     count_.store(0);
 
-    player_ = vs::open_file(source_path_.c_str());
-
-    if (player_->error()) {
-        show_error(player_->error());
-        player_.reset();
+    if (clipping_->player()->info()->error()) {
+        show_error(clipping_->player()->info()->error());
+        clipping_.reset();
         return;
     }
 
@@ -101,11 +103,9 @@ void VideoConversionWrapper::convert(bool append_reverse, bool merge_reverse, bo
 
     allocate_buffers();
 
-    thread_.reset(new boost::thread(
-        [this] () {
-            conversion_thread();
-        }
-    ));
+    clipping_->player()->conversion_thread([this] (vs::Player *player) {
+        conversion_thread(player);
+    });
 
     auto prog_window = std::unique_ptr<ProgressWindow>(new ProgressWindow(true));
 
@@ -113,7 +113,7 @@ void VideoConversionWrapper::convert(bool append_reverse, bool merge_reverse, bo
         for(;;) {
             Fl::wait(0.1);
 
-            if (thread_->timed_join(boost::posix_time::milliseconds(5))) {
+            if (clipping_->player()->conversion_finished()) {
                 break;
             }
 
@@ -130,7 +130,7 @@ void VideoConversionWrapper::convert(bool append_reverse, bool merge_reverse, bo
     });
 
     prog_window.reset();
-    player_.reset();
+    clipping_.reset();
 
     release_buffers();
 
@@ -147,8 +147,9 @@ const unsigned char* VideoConversionWrapper::preview_buffer() {
             return buffers_[index - 1].get();
         }
     }
-    if (player_) {
-        return player_->buffer();
+
+    if (clipping_) {
+        return clipping_->player()->info()->buffer();
     }
 
     return NULL;
@@ -162,8 +163,8 @@ int VideoConversionWrapper::preview_w() {
         }
     }
 
-    if (player_) {
-        return player_->w();
+    if (clipping_) {
+        return clipping_->player()->info()->w();
     }
 
     return 0;
@@ -178,8 +179,8 @@ int VideoConversionWrapper::preview_h() {
         }
     }
 
-    if (player_) {
-        return player_->h();
+    if (clipping_) {
+        return clipping_->player()->info()->h();
     }
 
     return 0;
@@ -192,21 +193,18 @@ uint32_t VideoConversionWrapper::interval() {
 void VideoConversionWrapper::allocate_buffers() {
     release_buffers();
 
-    target_w_ = player_->w();
-    target_h_ = player_->h();
+    target_w_ = clipping_->w();
+    target_h_ = clipping_->h();
 
-    if (start_frame_ > player_->count()) {
-        start_frame_ = player_->count();
+    if (start_frame_ > clipping_->player()->info()->count()) {
+        start_frame_ = clipping_->player()->info()->count();
     }
 
-    if (end_frame_ > player_->count()) {
-        end_frame_ = player_->count();
+    if (end_frame_ > clipping_->player()->info()->count()) {
+        end_frame_ = clipping_->player()->info()->count();
     }
 
-    if (clipping_) {
-        target_w_ = clipping_->w();
-        target_h_ = clipping_->h();
-    } else if (!append_reverse_ && (start_frame_ <= end_frame_)) {
+    if (!clipping_->keys().empty() && !append_reverse_ && (start_frame_ <= end_frame_)) {
         count_.store(interval());
         return;
     }
@@ -270,7 +268,7 @@ void VideoConversionWrapper::flush_buffers(vs::Encoder *encoder, int count, bool
     }
 }
 
-void VideoConversionWrapper::keep_first_frame() {
+void VideoConversionWrapper::keep_first_frame(vs::Player *player) {
     if (!merge_frames_) {
         first_frame_.reset();
         return;
@@ -280,19 +278,19 @@ void VideoConversionWrapper::keep_first_frame() {
     }
 
     if (clipping_) {
-        first_key_ = clipping_->at(player_->position()) ;
-        unsigned int buffer_size = 3 * player_->w() * player_->h();
+        first_key_ = clipping_->at(player->position()) ;
+        unsigned int buffer_size = 3 * player->w() * player->h();
         first_frame_.reset(new unsigned char[buffer_size], [](unsigned char *data){delete[] data;});
-        memcpy(first_frame_.get(), player_->buffer(), buffer_size);
+        memcpy(first_frame_.get(), player->buffer(), buffer_size);
     }
 }
 
-void VideoConversionWrapper::encode_all(vs::Encoder *encoder) {
+void VideoConversionWrapper::encode_all(vs::Player *player, vs::Encoder *encoder) {
     int start = start_frame_ < end_frame_ ? start_frame_ : end_frame_;
     int end = start_frame_ < end_frame_ ? end_frame_ : start_frame_;
 
-    player_->seek_frame(start);
-    keep_first_frame();
+    player->seek_frame(start);
+    keep_first_frame(player);
 
     buffer_index_.store(0);
     buffering_ = true;
@@ -305,14 +303,14 @@ void VideoConversionWrapper::encode_all(vs::Encoder *encoder) {
         last_frame = i + 1 >= end;
 
         if (!clipping_) {
-            memcpy(buffers_[i - start].get(), player_->buffer(), buffer_size_);
+            memcpy(buffers_[i - start].get(), player->buffer(), buffer_size_);
         } else {
             clipping_->render(clipping_->at(i), buffers_[i - start].get());
             if (last_frame && merge_frames_ && first_frame_)
                 clipping_->render_transparent(first_key_, first_frame_.get(), buffers_[i - start].get());
         }
 
-        player_->next();
+        player->next();
 
         ++i;
         ++buffer_index_;
@@ -327,9 +325,9 @@ void VideoConversionWrapper::encode_all(vs::Encoder *encoder) {
     }
 }
 
-void VideoConversionWrapper::encode_from_start(vs::Encoder *encoder) {
-    player_->seek_frame(start_frame_);
-    keep_first_frame();
+void VideoConversionWrapper::encode_from_start(vs::Player *player, vs::Encoder *encoder) {
+    player->seek_frame(start_frame_);
+    keep_first_frame(player);
 
     uint32_t i = start_frame_;
     buffering_ = clipping_.get() != NULL;
@@ -350,12 +348,12 @@ void VideoConversionWrapper::encode_from_start(vs::Encoder *encoder) {
 
             encoder->frame(buffers_[0].get());
         } else {
-            encoder->frame(player_->buffer());
+            encoder->frame(player->buffer());
         }
 
         ++position_;
 
-        player_->next();
+        player->next();
 
         ++i;
         if (i >= end_frame_)
@@ -363,7 +361,7 @@ void VideoConversionWrapper::encode_from_start(vs::Encoder *encoder) {
     }
 }
 
-void VideoConversionWrapper::encode_from_end(vs::Encoder *encoder) {
+void VideoConversionWrapper::encode_from_end(vs::Player *player, vs::Encoder *encoder) {
     uint32_t buffer_start = start_frame_ - (buffers_.size() - 1);
     uint32_t buffer_usage = buffers_.size();
     uint32_t last_usage = 0;
@@ -374,8 +372,8 @@ void VideoConversionWrapper::encode_from_end(vs::Encoder *encoder) {
     }
 
     int last_start = buffer_start;
-    player_->seek_frame(last_start);
-    keep_first_frame();
+    player->seek_frame(last_start);
+    keep_first_frame(player);
 
     bool last_loop = false;
     bool first_skippped = !append_reverse_;
@@ -393,9 +391,9 @@ void VideoConversionWrapper::encode_from_end(vs::Encoder *encoder) {
 
         while (buffer_usage > 0) {
             if (!clipping_) {
-                memcpy(buffers_[buffer_index_.load()].get(), player_->buffer(), buffer_size_);
+                memcpy(buffers_[buffer_index_.load()].get(), player->buffer(), buffer_size_);
             } else {
-                clipping_->render(clipping_->at(player_->position()), buffers_[buffer_index_.load()].get());
+                clipping_->render(clipping_->at(player->position()), buffers_[buffer_index_.load()].get());
                 if (last_loop && merge_frames_ && buffer_usage == 1 && first_frame_)
                     clipping_->render_transparent(first_key_, first_frame_.get(), buffers_[buffer_index_.load()].get());
             }
@@ -404,7 +402,7 @@ void VideoConversionWrapper::encode_from_end(vs::Encoder *encoder) {
             --buffer_usage;
 
             if (buffer_usage > 0)
-                player_->next();
+                player->next();
         }
 
         // flush the buffer
@@ -429,16 +427,16 @@ void VideoConversionWrapper::encode_from_end(vs::Encoder *encoder) {
         }
 
         last_start = buffer_start;
-        player_->seek_frame(last_start);
+        player->seek_frame(last_start);
     }
 }
 
-void VideoConversionWrapper::conversion_thread() {
+void VideoConversionWrapper::conversion_thread(vs::Player *player) {
     auto encoder = vs::encoder(
         codec_name_.c_str(),
         target_path_.c_str(),
-        clipping_ ? clipping_->w() : player_->w(),
-        clipping_ ? clipping_->h() : player_->h(),
+        clipping_->w(),
+        clipping_->h(),
         1000,
         fps_ * 1000,
         bitrate_);
@@ -449,14 +447,14 @@ void VideoConversionWrapper::conversion_thread() {
     }
 
     if (interval() <= buffers_.size() && buffers_.size() > 1) {
-        encode_all(encoder.get());
+        encode_all(player, encoder.get());
         return;
     }
 
     if (start_frame_ <= end_frame_) {
-        encode_from_start(encoder.get());
+        encode_from_start(player, encoder.get());
     } else {
-        encode_from_end(encoder.get());
+        encode_from_end(player, encoder.get());
     }
 
     if (append_reverse_) {
@@ -465,9 +463,9 @@ void VideoConversionWrapper::conversion_thread() {
         end_frame_ = tmp;
 
         if (start_frame_ <= end_frame_) {
-            encode_from_start(encoder.get());
+            encode_from_start(player, encoder.get());
         } else {
-            encode_from_end(encoder.get());
+            encode_from_end(player, encoder.get());
         }
     }
 }
