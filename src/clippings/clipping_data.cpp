@@ -98,8 +98,6 @@ void ClippingData::inc_version() {
 }
 
 void ClippingData::add(const ClippingKey & key) {
-    double last_angle = key.angle();
-
     inc_version();
 
     auto it = keys_.begin();

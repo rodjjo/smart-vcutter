@@ -42,8 +42,8 @@ const char *kPATH_VAR_NAME = "path";
 std::string EncoderWindow::last_filepath_; // NOLINT
 std::string EncoderWindow::last_sugestion_; // NOLINT
 
-EncoderWindow::EncoderWindow(History* history, const clipping_t & clip) {
-    init(history, &clip);
+EncoderWindow::EncoderWindow(History *history, std::shared_ptr<Clipping> clip) {
+    init(history, clip);
 }
 
 EncoderWindow::EncoderWindow(History* history) {
@@ -56,26 +56,22 @@ EncoderWindow::EncoderWindow(History* history, const std::string& path) {
 }
 
 
-void EncoderWindow::init(History* history, const clipping_t * clip) {
+void EncoderWindow::init(History* history, std::shared_ptr<Clipping> clip) {
     history_ = history;
-    has_clipping_ = clip != NULL;
-
-    if (has_clipping_) {
-        clip_ = *clip;
-    }
+    clip_ = clip;
 
     bitrate_action_src_ = NULL;
     frame_w_ = 0;
     frame_h_ = 0;
     original_fps_ = 0;
 
-    window_ = new Fl_Window(0, 0, kWINDOW_WIDTH, kWINDOW_HEIGHT, has_clipping_ ? "Generate animation" : "Convert video track (NO SOUND IN OUTPUT)");
+    window_ = new Fl_Window(0, 0, kWINDOW_WIDTH, kWINDOW_HEIGHT, clip_ ? "Generate animation" : "Convert video track (NO SOUND IN OUTPUT)");
     window_->begin();
 
     components_group_ = new Fl_Group(0,0, window_->w(), window_->h() - 30);
     components_group_->box(FL_DOWN_BOX);
 
-    edt_path_ = new Fl_Input(5,25, window_->w() - 37, 25, has_clipping_ ? "Animation from:" : "Source video path:");
+    edt_path_ = new Fl_Input(5,25, window_->w() - 37, 25, clip_ ? "Animation from:" : "Source video path:");
     edt_path_->align(FL_ALIGN_TOP_LEFT);
     edt_path_->readonly(true);
 
@@ -168,7 +164,7 @@ EncoderWindow::~EncoderWindow() {
 }
 
 void EncoderWindow::adapt_ui() {
-    if (has_clipping_) {
+    if (clip_) {
         btn_path_->hide();
         edt_start_->readonly(true);
         edt_end_->readonly(true);
@@ -203,10 +199,9 @@ std::map<std::string, std::string> EncoderWindow::serialize() {
     snprintf(tmp, sizeof(tmp), "%lf", original_fps_);
     result[kORI_FPS_FIELD] = tmp;
 
-    if (has_clipping_) {
-        Project p;
-        p.set_clipping(clip_);
-        result[kCLIP_VAR_NAME] = Json::FastWriter().write(p.get_data());
+    if (clip_) {
+        Json::Value root = clip_->serialize();
+        result[kCLIP_VAR_NAME] = Json::FastWriter().write(root);
     }
 
     return result;
@@ -271,22 +266,14 @@ bool EncoderWindow::deserialize(const session_data_t & data) {
     }
 
     if (clip_param != data.end()) {
-        has_clipping_ = true;
         path_.clear();
 
-        Project p;
+        clip_.reset(new Clipping(data.at(kCLIP_VAR_NAME).c_str(), false));
 
-        if (!p.load(data.at(kCLIP_VAR_NAME))) {
+        if (!clip_->good()) {
+            clip_.reset();
             return false;
         }
-
-        auto clip = p.get_clipping();
-
-        if (!clip) {
-            return false;
-        }
-
-        clip_ = *clip;
     }
 
     adapt_ui();
@@ -294,7 +281,7 @@ bool EncoderWindow::deserialize(const session_data_t & data) {
     return true;
 }
 
-void EncoderWindow::execute(History* history, Fl_Window *parent, Clipping *clip) {
+void EncoderWindow::execute(History* history, Fl_Window *parent, std::shared_ptr<Clipping> clip) {
     if (clip->video_path().empty()) {
         show_error("The clip must define a path to de video");
         return;
@@ -305,11 +292,8 @@ void EncoderWindow::execute(History* history, Fl_Window *parent, Clipping *clip)
         return;
     }
 
-    /*
-    TODO: uncomment after constructor be modified
     std::unique_ptr<EncoderWindow> window(new EncoderWindow(history, clip));
     window->show_modal(parent);
-    */
 }
 
 
@@ -347,7 +331,7 @@ void EncoderWindow::show_modal(Fl_Window *parent) {
 
     window_->show();
 
-    if (has_clipping_ || !path_.empty()) {
+    if (clip_ || !path_.empty()) {
         action_video_path();
     }
 
@@ -454,8 +438,8 @@ void EncoderWindow::action_convert() {
     Session session(kSESSION_ENCODER_WINDOW);
     session.save(1, serialize());
 
-    if (has_clipping_) {
-        VideoConversionWrapper converter(
+    if (clip_) {
+/*        VideoConversionWrapper converter(
             clip_,
             format,
             edt_output_->value(),
@@ -465,7 +449,7 @@ void EncoderWindow::action_convert() {
         );
 
         converter.convert(btn_append_reverse_->value() != 0, btn_merge_->value() != 0);
-        save_sugestion();
+        save_sugestion(); */
     } else {
         VideoConversionWrapper converter(
             edt_path_->value(),
@@ -497,7 +481,7 @@ const char *EncoderWindow::sugest_extension() {
 }
 
 void EncoderWindow::action_output() {
-    const char *key = has_clipping_ ? kCLIPPING_DIR_KEY : kCONVERSION_DIR_KEY;
+    const char *key = clip_ ? kCLIPPING_DIR_KEY : kCONVERSION_DIR_KEY;
     std::string directory = (*history_)[key];
 
     std::string path_to_save =
@@ -560,9 +544,9 @@ void EncoderWindow::update_bitrate_cb(Fl_Widget* widget, void *userdata) {
     window->update_bitrate();
     window->bitrate_action_src_ = NULL;
 
-    if (!window->has_clipping_ || window->btn_append_reverse_->value() != 0) {
+    if (!window->clip_ || window->btn_append_reverse_->value() != 0) {
         window->btn_merge_->hide();
-    } else if (window->has_clipping_) {
+    } else if (window->clip_) {
         window->btn_merge_->show();
     }
 }
@@ -620,9 +604,8 @@ void EncoderWindow::copy_original_fps() {
 void EncoderWindow::fill_animation_info(int video_frame_count) {
     char temp[50] = "";
 
-
-    double start_time = (clip_.items.begin()->frame / original_fps_) - 1;
-    double end_time = (clip_.items.rbegin()->frame / original_fps_) - 1;
+    double start_time = (clip_->first_frame() / original_fps_) - 1;
+    double end_time = (clip_->last_frame() / original_fps_) - 1;
 
     if (end_time == start_time) {
         end_time = (video_frame_count / original_fps_) - 1;
@@ -640,8 +623,8 @@ void EncoderWindow::fill_animation_info(int video_frame_count) {
     edt_start_->value(temp);
     seconds_to_str(temp, sizeof(temp), end_time, true);
     edt_end_->value(temp);
-    frame_w_ = clip_.w;
-    frame_h_ = clip_.h;
+    frame_w_ = clip_->w();
+    frame_h_ = clip_->h();
 }
 
 void EncoderWindow::sugest_output_file() {
@@ -649,7 +632,7 @@ void EncoderWindow::sugest_output_file() {
         return;
     }
 
-    if (!has_clipping_ && last_filepath_sug_ == edt_path_->value()) {
+    if (!clip_ && last_filepath_sug_ == edt_path_->value()) {
         edt_output_->value("");
     }
 
@@ -657,29 +640,29 @@ void EncoderWindow::sugest_output_file() {
         return;
     }
 
-    if (has_clipping_ && !strlen(edt_output_->value())) {
+    if (clip_ && !strlen(edt_output_->value())) {
         edt_output_->value(get_sugestion().c_str());
         if (strlen(edt_output_->value())) {
             return;
         }
     }
 
-    std::string dir = (*history_)[has_clipping_ ? kCLIPPING_DIR_KEY : kCONVERSION_DIR_KEY];
+    std::string dir = (*history_)[clip_ ? kCLIPPING_DIR_KEY : kCONVERSION_DIR_KEY];
     if (dir.empty() || !filepath_exists(dir.c_str())) {
         return;
     }
 
     edt_output_->value(
-        change_filepath_dir(edt_path_->value(), dir.c_str(), sugest_extension(), has_clipping_).c_str());
-    if (has_clipping_) {
+        change_filepath_dir(edt_path_->value(), dir.c_str(), sugest_extension(), clip_.get() != NULL).c_str());
+    if (clip_) {
         last_filepath_sug_ = edt_path_->value();
     }
 }
 
 void EncoderWindow::action_video_path() {
     std::string path;
-    if (has_clipping_) {
-        path = clip_.video_path;
+    if (clip_) {
+        path = clip_->video_path();
         btn_merge_->show();
     } else if (!path_.empty()) {
         path = path_;
@@ -714,7 +697,7 @@ void EncoderWindow::action_video_path() {
     if (player->error()) {
         show_error(player->error());
         edt_path_->value("");
-        if (has_clipping_) {
+        if (clip_) {
             window_->hide();
         }
         return;
@@ -726,7 +709,7 @@ void EncoderWindow::action_video_path() {
         original_fps_ = 0.000001;
         edt_path_->value("");
         show_error("Não foi possivel obter o fps do video.");
-        if (has_clipping_) {
+        if (clip_) {
             window_->hide();
         }
         return;
@@ -736,7 +719,7 @@ void EncoderWindow::action_video_path() {
         copy_original_fps();
     }
 
-    if (has_clipping_) {
+    if (clip_) {
         fill_animation_info(player->count());
     } else {
         char temp[50] = "";

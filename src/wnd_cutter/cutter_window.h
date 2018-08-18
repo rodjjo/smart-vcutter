@@ -38,7 +38,6 @@ class CutterWindow {
     CutterWindow(Fl_Group *parent);
     virtual ~CutterWindow();
 
-//    bool open_clipping(const clipping_t & clip);
     bool restore_session();
     bool open_clipping(const std::string& path);
     bool open_video(const std::string& video_path);
@@ -47,7 +46,7 @@ class CutterWindow {
     bool save_as(History * history);
 
     void close();
-    Clipping *to_clipping();
+    std::shared_ptr<Clipping> to_clipping();
     void poll_actions();
     bool visible();
     bool modified();
@@ -170,7 +169,7 @@ class CutterWindow {
     Fl_Select_Browser *key_list_;
     ClippingEditor *clipping_editor_;
 
-    std::unique_ptr<ClippingSession> clipping_;
+    std::shared_ptr<ClippingSession> clipping_;
 
     MiniatureViewer *viewer_;
     std::unique_ptr<ClippingKeeper> keeper_;

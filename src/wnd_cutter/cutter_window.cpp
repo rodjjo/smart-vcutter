@@ -344,7 +344,7 @@ bool CutterWindow::handle_opened_clipping() {
 }
 
 bool CutterWindow::restore_session() {
-    std::unique_ptr<ClippingSession> restored(std::move(ClippingSession::restore_session("cwnd")));
+    std::shared_ptr<ClippingSession> restored(std::move(ClippingSession::restore_session("cwnd")));
 
     if (!restored) {
         return false;
@@ -414,8 +414,8 @@ void CutterWindow::open_video() {
 
 }
 
-Clipping *CutterWindow::to_clipping() {
-    return clipping_.get();
+std::shared_ptr<Clipping> CutterWindow::to_clipping() {
+    return clipping_;
 }
 
 void CutterWindow::button_callback(Fl_Widget* widget, void *userdata) {

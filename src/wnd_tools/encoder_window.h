@@ -29,11 +29,11 @@ namespace vcutter {
 class EncoderWindow {
  public:
     explicit EncoderWindow(History* history);
-    EncoderWindow(History* history, const std::string & path);
-    EncoderWindow(History* history, const clipping_t & clip);
+    EncoderWindow(History *history, std::shared_ptr<Clipping> clip);
+    EncoderWindow(History *history, const std::string & path);
     virtual ~EncoderWindow();
     static void execute(History* history, Fl_Window *parent);
-    static void execute(History* history, Fl_Window *parent, Clipping *clip);
+    static void execute(History* history, Fl_Window *parent, std::shared_ptr<Clipping> clip);
     static void execute(History* history, Fl_Window *parent, const std::string& path);
     static void restore_session(History* history, Fl_Window *parent);
 
@@ -41,7 +41,7 @@ class EncoderWindow {
     std::map<std::string,std::string> serialize();
     bool deserialize(const session_data_t & data);
 
-    void init(History* history, const clipping_t * clip);
+    void init(History* history, std::shared_ptr<Clipping> clip);
     void show_modal(Fl_Window *parent);
     void fill_animation_info(int video_frame_count);
     void copy_original_fps();
@@ -67,8 +67,7 @@ class EncoderWindow {
     void sugest_output_file();
     const char *sugest_extension();
  private:
-    clipping_t clip_;
-    bool has_clipping_;
+    std::shared_ptr<Clipping> clip_;
     int frame_w_;
     int frame_h_;
     std::string path_;
