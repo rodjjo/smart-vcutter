@@ -115,7 +115,7 @@ ClippingKey MagicOperation::get_transformed_key() {
         return key;
     }
 
-    int ref_frame;
+    uint32_t ref_frame = 0;
     float px1, py1, px2, py2, rx1, ry1, rx2, ry2;
     if (!clipping()->ref().get_reference(&ref_frame, &rx1, &ry1, &rx2, &ry2)) {
         return key;

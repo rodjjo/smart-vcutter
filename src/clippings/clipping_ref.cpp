@@ -12,7 +12,7 @@ ClippingRef::ClippingRef(ClippingFrame *clipping) {
     clear_reference();
 }
 
-bool ClippingRef::get_reference(int *frame, float *rx1, float *ry1, float *rx2, float *ry2) {
+bool ClippingRef::get_reference(uint32_t *frame, float *rx1, float *ry1, float *rx2, float *ry2) {
     if (!has_ref_) {
         return false;
     }
@@ -31,7 +31,7 @@ bool ClippingRef::get_reference(int *frame, float *rx1, float *ry1, float *rx2, 
     return false;
 }
 
-bool ClippingRef::get_reference_frame(int *frame) {
+bool ClippingRef::get_reference_frame(uint32_t *frame) {
     if (!has_ref_) {
         return false;
     }
@@ -57,7 +57,7 @@ bool ClippingRef::has_ref() {
     return false;
 }
 
-void ClippingRef::set_reference(int frame, float rx1, float ry1, float rx2, float ry2) {
+void ClippingRef::set_reference(uint32_t frame, float rx1, float ry1, float rx2, float ry2) {
     rx1_ = rx1;
     ry1_ = ry1;
     rx2_ = rx2;

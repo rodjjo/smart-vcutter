@@ -449,7 +449,8 @@ void CutterWindow::goto_selected_clipping_key() {
     if (!key_list_->value()) {
         return;
     }
-    int index = key_list_->value() - 1;
+
+    uint32_t index = key_list_->value() - 1;
     if (index < clipping_->keys().size()) {
         auto frame = clipping_->at_index(index).frame;
 
@@ -786,8 +787,8 @@ void CutterWindow::swap_wh() {
         return;
     }
 
-    int video_w = clipping_->player()->info()->w();
-    int video_h = clipping_->player()->info()->h();
+    uint32_t video_w = clipping_->player()->info()->w();
+    uint32_t video_h = clipping_->player()->info()->h();
 
     if (!video_h || !video_w) {
         show_error("Unxpected error width or height invalid in this video");
@@ -1002,7 +1003,7 @@ void CutterWindow::action_clear_ref() {
 }
 
 void CutterWindow::action_goto_reference() {
-    int frame = 0;
+    uint32_t frame = 0;
     if (clipping_->ref().get_reference_frame(&frame)) {
         clipping_->player()->pause();
         clipping_->player()->seek_frame(frame);
@@ -1117,10 +1118,10 @@ void CutterWindow::update_clipping_list() {
     in_key_list_ = true;
     char temp_buffer[100] = "";
     int selection = key_list_->value();
-    int size = key_list_->size();
-    size_t i = 0;
+    uint32_t size = key_list_->size();
+
     key_list_->clear();
-    int ref_frame = -1;
+    uint32_t ref_frame = -1;
     clipping_->ref().get_reference_frame(&ref_frame);
 
     for (auto k : clipping_->keys()) {
@@ -1129,7 +1130,7 @@ void CutterWindow::update_clipping_list() {
         key_list_->add(temp_buffer);
     }
 
-    if (size == key_list_->size() && selection) {
+    if (size == static_cast<uint32_t>(key_list_->size()) && selection != 0) {
         key_list_->deselect();
         key_list_->value(selection);
         key_list_->select(selection);
@@ -1188,7 +1189,7 @@ void CutterWindow::update_seek_bar() {
 void CutterWindow::key_list_auto_selection() {
     in_key_list_ = true;
     selected_clip_ = clipping_->find_index(clipping_->player()->info()->position()) + 1;
-    if (selected_clip_ > 0 && selected_clip_ <= key_list_->size()) {
+    if (selected_clip_ > 0 && selected_clip_ <= static_cast<uint32_t>(key_list_->size())) {
         key_list_->value(selected_clip_);
     }
     in_key_list_ = false;
@@ -1217,7 +1218,7 @@ void CutterWindow::update_buffers(bool frame_changed) {
         clipping_->wh(clipping_->player()->info()->w(), clipping_->player()->info()->h());
     }
 
-    if (clipping_->keys().size() != key_list_->size()) {
+    if (clipping_->keys().size() != static_cast<u_int32_t>(key_list_->size())) {
         update_clipping_list();
     }
 }

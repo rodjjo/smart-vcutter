@@ -55,8 +55,8 @@ void ClippingKey::angle(double value) {
 ClippingKey ClippingKey::constrained(ClippingFrame *owner) {
     ClippingKey result(*this);
 
-    int max_x = owner->player()->info()->w() - 1;
-    int max_y = owner->player()->info()->h() - 1;
+    uint32_t max_x = owner->player()->info()->w() - 1;
+    uint32_t max_y = owner->player()->info()->h() - 1;
 
     if (result.px < 1) {
         result.px = 1;
@@ -111,8 +111,6 @@ void ClippingKey::limit_scale(ClippingFrame *owner) {
 
     point_t lt = area.left_top_violation(width, height);
     point_t rb = area.right_bottom_violation(width, height);
-
-    point_t sz = area.size();
 
     int xpass = lt.x > rb.x ? lt.x : rb.x;
     int ypass = lt.y > rb.y ? lt.y : rb.y;

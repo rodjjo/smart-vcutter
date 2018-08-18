@@ -83,7 +83,7 @@ void MainWindow::timeout_handler(void* ud) {
 
 int MainWindow::run() {
     run_called_ = true;
-    Fl::run();
+    return Fl::run();
 }
 
 void MainWindow::poll_actions() {

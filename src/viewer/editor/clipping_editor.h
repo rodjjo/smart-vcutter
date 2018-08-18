@@ -55,8 +55,8 @@ private:
     void check_key_count();
 private:
     bool initialized_caches_[3];
-    int frame_numbers_[3];
-    int prev_key_count_;
+    uint32_t frame_numbers_[3];
+    uint32_t prev_key_count_;
     bool modified_;
     bool should_update_;
     bool compare_box_;

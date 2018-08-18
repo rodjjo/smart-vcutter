@@ -185,7 +185,7 @@ int VideoConversionWrapper::preview_h() {
     return 0;
 }
 
-int VideoConversionWrapper::interval() {
+uint32_t VideoConversionWrapper::interval() {
     return start_frame_ < end_frame_ ? end_frame_ - start_frame_ : start_frame_ - end_frame_;
 }
 
@@ -213,7 +213,7 @@ void VideoConversionWrapper::allocate_buffers() {
 
     const unsigned int max_memory = 256 * (1024 * 1024); // 256MB of ram of cache
     buffer_size_ = target_w_ * target_h_ * 3;
-    int buffered_frames = max_memory / buffer_size_;
+    uint32_t buffered_frames = max_memory / buffer_size_;
     buffers_.reserve(buffered_frames);
 
     auto buffer_deallocator = [] (unsigned char* data) {
@@ -238,7 +238,7 @@ void VideoConversionWrapper::allocate_buffers() {
         buffered_frames = interval();
     }
 
-    for (int i = 0; i < buffered_frames; ++i) {
+    for (uint32_t i = 0; i < buffered_frames; ++i) {
         buffers_.push_back(std::shared_ptr<unsigned char>(
             new unsigned char[buffer_size_], buffer_deallocator));
     }
@@ -331,8 +331,7 @@ void VideoConversionWrapper::encode_from_start(vs::Encoder *encoder) {
     player_->seek_frame(start_frame_);
     keep_first_frame();
 
-    int count = end_frame_ - start_frame_;
-    int i = start_frame_;
+    uint32_t i = start_frame_;
     buffering_ = clipping_.get() != NULL;
     buffer_index_.store(buffering_ ? 1 : 0);
     bool last_frame = false;
@@ -365,11 +364,9 @@ void VideoConversionWrapper::encode_from_start(vs::Encoder *encoder) {
 }
 
 void VideoConversionWrapper::encode_from_end(vs::Encoder *encoder) {
-    int buffer_start = start_frame_ - (buffers_.size() - 1);
-    int start = end_frame_;
-    int end = start_frame_;
-    int buffer_usage = buffers_.size();
-    int last_usage = 0;
+    uint32_t buffer_start = start_frame_ - (buffers_.size() - 1);
+    uint32_t buffer_usage = buffers_.size();
+    uint32_t last_usage = 0;
 
     if (buffer_start <= end_frame_) {
         buffer_usage -= -buffer_usage;

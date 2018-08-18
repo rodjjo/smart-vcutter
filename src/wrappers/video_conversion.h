@@ -47,7 +47,7 @@ class VideoConversionWrapper {
     const unsigned char* preview_buffer();
     int preview_w();
     int preview_h();
-    int interval();
+    uint32_t interval();
     void flush_buffers(vs::Encoder *encoder, int count, bool from_start, bool discart_first);
     void encode_all(vs::Encoder *encoder);
     void encode_from_start(vs::Encoder *encoder);
@@ -58,7 +58,7 @@ class VideoConversionWrapper {
     std::unique_ptr<boost::thread> thread_;
 
     std::vector<std::shared_ptr<unsigned char> > buffers_;
-    int buffer_size_;
+    uint32_t buffer_size_;
     std::atomic_int buffer_index_;
 
     std::string source_path_;
@@ -68,8 +68,8 @@ class VideoConversionWrapper {
     int target_w_;
     int target_h_;
 
-    int start_frame_;
-    int end_frame_;
+    uint32_t start_frame_;
+    uint32_t end_frame_;
     bool buffering_;
     bool encode_error_;
     bool canceled_;

@@ -7,10 +7,6 @@
 
 namespace vcutter {
 
-namespace {
-    const char *kHISTORY_PREFIX = "history";
-}
-
 History::History(const char *path) {
     std::string histpath = path ? path : history_file_path();
     json_file_.reset(new JsonFile(histpath.c_str()));

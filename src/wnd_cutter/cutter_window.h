@@ -174,7 +174,7 @@ class CutterWindow {
     bool has_key_copy_;
     ClippingKey key_copy_;
  private:
-    int64_t clipping_version_;
+    uint64_t clipping_version_;
     unsigned int wink_lap_;
     unsigned int selected_clip_;
     bool wink_comparison_;

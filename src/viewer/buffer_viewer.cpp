@@ -165,7 +165,6 @@ const viewport_t & BufferViewer::view_port() const {
 void BufferViewer::draw_buffer(const unsigned char* buffer, uint32_t w, uint32_t h) {
     update_cache(&buffer, &w, &h);
 
-    unsigned short x1, y1, x2, y2;
     float pixel_zoom = vp_.raster_zoom(w, h);
     point_t raster = vp_.raster_coords(w, h);
 

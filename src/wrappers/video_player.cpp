@@ -153,7 +153,7 @@ void PlayerWrapper::run_callback() {
     }
 }
 
-bool PlayerWrapper::change_speed(bool increment) {
+void PlayerWrapper::change_speed(bool increment) {
     float step = 0.20 * (increment ? 1: -1);
 
     if (get_speed() + step <= 5.0 && get_speed() + step >= 0.20) {

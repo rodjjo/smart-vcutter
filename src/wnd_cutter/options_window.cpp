@@ -107,6 +107,8 @@ bool CutterOptionsWindow::edit(
         copy_number(edt_width_->value(), w);
         copy_number(edt_height_->value(), h);
     }
+
+    return confirmed_;
 }
 
 bool CutterOptionsWindow::copy_number(const char* value, unsigned int *output) {

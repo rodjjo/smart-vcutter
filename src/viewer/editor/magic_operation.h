@@ -36,7 +36,7 @@ class MagicOperation: public ClippingOperation {
     uint32_t py1_;
     uint32_t px2_;
     uint32_t py2_;
-    int frame_;
+    uint32_t frame_;
     bool opt_x_enabled_;
     bool opt_y_enabled_;
     bool opt_scale_enabled_;

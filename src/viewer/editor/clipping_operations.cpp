@@ -441,7 +441,7 @@ void ClippingOperationSet::draw_ref_line(const viewport_t &vp) {
         return;
     }
 
-    int frame = -1;
+    uint32_t frame = 0;
     float px1, py1, px2, py2;
 
     if (!(*clipping_)->ref().get_reference(&frame, &px1, &py1, &px2, &py2) ||

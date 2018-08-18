@@ -26,7 +26,7 @@ class PlayerWrapper {
     void stop();
     void next();
     void prior();
-    bool change_speed(bool increment);
+    void change_speed(bool increment);
     void seek_frame(int64_t frame);
     void seek_time(int64_t ms_time);
     bool is_playing();

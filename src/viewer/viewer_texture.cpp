@@ -25,7 +25,7 @@ ViewerTexture::ViewerTexture() {
     view_h_ = 0;
 }
 
-ViewerTexture::ViewerTexture(const uint8_t *buffer, int w, int h, bool resize_texture, bool rgba) {
+ViewerTexture::ViewerTexture(const uint8_t *buffer, uint32_t w, uint32_t h, bool resize_texture, bool rgba) {
     texture_id_ = 0;
     texture_w_ = 0;
     texture_h_ = 0;
@@ -46,7 +46,7 @@ ViewerTexture::~ViewerTexture() {
     }
 }
 
-void ViewerTexture::update(const uint8_t *buffer, int w, int h, bool resize_texture, bool rgba) {
+void ViewerTexture::update(const uint8_t *buffer, uint32_t w, uint32_t h, bool resize_texture, bool rgba) {
     auto buffer_size = w * h * (rgba ? 4 : 3);
     buffer_.reset(new uint8_t[buffer_size], [](const uint8_t *b) { delete[] b;});
     buffer_w_ = w;
@@ -94,7 +94,7 @@ void ViewerTexture::draw(const viewport_t &vp, float x, float y, float zoom) {
     }
 }
 
-void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int h, bool resize_texture, bool rgba) {
+void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, uint32_t w, uint32_t h, bool resize_texture, bool rgba) {
     update_texture(vp, buffer, w, h, resize_texture, rgba);
 
     if (!texture_w_ || !texture_h_ || !texture_id_) {
@@ -129,7 +129,7 @@ void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int
     }
 }
 
-void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coords, box_t view_coords, float alpha) {
+void ViewerTexture::draw(const viewport_t &vp, uint32_t vw, uint32_t vh, box_t texture_coords, box_t view_coords, float alpha) {
     update_texture(vp, NULL, 0, 0, resize_texture_, rgba_);
 
     if (!texture_w_ || !texture_h_ || !texture_id_) {
@@ -166,7 +166,7 @@ void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coo
 }
 
 
-void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, int w, int h, bool resize_texture, bool rgba) {
+void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, uint32_t w, uint32_t h, bool resize_texture, bool rgba) {
     if (!buffer && !buffer_) {
         return;
     }
@@ -182,7 +182,7 @@ void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, 
         rgba_ = rgba;
     }
 
-    if (texture_id_ == 0 || (resize_texture && (vp[2] != view_w_ || vp[3] != view_h_)) || w != texture_w_ || h != texture_h_) {
+    if (texture_id_ == 0 || (resize_texture && (static_cast<uint32_t>(vp[2]) != view_w_ || static_cast<uint32_t>(vp[3]) != view_h_)) || w != texture_w_ || h != texture_h_) {
         if (texture_id_) {
             glDeleteTextures(1, &texture_id_);
         }

@@ -9,7 +9,10 @@ namespace vcutter {
 
 JsonFile::JsonFile(
     const char *path, bool delete_on_close, bool should_load
-) : path_(path), delete_on_close_(delete_on_close), loaded_(false) {
+) {
+    path_ = path;
+    delete_on_close_ = delete_on_close;
+    loaded_ = false;
     if (should_load) {
         load();
     }
