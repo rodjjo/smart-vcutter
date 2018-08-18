@@ -20,15 +20,12 @@
 #include <FL/Fl_Hor_Slider.H>
 #include <FL/Fl_Select_Browser.H>
 
-#include "src/data/project.h"
 #include "src/data/history.h"
 #include "src/wnd_cutter/options_window.h"
 #include "src/wrappers/video_player.h"
-#include "src/clippings/clipping_painter.h"
 #include "src/clippings/clipping_session.h"
 #include "src/viewer/miniature_viewer.h"
 #include "src/viewer/editor/clipping_editor.h"
-
 
 
 namespace vcutter {
@@ -172,12 +169,12 @@ class CutterWindow {
     std::shared_ptr<ClippingSession> clipping_;
 
     MiniatureViewer *viewer_;
-    std::unique_ptr<ClippingKeeper> keeper_;
  private:
     std::set<std::shared_ptr<Fl_Image> > images_;
     bool has_key_copy_;
-    clipping_key_t key_copy_;
+    ClippingKey key_copy_;
  private:
+    int64_t clipping_version_;
     unsigned int wink_lap_;
     unsigned int selected_clip_;
     bool wink_comparison_;
