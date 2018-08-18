@@ -15,7 +15,7 @@ MiniatureViewer::~MiniatureViewer() {
 }
 
 void MiniatureViewer::invalidate() {
-    player_ = NULL;
+    clipping_ = NULL;
     miniature_buffer_w_ = 0;
     miniature_buffer_h_ = 0;
     buffer_size_ = 0;
@@ -24,7 +24,11 @@ void MiniatureViewer::invalidate() {
 }
 
 void MiniatureViewer::viewer_draw(BufferViewer *viewer, bool *handled, const unsigned char* buffer, uint32_t w, uint32_t h) {
-    if (player_->is_playing()) {
+    if (!clipping_) {
+        return;
+    }
+
+    if (clipping_->player()->is_playing()) {
         return;
     }
 
@@ -44,14 +48,12 @@ void MiniatureViewer::viewer_buffer(BufferViewer *viewer, const unsigned char** 
     *h = miniature_buffer_h_;
 }
 
-void MiniatureViewer::update_preview(PlayerWrapper *player, ClippingKeeper *keeper) {
-    player_ = player;
+void MiniatureViewer::update_preview(Clipping *clipping) {
+    clipping_ = clipping;
     miniature_buffer_w_ = 0;
     miniature_buffer_h_ = 0;
 
-    keeper->set_video_dimensions(player->info()->w(), player->info()->h());
-
-    uint32_t preview_w = keeper->get_width(), preview_h = keeper->get_height();
+    uint32_t preview_w = clipping_->w(), preview_h = clipping_->h();
 
     viewport_t vp(0, 0, w(), h());
     float fit_scale = vp.fit(&preview_w, &preview_h);
@@ -71,10 +73,10 @@ void MiniatureViewer::update_preview(PlayerWrapper *player, ClippingKeeper *keep
     miniature_buffer_w_ = preview_w;
     miniature_buffer_h_ = preview_h;
 
-    auto key = keeper->get_key(player->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.scale *= fit_scale;
 
-    paint_clipping(player->info()->buffer(),  player->info()->w(), player->info()->h(), key, preview_w, preview_h, clipping_buffer_.get());
+    clipping_->render(key, preview_w, preview_h, clipping_buffer_.get());
 
     modified_ = true;
     redraw();

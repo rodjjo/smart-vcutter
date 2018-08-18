@@ -7,7 +7,7 @@
 #include <memory>
 
 #include "src/wrappers/video_player.h"
-#include "src/clippings/clipping_keeper.h"
+#include "src/clippings/clipping.h"
 #include "src/viewer/buffer_viewer.h"
 #include "src/viewer/viewer_texture.h"
 
@@ -18,14 +18,14 @@ public:
     MiniatureViewer(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
     virtual ~MiniatureViewer();
     void invalidate();
-    void update_preview(PlayerWrapper *player, ClippingKeeper *keeper);
+    void update_preview(Clipping *clipping);
 
 private:
     void viewer_draw(BufferViewer *viewer, bool *handled, const unsigned char* buffer, uint32_t w, uint32_t h) override;
     void viewer_buffer(BufferViewer *viewer, const unsigned char** buffer, uint32_t *w, uint32_t *h) override;
 
 private:
-    PlayerWrapper *player_;
+    Clipping *clipping_;
     std::unique_ptr<ViewerTexture> viewer_texture_;
     bool modified_;
     bool should_update_;

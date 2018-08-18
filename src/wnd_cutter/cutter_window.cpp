@@ -1198,21 +1198,21 @@ void CutterWindow::update_buffers(bool frame_changed) {
     if (clipping_->player()->info()->error()) {
         return;
     }
-/*
+
     if (frame_changed) {
         update_seek_bar();
         redraw_frame();
         key_list_auto_selection();
-        clipping_editor_->update(clipping_->player(), keeper_.get());
-        viewer_->update_preview(clipping_->player(), keeper_.get());
+        clipping_editor_->update(clipping_.get());
+        viewer_->update_preview(clipping_.get());
     } else {
         clipping_editor_->draw_operations();
         if (clipping_editor_->key_changed(true)) {
             update_clipping_list();
-            viewer_->update_preview(clipping_->player(), keeper_.get());
+            viewer_->update_preview(clipping_.get());
         }
     }
-*/
+
     if (clipping_->w() < 15 || clipping_->h() < 15) {
         clipping_->wh(clipping_->player()->info()->w(), clipping_->player()->info()->h());
     }
