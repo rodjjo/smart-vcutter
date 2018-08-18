@@ -138,5 +138,72 @@ void ClippingKey::limit_scale(ClippingFrame *owner) {
     scale *= (scalex < scaley ? scalex : scaley);
 }
 
+ClippingKey ClippingKey::magic_tool(
+        ClippingFrame *owner,
+        float source_rx1,
+        float source_ry1,
+        float source_rx2,
+        float source_ry2,
+        float curr_rx1,
+        float curr_ry1,
+        float curr_rx2,
+        float curr_ry2,
+        bool should_rotate,
+        bool should_scale,
+        bool should_positionate_x,
+        bool should_positionate_y) const {
+    ClippingKey result = *this;
+    ClippingKey source = *this;
+
+    if (!(should_rotate || should_scale || should_positionate_x || should_positionate_y)) {
+        return result;
+    }
+
+    double scale = 1.0;
+    if (should_scale) {
+        double source_distance = point_t(source_rx1, source_ry1).distance_to(source_rx2, source_ry2);
+        double target_distance = point_t(curr_rx1, curr_ry1).distance_to(curr_rx2, curr_ry2);
+
+        if (source_distance != 0) {
+            scale = target_distance / source_distance;
+        }
+        source.scale *= scale;
+    }
+
+    if (should_positionate_x) {
+        float dx = (curr_rx1 - source_rx1) * scale;
+        source.px += dx;
+    }
+
+    if (should_positionate_y) {
+        float dy = (curr_ry1 - source_ry1) * scale;
+        source.py += dy;
+    }
+
+    if (should_rotate) {
+        float source_angle = point_t(source_rx2 - source_rx1, source_ry2  - source_ry1).angle_0_360();
+        float target_angle = point_t(curr_rx2 - curr_rx1, curr_ry2 - curr_ry1).angle_0_360();
+        float diff = target_angle - source_angle;
+        if (diff) {
+            source.angle(source.angle() + diff);
+        }
+    }
+
+    source = source.constrained(owner);
+    box_t bb = source.clipping_box(owner).occupied_area();
+    if (bb[1].x - bb[0].x > 15 && bb[2].y - bb[0].y > 15) {
+        result.scale = source.scale;
+    }
+
+    if (source.px >= 1 && source.py >= 1 && source.px + 1 < owner->player()->info()->w() && source.py + 1 < owner->player()->info()->h()) {
+        result.px = source.px;
+        result.py = source.py;
+    }
+
+    result.angle(source.angle());
+
+    return result;
+}
+
 
 }  // namespace vcutter

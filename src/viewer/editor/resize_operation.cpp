@@ -32,7 +32,7 @@ void ResizeOperation::draw_dragging_points() {
         return;
     }
 
-    auto b = current_clipping_box(view_port(), player(), keeper());
+    auto b = current_clipping_box(view_port(), clipping());
     bool should_draw_points = b.contours_point(mouse_move_x(), mouse_move_y());
 
     int distance = mouse_distance_;
@@ -52,8 +52,8 @@ void ResizeOperation::draw_dragging_points() {
     }
 }
 
-clipping_key_t ResizeOperation::get_transformed_key() {
-    auto key = keeper()->get_key(player()->info()->position());
+ClippingKey ResizeOperation::get_transformed_key() {
+    auto key = clipping()->at(player()->info()->position());
 
     const viewport_t & vp = view_port();
 
@@ -90,7 +90,7 @@ void ResizeOperation::mouse_changed(char direction) {
         return;
     }
 
-    auto box = current_clipping_box(view_port(), player(), keeper());
+    auto box = current_clipping_box(view_port(), clipping());
     box_t b;
     int w;
 

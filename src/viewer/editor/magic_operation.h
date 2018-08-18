@@ -16,7 +16,7 @@ class MagicOperation: public ClippingOperation {
     void activate() override;
     bool active() override;
     void draw() override;
-    clipping_key_t get_transformed_key() override;
+    ClippingKey get_transformed_key() override;
     void cancel() override;
     bool should_redraw() override;
     void mouse_changed(char direction) override;

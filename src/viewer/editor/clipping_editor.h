@@ -8,8 +8,7 @@
 
 #include <FL/Fl_RGB_Image.H>
 
-#include "src/wrappers/video_player.h"
-#include "src/clippings/clipping_keeper.h"
+#include "src/clippings/clipping.h"
 #include "src/viewer/buffer_viewer.h"
 #include "src/viewer/viewer_texture.h"
 #include "src/viewer/editor/clipping_operations.h"
@@ -28,7 +27,7 @@ public:
     ClippingEditor(uint32_t x, uint32_t y, uint32_t w, uint32_t h);
     virtual ~ClippingEditor();
     void invalidate();
-    void update(PlayerWrapper *player, ClippingKeeper *keeper);
+    void update(Clipping *clipping);
     void draw_operations();
     bool first_frame_cache_initialized();
     bool last_frame_cache_initialized();
@@ -63,8 +62,7 @@ private:
     bool compare_box_;
     bool compare_box_wink_;
     Fl_RGB_Image *last_cursor_;
-    PlayerWrapper *player_;
-    ClippingKeeper *keeper_;
+    Clipping *clipping_;
 
     ClippingOperationSet operation_set_;
 

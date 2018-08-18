@@ -14,7 +14,7 @@ class DragOperation: public ClippingOperation {
     virtual ~DragOperation();
     bool active() override;
     void draw_dragging_points() override;
-    clipping_key_t get_transformed_key() override;
+    ClippingKey get_transformed_key() override;
     void cancel() override;
     void alt_pressed() override;
     bool should_redraw() override;
