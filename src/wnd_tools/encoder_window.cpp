@@ -8,7 +8,6 @@
 #include "src/common/utils.h"
 #include "src/wrappers/video_conversion.h"
 #include "src/wnd_common/common_dialogs.h"
-#include "src/data/project.h"
 #include "src/wnd_tools/encoder_window.h"
 
 namespace vcutter {

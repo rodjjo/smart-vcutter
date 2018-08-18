@@ -18,7 +18,6 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Check_Button.H>
 
-#include "src/data/project.h"
 #include "src/clippings/clipping.h"
 #include "src/vstream/video_stream.h"
 #include "src/data/session.h"
