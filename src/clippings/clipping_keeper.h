@@ -59,8 +59,8 @@ class ClippingKeeper {
     void positionate_right(int frame);
     void positionate_top(int frame);
     void positionate_bottom(int frame);
-    void positionate_vertical(int frame);
-    void positionate_horizontal(int frame);
+    void center_vertical(int frame);
+    void center_horizontal(int frame);
     void normalize_scale(int frame);
     void align_left(int frame);
     void align_right(int frame);

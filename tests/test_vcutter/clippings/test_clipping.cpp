@@ -447,7 +447,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_positionate_bottom) {
 }
 
 
-BOOST_AUTO_TEST_CASE(test_clipping_positionate_vertical) {
+BOOST_AUTO_TEST_CASE(test_clipping_center_vertical) {
     ClippingTearDown teardown;
 
     vcutter::ClippingKey start_pos = clp->at(120);
@@ -457,12 +457,12 @@ BOOST_AUTO_TEST_CASE(test_clipping_positionate_vertical) {
 
     start_pos.py = 0;
     clp->add(start_pos);
-    clp->positionate_vertical(120);
+    clp->center_vertical(120);
     vcutter::ClippingKey k1 = clp->at(120);
     BOOST_CHECK_EQUAL(k1.py, clp->player()->info()->h() / 2);
 }
 
-BOOST_AUTO_TEST_CASE(test_clipping_positionate_horizontal) {
+BOOST_AUTO_TEST_CASE(test_clipping_center_horizontal) {
     ClippingTearDown teardown;
 
     vcutter::ClippingKey start_pos = clp->at(120);
@@ -472,7 +472,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_positionate_horizontal) {
 
     start_pos.px = 0;
     clp->add(start_pos);
-    clp->positionate_horizontal(120);
+    clp->center_horizontal(120);
     vcutter::ClippingKey k1 = clp->at(120);
     BOOST_CHECK_EQUAL(k1.px, clp->player()->info()->w() / 2);
 }
@@ -501,8 +501,8 @@ BOOST_AUTO_TEST_CASE(test_clipping_normalize_scale) {
     k1 = clp->at(120);
 
     BOOST_CHECK_CLOSE(k1.scale, 0.497536, 0.01);
-
 }
+
 
 /*
 
@@ -510,11 +510,11 @@ BOOST_AUTO_TEST_CASE(test_clipping_normalize_scale) {
     render
     render overloaded
 
-    align_left
-    align_right
-    align_top
-    align_bottom
-    align_all
+    fit_left
+    fit_right
+    fit_top
+    fit_bottom
+    fit_all
 */
 
 BOOST_AUTO_TEST_SUITE_END()

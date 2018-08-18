@@ -407,13 +407,13 @@ void ClippingKeeper::positionate_bottom(int frame) {
     add_key(key);
 }
 
-void ClippingKeeper::positionate_vertical(int frame) {
+void ClippingKeeper::center_vertical(int frame) {
     auto key = get_key(frame);
     key.py = get_video_height() / 2.0;
     add_key(key);
 }
 
-void ClippingKeeper::positionate_horizontal(int frame) {
+void ClippingKeeper::center_horizontal(int frame) {
     auto key = get_key(frame);
 
     key.px = get_video_width() / 2.0;
