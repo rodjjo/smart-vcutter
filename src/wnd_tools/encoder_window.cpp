@@ -708,7 +708,7 @@ void EncoderWindow::action_video_path() {
     if (!original_fps_) {
         original_fps_ = 0.000001;
         edt_path_->value("");
-        show_error("Não foi possivel obter o fps do video.");
+        show_error("Could not retrive video's fps.");
         if (clip_) {
             window_->hide();
         }
