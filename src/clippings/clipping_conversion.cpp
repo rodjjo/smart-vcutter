@@ -16,9 +16,9 @@ ClippingConversion::ClippingConversion(
     max_memory_ = max_memory;
     clipping_ = clipping;
     prog_handler_ = prog_handler;
-    current_buffer_.store(NULL);
     current_position_.store(0);
     max_position_ = 1;
+    buffer_index_ = 0;
 }
 
 bool ClippingConversion::convert(
@@ -31,6 +31,7 @@ bool ClippingConversion::convert(
     uint8_t transition_frames
 ) {
     current_position_.store(0);
+    buffer_index_ = 0;
     max_position_ = clipping_->duration_frames() * (append_reverse ? 2 : 1);
     allocate_buffers(from_start, append_reverse, transition_frames);
     max_position_ -= transitions_.size();
@@ -67,12 +68,16 @@ bool ClippingConversion::convert(
         while (!clipping_->player()->context_finished()) {
             Fl::wait(0.1);
             prog_handler_->set_progress(current_position_.load(), max_position_);
-            prog_handler_->set_buffer(current_buffer_.load(), clipping_->w(), clipping_->h());
+            prog_handler_->set_buffer(render_buffer_->data, clipping_->w(), clipping_->h());
         }
 
         return true;
     });
 
+    prog_handler_->set_buffer(NULL, 0, 0);
+    prog_handler_->set_progress(100, 100);
+
+    render_buffer_.reset();
     buffers_.clear();
     transitions_.clear();
 
@@ -85,44 +90,131 @@ void ClippingConversion::copy_buffer(vs::Player *player, uint8_t *buffer) {
 
 void ClippingConversion::encode_from_begin(vs::Player *player, vs::Encoder *encoder) {
     player->seek_frame(clipping_->first_frame());
+
     auto normal_interval = std::make_pair(clipping_->first_frame(), clipping_->last_frame());
-
-    uint32_t save_pos = 0;
-    uint32_t use_pos = 0;
-
     normal_interval.first += transitions_.size();
     normal_interval.second -= transitions_.size();
 
+    uint32_t save_pos = 0;
+    uint32_t use_pos = 0;
     float alpha = transparency_increment();
-
-    ConversionBuffer render_buffer(clipping_->req_buffer_size());
 
     do {
         if (normal_interval.first > player->position() && !transitions_.empty() && save_pos < transitions_.size()) {
             copy_buffer(player, transitions_[save_pos]->data);
             ++save_pos;
-            continue; // do not render transition frames at begin
+            continue; // do not render transition frames at the beginning
         }
 
-        clipping_->render(clipping_->at(player->position()), render_buffer.data);
+        clipping_->render(clipping_->at(player->position()), render_buffer_->data);
 
-        if (normal_interval.second < player->position() && !transitions_.empty() && use_pos < transitions_.size()) {
+        if (normal_interval.second <= player->position() && !transitions_.empty() && use_pos < transitions_.size()) {
             clipping_->render(
                 clipping_->at(player->position()),
                 alpha,
                 transitions_[use_pos]->data,
-                render_buffer.data);
+                render_buffer_->data);
             alpha += transparency_increment();
             ++use_pos;
         }
 
-        encode_frame(encoder, render_buffer.data);
+        encode_frame(encoder, render_buffer_->data);
         player->next();
     } while(player->position() < clipping_->last_frame() && !prog_handler_->canceled());
 }
 
-void ClippingConversion::encode_from_end(vs::Player *player, vs::Encoder *encoder) {
+bool ClippingConversion::buffer_push(vs::Player *player) {
+    if (buffer_index_ < buffers_.size()) {
+        copy_buffer(player, buffers_[buffer_index_]->data);
+        ++buffer_index_;
+        return true;
+    }
+    return false;
+}
 
+uint8_t *ClippingConversion::buffer_pop() {
+    if (buffer_index_) {
+        --buffer_index_;
+        return buffers_[buffer_index_]->data;
+    }
+    return NULL;
+}
+
+void ClippingConversion::encode_from_end(vs::Player *player, vs::Encoder *encoder) {
+    uint32_t remaining = clipping_->duration_frames() - transitions_.size();
+
+    if (!remaining) {
+        return;
+    }
+
+    auto normal_interval = std::make_pair(clipping_->first_frame(), clipping_->last_frame());
+    normal_interval.first += transitions_.size();
+    normal_interval.second -= transitions_.size();
+
+
+    uint8_t *buffer = NULL;
+    bool accumulating = true;
+    uint32_t save_pos = 0;
+    uint32_t use_pos = 0;
+    uint32_t position = clipping_->last_frame() - buffers_.size();
+    uint32_t render_pos = clipping_->last_frame();
+    float alpha = transparency_increment();
+
+    size_t accumulate_count = 0;
+
+    if (position < clipping_->first_frame())
+        position = clipping_->first_frame();
+    player->seek_frame(position);
+
+    do {
+        if (accumulating) {
+            if (accumulate_count < clipping_->duration_frames() && buffer_push(player)) {
+                ++accumulate_count;
+                player->next();
+                continue;
+            }
+            accumulating = false;
+        }
+
+        buffer = buffer_pop();
+
+        if (!buffer) {
+            if (accumulate_count >= clipping_->duration_frames()) {
+                break;
+            }
+
+            if (position - buffers_.size() >= clipping_->first_frame()) {
+                position -= buffers_.size();
+            } else {
+                position = clipping_->first_frame();
+            }
+            accumulating = true;
+            player->seek_frame(position);
+            continue;
+        }
+
+        if (normal_interval.second <= render_pos && !transitions_.empty() && save_pos < transitions_.size()) {
+            memcpy(transitions_[save_pos]->data, buffer, player_buffer_size());
+            ++save_pos;
+        } else {
+            clipping_->render(clipping_->at(render_pos), buffer, render_buffer_->data);
+
+            if (remaining <= transitions_.size() && !transitions_.empty() && use_pos < transitions_.size()) {
+                clipping_->render(
+                    clipping_->at(render_pos),
+                    alpha,
+                    transitions_[use_pos]->data,
+                    render_buffer_->data);
+                alpha += transparency_increment();
+                ++use_pos;
+            }
+
+            encode_frame(encoder, render_buffer_->data);
+        }
+
+        --render_pos;
+        --remaining;
+    } while (!prog_handler_->canceled() && remaining);
 }
 
 float ClippingConversion::transparency_increment() {
@@ -159,6 +251,8 @@ void ClippingConversion::process(vs::Player *player, vs::Encoder *encoder, bool 
 void ClippingConversion::allocate_buffers(bool from_start, bool append_reverse, uint8_t transition_frames) {
     buffers_.clear();
     transitions_.clear();
+
+    render_buffer_.reset(new ConversionBuffer(clipping_->req_buffer_size()));
 
     if (append_reverse) {
         // not necessary because reversed copies are smooth
@@ -202,7 +296,6 @@ void ClippingConversion::allocate_buffers(bool from_start, bool append_reverse, 
 }
 
 void ClippingConversion::encode_frame(vs::Encoder *encoder, u_int8_t *buffer) {
-    current_buffer_.store(buffer);
     encoder->frame(buffer);
     ++current_position_;
 }

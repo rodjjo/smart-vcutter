@@ -25,7 +25,7 @@ class ProgressHandler {
     virtual void set_progress(uint32_t progress, uint32_t max_progress) = 0;
 };
 
-class ConversionBuffer: private boost::noncopyable  {
+class ConversionBuffer: private boost::noncopyable {
   public:
     ConversionBuffer(uint32_t size) {
         data = new uint8_t[size];
@@ -38,7 +38,7 @@ class ConversionBuffer: private boost::noncopyable  {
     uint8_t *data;
 };
 
-class ClippingConversion {
+class ClippingConversion: private boost::noncopyable {
  public:
     ClippingConversion(std::shared_ptr<ProgressHandler> prog_handler, std::shared_ptr<Clipping> clipping, uint32_t max_memory=419430400);
 
@@ -62,9 +62,12 @@ class ClippingConversion {
     uint32_t player_buffer_size();
 
  private:
-    std::atomic<uint8_t*> current_buffer_;
     std::atomic_uint32_t current_position_;
     uint32_t max_position_;
+    uint32_t buffer_index_;
+    bool buffer_push(vs::Player *player);
+    uint8_t *buffer_pop();
+    std::unique_ptr<ConversionBuffer> render_buffer_;
     std::shared_ptr<Clipping> clipping_;
     std::shared_ptr<ProgressHandler> prog_handler_;
     std::vector<std::shared_ptr<ConversionBuffer> > buffers_;

@@ -41,6 +41,15 @@ const char *kPATH_VAR_NAME = "path";
 std::string EncoderWindow::last_filepath_; // NOLINT
 std::string EncoderWindow::last_sugestion_; // NOLINT
 
+
+bool should_replace(const char *path) {
+    if (filepath_exists(path) && !ask("The destination filepath already exists. override it ?")) {
+        return false;
+    }
+
+    return true;
+}
+
 EncoderWindow::EncoderWindow(History *history, std::shared_ptr<Clipping> clip) {
     init(history, clip);
 }
@@ -461,6 +470,10 @@ void EncoderWindow::action_convert() {
         return;
     }
 
+    if (!should_replace(edt_output_->value())) {
+        return;
+    }
+
     if (!strlen(edt_output_->value())) {
         action_output();
         if (!strlen(edt_output_->value())) {
@@ -510,7 +523,7 @@ void EncoderWindow::action_convert() {
         edt_output_->value(),
         choosen_bitrate(),
         choosen_fps(),
-        btn_start_backward_->value() != 0,
+        btn_start_backward_->value() == 0,
         btn_append_reverse_->value() != 0,
         choosen_transitions());
 
