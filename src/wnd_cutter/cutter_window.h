@@ -20,14 +20,12 @@
 #include <FL/Fl_Hor_Slider.H>
 #include <FL/Fl_Select_Browser.H>
 
-#include "src/data/project.h"
+#include "src/data/history.h"
 #include "src/wnd_cutter/options_window.h"
 #include "src/wrappers/video_player.h"
-#include "src/clippings/clipping_painter.h"
 #include "src/clippings/clipping_session.h"
 #include "src/viewer/miniature_viewer.h"
 #include "src/viewer/editor/clipping_editor.h"
-
 
 
 namespace vcutter {
@@ -36,10 +34,16 @@ class CutterWindow {
  public:
     CutterWindow(Fl_Group *parent);
     virtual ~CutterWindow();
-    bool open_clipping(const clipping_t & clip);
+
+    bool restore_session();
+    bool open_clipping(const std::string& path);
     bool open_video(const std::string& video_path);
+
+    bool save(History * history);
+    bool save_as(History * history);
+
     void close();
-    clipping_t to_clipping();
+    std::shared_ptr<Clipping> to_clipping();
     void poll_actions();
     bool visible();
     bool modified();
@@ -103,8 +107,8 @@ class CutterWindow {
     void resize_controls();
  private:
     void clear(bool clear_controls = true);
+    bool handle_opened_clipping();
     //void load(Project* project, unsigned int index);
-    bool wait_video_open();
     void open_video();
     void update_clipping_list();
     void update_seek_bar();
@@ -136,7 +140,6 @@ class CutterWindow {
     void action_insert();
     void action_play_interval();
  private:
-    std::string video_path_;
     Fl_Group *parent_;
     Fl_Group *window_;
     Fl_Group *components_group_;
@@ -163,19 +166,18 @@ class CutterWindow {
     Fl_Select_Browser *key_list_;
     ClippingEditor *clipping_editor_;
 
-    std::unique_ptr<ClippingSession> clipping_;
+    std::shared_ptr<ClippingSession> clipping_;
 
     MiniatureViewer *viewer_;
-    std::unique_ptr<ClippingKeeper> keeper_;
  private:
     std::set<std::shared_ptr<Fl_Image> > images_;
     bool has_key_copy_;
-    clipping_key_t key_copy_;
+    ClippingKey key_copy_;
  private:
+    uint64_t clipping_version_;
     unsigned int wink_lap_;
     unsigned int selected_clip_;
     bool wink_comparison_;
-    bool video_opened_;
     bool open_failure_;
     bool in_key_list_;
     bool in_seek_bar_callback_;

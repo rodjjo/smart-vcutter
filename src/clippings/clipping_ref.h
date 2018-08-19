@@ -16,14 +16,14 @@ class ClippingRef: private boost::noncopyable {
  public:
     ClippingRef(ClippingFrame *clipping);
     bool has_ref();
-    bool get_reference_frame(int *frame);
-    bool get_reference(int *frame, float *rx1, float *ry1, float *rx2, float *ry2);
-    void set_reference(int frame, float rx1, float ry1, float rx2, float ry2);
+    bool get_reference_frame(uint32_t *frame);
+    bool get_reference(uint32_t *frame, float *rx1, float *ry1, float *rx2, float *ry2);
+    void set_reference(uint32_t frame, float rx1, float ry1, float rx2, float ry2);
     void clear_reference();
 
  private:
     bool has_ref_;
-    int ref_frame_;
+    uint32_t ref_frame_;
     double rx1_;
     double ry1_;
     double rx2_;

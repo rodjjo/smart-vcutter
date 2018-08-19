@@ -11,8 +11,7 @@ namespace vcutter {
 
 ClippingOperation::ClippingOperation(const char *name) {
     name_ = name;
-    player_ = NULL;
-    keeper_ = NULL;
+    clipping_ = NULL;
     modified_ = NULL;
     mouse_move_x_  = 0;
     mouse_move_y_  = 0;
@@ -52,9 +51,8 @@ void ClippingOperation::alt_pressed() {
     return 0;
 }
 
-void ClippingOperation::register_operation(PlayerWrapper **player_var, ClippingKeeper **keeper_var, bool *modified_var) {
-    player_ = player_var;
-    keeper_ = keeper_var;
+void ClippingOperation::register_operation(Clipping **clipping_var, bool *modified_var) {
+    clipping_ = clipping_var;
     modified_ = modified_var;
 }
 
@@ -109,17 +107,17 @@ void ClippingOperation::_cancel() {
     cancel();
 }
 
-PlayerWrapper *ClippingOperation::player() {
-    return *player_;
+Clipping *ClippingOperation::clipping() {
+    return *clipping_;
 }
 
-ClippingKeeper *ClippingOperation::keeper() {
-    return *keeper_;
+PlayerWrapper *ClippingOperation::player() {
+    return clipping()->player();
 }
 
 void ClippingOperation::add_key() {
     player()->pause();
-    keeper()->add_key(get_transformed_key());
+    clipping()->add(get_transformed_key());
     modify();
 }
 
@@ -127,9 +125,8 @@ void ClippingOperation::modify() {
     *modified_ = true;
 }
 
-ClippingOperationSet::ClippingOperationSet(PlayerWrapper **player_var, ClippingKeeper **keeper_var) {
-    player_ = player_var;
-    keeper_ = keeper_var;
+ClippingOperationSet::ClippingOperationSet(Clipping **clipping_var) {
+    clipping_ = clipping_var;
     modified_ = false;
 }
 
@@ -145,13 +142,13 @@ void ClippingOperationSet::register_operation(std::shared_ptr<ClippingOperation>
     }
 
     operations_.push_back(operation);
-    operation->register_operation(player_, keeper_, &modified_);
+    operation->register_operation(clipping_, &modified_);
 }
 
-clipping_key_t ClippingOperationSet::get_transformed_key() {
-    clipping_key_t k;
+ClippingKey ClippingOperationSet::get_transformed_key() {
+    ClippingKey k;
     memset(&k, 0, sizeof(k));
-    if (!*player_ || !*keeper_) {
+    if (!*clipping_) {
         k.frame = 1;
         k.scale = 1;
         k.px = 2;
@@ -165,16 +162,17 @@ clipping_key_t ClippingOperationSet::get_transformed_key() {
         }
     }
 
-    return (*keeper_)->get_key((*player_)->info()->position());
+    return (*clipping_)->at((*clipping_)->player()->info()->position());
 }
 
 void ClippingOperationSet::draw(const viewport_t &vp) {
-    if (!*player_ || !*keeper_) {
+    if (!*clipping_) {
         return;
     }
 
     bool computed = false;
-    auto b = current_clipping_box(vp, *player_, *keeper_, &computed);
+
+    auto b = current_clipping_box(vp, *clipping_, &computed);
 
     ClippingOperation *operation = NULL;
 
@@ -195,15 +193,16 @@ void ClippingOperationSet::draw(const viewport_t &vp) {
 
     draw_box(vp, b, false, color[0], color[1], color[2], color[3]);
 
-    float cw = (*keeper_)->get_width(), ch = (*keeper_)->get_height();
-    float vw = (*player_)->info()->w(), vh = (*player_)->info()->h();
-
     if (operation) {
         operation->view_port(vp);
         operation->draw();
 
-        b = clipping_box(adjust_bounds(operation->get_transformed_key(), cw, ch, vw, vh), cw, ch);
-        b = vp.frame_to_screen_coords(vw, vh, b);
+        b = operation->get_transformed_key().constrained(*clipping_).clipping_box(*clipping_);
+
+        b = vp.frame_to_screen_coords(
+            (*clipping_)->player()->info()->w(),
+            (*clipping_)->player()->info()->h(),
+            b);
 
         color[0] = 0.0;
         color[1] = 0.0;
@@ -232,7 +231,7 @@ int ClippingOperationSet::get_option(const char *operation_name, const char *opt
 }
 
 void ClippingOperationSet::draw_dragging_points(const viewport_t &vp) {
-    if (!*player_ || !*keeper_) {
+    if (!*clipping_) {
         return;
     }
 
@@ -255,7 +254,7 @@ bool ClippingOperationSet::modified(bool clear_flag) {
 }
 
 void ClippingOperationSet::mouse_down(const viewport_t &vp, bool left_pressed, bool right_pressed, int x, int y) {
-    if (!*player_ || !*keeper_) {
+    if (!*clipping_) {
         return;
     }
 
@@ -277,7 +276,7 @@ void ClippingOperationSet::mouse_down(const viewport_t &vp, bool left_pressed, b
 }
 
 void ClippingOperationSet::mouse_move(const viewport_t &vp, bool left_pressed, bool right_pressed, int dx, int dy, int mx, int my) {
-    if (!*player_ || !*keeper_) {
+    if (!*clipping_) {
         return;
     }
 
@@ -299,7 +298,7 @@ void ClippingOperationSet::mouse_move(const viewport_t &vp, bool left_pressed, b
 }
 
 void ClippingOperationSet::mouse_up(const viewport_t &vp, bool left_pressed, bool right_pressed, int dx, int dy, int ux, int uy) {
-    if (!*player_ || !*keeper_) {
+    if (!*clipping_) {
         return;
     }
 
@@ -387,7 +386,7 @@ Fl_RGB_Image *ClippingOperationSet::current_cursor(const viewport_t &vp) {
 }
 
 bool ClippingOperationSet::should_redraw(const viewport_t &vp) {
-    if (!*player_ || !*keeper_ || (*player_)->is_playing()) {
+    if (!*clipping_ || (*clipping_)->player()->is_playing()) {
         return false;
     }
 
@@ -401,15 +400,9 @@ bool ClippingOperationSet::should_redraw(const viewport_t &vp) {
     return false;
 }
 
-box_t current_clipping_box(const viewport_t &vp, PlayerWrapper *player, ClippingKeeper *keeper, bool *computed) {
-    auto vw = player->info()->w(), vh = player->info()->h();
-    auto cw = keeper->get_width(), ch = keeper->get_height();
-
-    auto key = keeper->get_key(player->info()->position(), computed);
-
-    auto b = clipping_box(adjust_bounds(key, cw, ch, vw, vh), cw, ch);
-
-    return vp.frame_to_screen_coords(player->info()->w(), player->info()->h(), b);
+box_t current_clipping_box(const viewport_t &vp, Clipping *clipping, bool *computed) {
+    auto b = clipping->at(clipping->player()->info()->position()).constrained(clipping).clipping_box(clipping);
+    return vp.frame_to_screen_coords(clipping->player()->info()->w(), clipping->player()->info()->h(), b);
 }
 
 void ClippingOperationSet::draw_box(const viewport_t &vp, box_t box, bool invert, float r, float g, float b, float a) {
@@ -444,12 +437,15 @@ void ClippingOperationSet::draw_box(const viewport_t &vp, box_t box, bool invert
 }
 
 void ClippingOperationSet::draw_ref_line(const viewport_t &vp) {
-    if (!*player_ || !*keeper_) {
+    if (!*clipping_) {
         return;
     }
-    int frame = -1;
+
+    uint32_t frame = 0;
     float px1, py1, px2, py2;
-    if (!(*keeper_)->get_reference(&frame, &px1, &py1, &px2, &py2) || frame != (*player_)->info()->position()) {
+
+    if (!(*clipping_)->ref().get_reference(&frame, &px1, &py1, &px2, &py2) ||
+            frame != (*clipping_)->player()->info()->position()) {
         return;
     }
 

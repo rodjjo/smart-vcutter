@@ -25,7 +25,7 @@ ViewerTexture::ViewerTexture() {
     view_h_ = 0;
 }
 
-ViewerTexture::ViewerTexture(const uint8_t *buffer, int w, int h, bool resize_texture, bool rgba) {
+ViewerTexture::ViewerTexture(const uint8_t *buffer, uint32_t w, uint32_t h, bool resize_texture, bool rgba) {
     texture_id_ = 0;
     texture_w_ = 0;
     texture_h_ = 0;
@@ -46,7 +46,7 @@ ViewerTexture::~ViewerTexture() {
     }
 }
 
-void ViewerTexture::update(const uint8_t *buffer, int w, int h, bool resize_texture, bool rgba) {
+void ViewerTexture::update(const uint8_t *buffer, uint32_t w, uint32_t h, bool resize_texture, bool rgba) {
     auto buffer_size = w * h * (rgba ? 4 : 3);
     buffer_.reset(new uint8_t[buffer_size], [](const uint8_t *b) { delete[] b;});
     buffer_w_ = w;
@@ -94,7 +94,7 @@ void ViewerTexture::draw(const viewport_t &vp, float x, float y, float zoom) {
     }
 }
 
-void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int h, bool resize_texture, bool rgba) {
+void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, uint32_t w, uint32_t h, bool resize_texture, bool rgba) {
     update_texture(vp, buffer, w, h, resize_texture, rgba);
 
     if (!texture_w_ || !texture_h_ || !texture_id_) {
@@ -103,6 +103,24 @@ void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int
 
     float coord_w = ((2.0 / vp[2]) * texture_w_) / 2.0;
     float coord_h = ((2.0 / vp[3]) * texture_h_) / 2.0;
+
+    if (coord_w < 1.0 && coord_h < 1.0) {
+        float scale = 1.0 / coord_w;
+        float scale_h = 1.0 / coord_h;
+        if (scale_h > scale) {
+            scale = scale_h;
+        }
+        coord_w *= scale;
+        coord_h *= scale;
+        if (coord_w > 1.0) {
+            coord_h /= coord_w;
+            coord_w = 1.0;
+        }
+        if (coord_h > 1.0) {
+            coord_w /= coord_h;
+            coord_h = 1.0;
+        }
+    }
 
     if (rgba) {
         glEnable(GL_BLEND);
@@ -129,14 +147,14 @@ void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, int w, int
     }
 }
 
-void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coords, box_t view_coords, float alpha) {
+void ViewerTexture::draw(const viewport_t &vp, uint32_t vw, uint32_t vh, box_t texture_coords, box_t view_coords, float alpha) {
     update_texture(vp, NULL, 0, 0, resize_texture_, rgba_);
 
     if (!texture_w_ || !texture_h_ || !texture_id_) {
         return;
     }
 
-    for (char i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i) {
         view_coords[i] = vp.frame_to_screen_coords(vw, vh, view_coords[i]);
         view_coords[i].x = view_coords[i].x * (2.0f / vp[2]) - 1.0f;
         view_coords[i].y = (vp[3] - view_coords[i].y) * (2.0f / vp[3]) - 1.0f;
@@ -166,7 +184,7 @@ void ViewerTexture::draw(const viewport_t &vp, int vw, int vh, box_t texture_coo
 }
 
 
-void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, int w, int h, bool resize_texture, bool rgba) {
+void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, uint32_t w, uint32_t h, bool resize_texture, bool rgba) {
     if (!buffer && !buffer_) {
         return;
     }
@@ -182,7 +200,7 @@ void ViewerTexture::update_texture(const viewport_t &vp, const uint8_t* buffer, 
         rgba_ = rgba;
     }
 
-    if (texture_id_ == 0 || (resize_texture && (vp[2] != view_w_ || vp[3] != view_h_)) || w != texture_w_ || h != texture_h_) {
+    if (texture_id_ == 0 || (resize_texture && (static_cast<uint32_t>(vp[2]) != view_w_ || static_cast<uint32_t>(vp[3]) != view_h_)) || w != texture_w_ || h != texture_h_) {
         if (texture_id_) {
             glDeleteTextures(1, &texture_id_);
         }

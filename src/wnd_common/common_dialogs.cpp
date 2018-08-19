@@ -27,11 +27,11 @@ const char *kOUTPUT_VIDEO_FILE_TITLE = "Define a location to save the video";
 
 
 bool ask(const char *message) {
-    return fl_choice(message, "No", "Yes", NULL) == 1;
+    return fl_choice("%s", "No", "Yes", NULL, message) == 1;
 }
 
 int yes_nc(const char *message) {
-    return 2 - fl_choice(message, "No", "Cancel", "Yes");
+    return 2 - fl_choice("%s", "No", "Cancel", "Yes", message);
 }
 
 void show_error(const char *message) {
@@ -39,7 +39,7 @@ void show_error(const char *message) {
 }
 
 const char *ask_value(const char *message) {
-    return fl_input (message, "");
+    return fl_input("%s", "", message);
 }
 
 void new_video_file_chooser(Fl_Native_File_Chooser *dialog, const char *filter, const char *title, bool saving=true) {
@@ -69,7 +69,7 @@ std::string execute_file_choose(Fl_Native_File_Chooser *fc, std::string* current
             }
         }
 
-        int extension_lenght = default_extension ? strlen(default_extension) - 1 : 3;
+        uint32_t extension_lenght = default_extension ? strlen(default_extension) - 1 : 3;
 
         if (default_extension && (path.size() <= extension_lenght || *(path.rbegin() + extension_lenght) != '.')) {
             path += default_extension;

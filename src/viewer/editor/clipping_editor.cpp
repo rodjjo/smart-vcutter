@@ -14,7 +14,7 @@ namespace vcutter {
 
 ClippingEditor::ClippingEditor(
     uint32_t x, uint32_t y, uint32_t w, uint32_t h
-): BufferViewer(this, this, x, y, w, h), operation_set_(&player_, &keeper_) {
+): BufferViewer(this, this, x, y, w, h), operation_set_(&clipping_) {
     memset(&initialized_caches_, 0, sizeof(initialized_caches_));
     memset(&frame_numbers_, 0, sizeof(frame_numbers_));
     text_first_frame_.reset(new ViewerTexture());
@@ -24,8 +24,7 @@ ClippingEditor::ClippingEditor(
     compare_box_ = false;
     compare_box_wink_ = false;
     prev_key_count_ = 0;
-    player_ = NULL;
-    keeper_ = NULL;
+    clipping_ = NULL;
     last_cursor_ = NULL;
     register_operations();
 }
@@ -58,8 +57,7 @@ void ClippingEditor::activate_operation(const char *operation_name) {
 void ClippingEditor::invalidate() {
     memset(&initialized_caches_, 0, sizeof(initialized_caches_));
     memset(&frame_numbers_, 0, sizeof(frame_numbers_));
-    player_ = NULL;
-    keeper_ = NULL;
+    clipping_ = NULL;
     prev_key_count_ = 0;
     modified_ = true;
     should_update_ =  true;
@@ -71,53 +69,52 @@ bool ClippingEditor::key_changed(bool clear_flag) {
 }
 
 void ClippingEditor::check_key_count() {
-    if (!keeper_) {
+    if (!clipping_) {
         return;
     }
 
-    if (prev_key_count_ != keeper_->get_key_count()) {
+    if (prev_key_count_ != clipping_->keys().size()) {
         modified_ = true;
         should_update_ =  true;
-        prev_key_count_ = keeper_->get_key_count();
+        prev_key_count_ = clipping_->keys().size();
         redraw();
     }
 }
 
-void ClippingEditor::update(PlayerWrapper *player, ClippingKeeper *keeper) {
-    player_ = player;
-    keeper_ = keeper;
+void ClippingEditor::update(Clipping *clipping) {
+    clipping_ = clipping;
     modified_ = true;
     should_update_ =  true;
     redraw();
 }
 
 void ClippingEditor::viewer_draw(BufferViewer *viewer, bool *handled, const unsigned char* buffer, uint32_t w, uint32_t h) {
-    if (!keeper_ || !player_) {
+    if (!clipping_) {
         return;
     }
 
-    if (player_->is_playing()) {
+    if (clipping_->player()->is_playing()) {
         return;
     }
 
     if (!modified_) {
-        if (player_->info()->position() == keeper_->get_first_frame()) {
-            frame_numbers_[0] = player_->info()->position();
+        if (clipping_->player()->info()->position() == clipping_->first_frame()) {
+            frame_numbers_[0] = clipping_->player()->info()->position();
             if (should_update_ || !initialized_caches_[0]) {
                 text_first_frame_->draw(view_port(), buffer, w, h, true);
                 initialized_caches_[0] = true;
             }
 
             text_first_frame_->draw(view_port());
-        } else if (player_->info()->position() == keeper_->get_last_frame()) {
-            frame_numbers_[2] = player_->info()->position();
+        } else if (clipping_->player()->info()->position() == clipping_->last_frame()) {
+            frame_numbers_[2] = clipping_->player()->info()->position();
             if (should_update_ || !initialized_caches_[2]) {
                 text_last_frame_->draw(view_port(), buffer, w, h, true);
                 initialized_caches_[0] = true;
             }
             text_last_frame_->draw(view_port());
         } else {
-            frame_numbers_[1] = player_->info()->position();
+            frame_numbers_[1] = clipping_->player()->info()->position();
             if (should_update_ || !initialized_caches_[1]) {
                 text_curr_frame_->draw(view_port(), buffer, w, h, true);
                 initialized_caches_[1] = true;
@@ -125,7 +122,7 @@ void ClippingEditor::viewer_draw(BufferViewer *viewer, bool *handled, const unsi
             text_curr_frame_->draw(view_port());
         }
         if (should_update_) {
-            prev_key_count_ = keeper_->get_key_count();
+            prev_key_count_ = clipping_->keys().size();
         }
         *handled = true;
         should_update_ = false;
@@ -139,10 +136,10 @@ void ClippingEditor::draw_compare_box() {
     if (!compare_box_ || compare_box_wink_) {
         return;
     }
-    int first_frame = keeper_->get_first_frame();
-    int last_frame =  keeper_->get_last_frame();
-    int frame = player_->info()->position();
-    if (first_frame == last_frame || (frame != last_frame && frame != first_frame) || player_->is_playing()) {
+    int first_frame = clipping_->first_frame();
+    int last_frame =  clipping_->last_frame();
+    int frame = clipping_->player()->info()->position();
+    if (first_frame == last_frame || (frame != last_frame && frame != first_frame) || clipping_->player()->is_playing()) {
         return;
     }
 
@@ -155,32 +152,34 @@ void ClippingEditor::draw_compare_box() {
     box_t texture_box;
     box_t drawing_box;
 
-    float cw = keeper_->get_width(), ch = keeper_->get_height();
-    float vw = player_->info()->w(), vh = player_->info()->h();
-
-
     if (frame == last_frame) {
         texture = text_first_frame_.get();
-        texture_box = clipping_box(adjust_bounds(keeper_->get_key(first_frame), cw, ch, vw, vh), cw, ch);
+        texture_box = clipping_->at(first_frame).constrained(clipping_).clipping_box(clipping_);
     } else {
         texture = text_last_frame_.get();
-        texture_box = clipping_box(adjust_bounds(keeper_->get_key(last_frame), cw, ch, vw, vh), cw, ch);
+        texture_box = clipping_->at(last_frame).constrained(clipping_).clipping_box(clipping_);
     }
 
-    drawing_box = clipping_box(adjust_bounds(operation_set_.get_transformed_key(), cw, ch, vw, vh), cw, ch);
+    drawing_box = operation_set_.get_transformed_key().constrained(clipping_).clipping_box(clipping_);
 
     if (!texture) {
         return;
     }
 
-    texture->draw(view_port(), vw, vh, texture_box, drawing_box, 1.0);
+    texture->draw(
+        view_port(),
+        clipping_->player()->info()->w(),
+        clipping_->player()->info()->h(),
+        texture_box,
+        drawing_box,
+        1.0);
 }
 
 void ClippingEditor::viewer_buffer(BufferViewer *viewer, const unsigned char** buffer, uint32_t *w, uint32_t *h) {
-    if (player_) {
-        *buffer = player_->info()->buffer();
-        *w = player_->info()->w();
-        *h = player_->info()->h();
+    if (clipping_) {
+        *buffer = clipping_->player()->info()->buffer();
+        *w = clipping_->player()->info()->w();
+        *h = clipping_->player()->info()->h();
     }
 }
 
@@ -265,10 +264,10 @@ void ClippingEditor::wink_compare_box() {
         compare_box_wink_ = false;
         return;
     }
-    int first_frame = keeper_->get_first_frame();
-    int last_frame =  keeper_->get_last_frame();
-    int frame = player_->info()->position();
-    if (first_frame == last_frame || (frame != last_frame && frame != first_frame) || player_->is_playing()) {
+    int first_frame = clipping_->first_frame();
+    int last_frame =  clipping_->last_frame();
+    int frame = clipping_->player()->info()->position();
+    if (first_frame == last_frame || (frame != last_frame && frame != first_frame) || clipping_->player()->is_playing()) {
         compare_box_wink_ = false;
         return;
     }

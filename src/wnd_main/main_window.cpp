@@ -25,9 +25,6 @@
 namespace vcutter {
 
 namespace {
-const char *kSESSION_SUFIX = "mwclp";
-const char *kSESSION_PATH = "project_path";
-const char *kSESSION_DATA = "project_data";
 
 const int kMENU_HEIGHT = 25;
 const float kTIMEOUT_INTERVAL = 0.0333;
@@ -47,8 +44,6 @@ MainWindow::MainWindow() : Fl_Menu_Window(
     session_timelap_ = 0;
     key_value_ = 0;
     key_time_lap_ = 0;
-    project_.reset(new Project());
-    clipping_session_.reset(new Session(kSESSION_SUFIX));
 
     window_ = this;
     window_->size_range(default_window_width(), default_window_height());
@@ -88,15 +83,15 @@ void MainWindow::timeout_handler(void* ud) {
 
 int MainWindow::run() {
     run_called_ = true;
-    Fl::run();
-    close_session();
+    int result = Fl::run();
+    cutter_window_.reset();
+    return result;
 }
 
 void MainWindow::poll_actions() {
     poll_key_repeat();
     cutter_window_->poll_actions();
     load_sessions();
-    save_session();
 }
 
 void MainWindow::load_sessions() {
@@ -105,55 +100,12 @@ void MainWindow::load_sessions() {
     }
     sessions_loaded_ = true;
 
-    if (clipping_session_->loaded()) {
-        std::unique_ptr<Project> project(new Project());
-        const auto & root = clipping_session_->get_data();
-
-        if (project->open(root[kSESSION_DATA], root[kSESSION_PATH].asString())) {
-            auto clipping = project->get_clipping();
-            if (clipping && cutter_window_->open_clipping(*clipping)) {
-                project_.swap(project);
-                enable_controls();
-            }
-        }
+    if (cutter_window_->restore_session()) {
+        enable_controls();
     }
 
     cutter_window_->pause();
     EncoderWindow::restore_session(&history_, window_);
-}
-
-void MainWindow::save_session() {
-    if (!cutter_window_->visible()) {
-        if (clipping_session_->saved()) {
-            close_session();
-        }
-    }
-
-    if (!cutter_window_->visible() ||
-        cutter_window_->modified_version() == clipping_session_->get_version()) {
-        return;
-    }
-
-    session_timelap_ += (1000 * kTIMEOUT_INTERVAL);
-    if (session_timelap_ < 5000) {
-        return;
-    }
-
-    session_timelap_ = 0;
-
-    Project backup;
-    backup.set_clipping(cutter_window_->to_clipping());
-
-    Json::Value root;
-    root[kSESSION_PATH] = project_->get_path();
-    root[kSESSION_DATA] = backup.get_data();
-
-    clipping_session_->save(cutter_window_->modified_version(), root);
-}
-
-void MainWindow::close_session() {
-    clipping_session_.reset(); // uses the destructor before the constructor
-    clipping_session_.reset(new Session(kSESSION_SUFIX));
 }
 
 void MainWindow::init_tool_bar() {
@@ -258,6 +210,7 @@ void MainWindow::init_main_menu() {
 
 menu_callback_t MainWindow::action_utils_clipping() {
     return [this] (Menu *) {
+        /*
         const char *key = "main-window-project-dir";
         std::string directory = history_[key];
         std::string path = input_prj_file_chooser(&directory);
@@ -276,7 +229,7 @@ menu_callback_t MainWindow::action_utils_clipping() {
         }
 
         cutter_window_->pause();
-        EncoderWindow::execute(&history_, window_, *clipping);
+        EncoderWindow::execute(&history_, window_, *clipping); */
     };
 }
 
@@ -473,29 +426,16 @@ void MainWindow::open_video_or_project(const std::string& path) {
 
     std::string extension(".vcutter");
     if (path.substr(path.size() - extension.size()) == extension) {
-        std::unique_ptr<Project> tmp(new Project(path));
-
-        auto clipping = tmp->get_clipping();
-
-        if (!clipping) {
-            show_error(tmp->get_last_error().c_str());
-            return;
-        }
-
-        if (cutter_window_->open_clipping(*clipping)) {
-            project_.swap(tmp);
-            project_->set_clipping(cutter_window_->to_clipping());
+        if (cutter_window_->open_clipping(path)) {
             enable_controls();
             return;
         }
     } else {
-        project_.reset(new Project());
         if (cutter_window_->open_video(path)) {
-            project_->set_clipping(cutter_window_->to_clipping());
+            enable_controls();
+            return;
         }
     }
-
-    enable_controls();
 }
 
 
@@ -530,29 +470,10 @@ menu_callback_t MainWindow::action_file_open() {
 }
 
 bool MainWindow::save_project(bool create_new_file) {
-    std::string path = create_new_file ? std::string() : project_->get_path();
-
-    if (path.empty()) {
-        const char *key = "main-window-project-dir";
-        std::string directory = history_[key];
-        path = output_prj_file_chooser(&directory);
-        if (!directory.empty()) {
-            history_.set(key, directory.c_str());
-        }
-        if (path.empty()) {
-            return false;
-        }
+    if (create_new_file) {
+        return cutter_window_->save_as(&history_);
     }
-
-    if (create_new_file && filepath_exists(path.c_str()) && !ask("The file already exists. Overwrite it ?")) {
-        return false;
-    }
-
-    project_->set_clipping(cutter_window_->to_clipping());
-    project_->save(path);
-    cutter_window_->clear_modified();
-
-    return true;
+    return cutter_window_->save(&history_);
 }
 
 menu_callback_t MainWindow::action_file_save() {

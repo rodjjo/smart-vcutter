@@ -5,9 +5,9 @@ BOOST_AUTO_TEST_SUITE(box_test_suite)
 
 BOOST_AUTO_TEST_CASE(test_box_constructors) {
     vcutter::point_t p[4] = {
-        vcutter::point_t(1, 2), 
-        vcutter::point_t(3, 4), 
-        vcutter::point_t(5, 6), 
+        vcutter::point_t(1, 2),
+        vcutter::point_t(3, 4),
+        vcutter::point_t(5, 6),
         vcutter::point_t(7, 8)
     };
 
@@ -33,9 +33,9 @@ BOOST_AUTO_TEST_CASE(test_box_constructors) {
 
 BOOST_AUTO_TEST_CASE(text_box_rotate) {
     vcutter::point_t p[4] = {
-        vcutter::point_t(-10, -10), 
-        vcutter::point_t(10, -10), 
-        vcutter::point_t(10, 10), 
+        vcutter::point_t(-10, -10),
+        vcutter::point_t(10, -10),
+        vcutter::point_t(10, 10),
         vcutter::point_t(-10, 10)
     };
 
@@ -62,9 +62,9 @@ BOOST_AUTO_TEST_CASE(text_box_rotate) {
 
 BOOST_AUTO_TEST_CASE(text_box_translate) {
     vcutter::point_t p[4] = {
-        vcutter::point_t(5, 10), 
-        vcutter::point_t(15, 20), 
-        vcutter::point_t(25, 30), 
+        vcutter::point_t(5, 10),
+        vcutter::point_t(15, 20),
+        vcutter::point_t(25, 30),
         vcutter::point_t(35, 40)
     };
 
@@ -83,9 +83,9 @@ BOOST_AUTO_TEST_CASE(text_box_translate) {
 
 BOOST_AUTO_TEST_CASE(test_box_scale) {
     vcutter::point_t p[4] = {
-        vcutter::point_t(10, 20), 
-        vcutter::point_t(30, 40), 
-        vcutter::point_t(50, 60), 
+        vcutter::point_t(10, 20),
+        vcutter::point_t(30, 40),
+        vcutter::point_t(50, 60),
         vcutter::point_t(70, 80)
     };
 
@@ -104,9 +104,9 @@ BOOST_AUTO_TEST_CASE(test_box_scale) {
 
 BOOST_AUTO_TEST_CASE(test_box_center) {
     vcutter::point_t p[4] = {
-        vcutter::point_t(10, 12), 
-        vcutter::point_t(20, 12), 
-        vcutter::point_t(20, 22), 
+        vcutter::point_t(10, 12),
+        vcutter::point_t(20, 12),
+        vcutter::point_t(20, 22),
         vcutter::point_t(10, 22)
     };
 
@@ -120,9 +120,9 @@ BOOST_AUTO_TEST_CASE(test_box_center) {
 BOOST_AUTO_TEST_CASE(test_box_size) {
     // the box must not be rotated
     vcutter::point_t p[4] = {
-        vcutter::point_t(-10, -20), 
-        vcutter::point_t(10, -20), 
-        vcutter::point_t(10, 20), 
+        vcutter::point_t(-10, -20),
+        vcutter::point_t(10, -20),
+        vcutter::point_t(10, 20),
         vcutter::point_t(-10, 20)
     };
 
@@ -135,9 +135,9 @@ BOOST_AUTO_TEST_CASE(test_box_size) {
 
 BOOST_AUTO_TEST_CASE(test_box_occupied_area) {
     vcutter::point_t p[4] = {
-        vcutter::point_t(-10, -20), 
-        vcutter::point_t(20, 20), 
-        vcutter::point_t(30, 60), 
+        vcutter::point_t(-10, -20),
+        vcutter::point_t(20, 20),
+        vcutter::point_t(30, 60),
         vcutter::point_t(40, 100)
     };
 
@@ -157,9 +157,9 @@ BOOST_AUTO_TEST_CASE(test_box_occupied_area) {
 
 BOOST_AUTO_TEST_CASE(test_box_trunc_precision) {
     vcutter::point_t p[4] = {
-        vcutter::point_t(1.9, 2.9), 
-        vcutter::point_t(3.9, 4.9), 
-        vcutter::point_t(5.9, 6.9), 
+        vcutter::point_t(1.9, 2.9),
+        vcutter::point_t(3.9, 4.9),
+        vcutter::point_t(5.9, 6.9),
         vcutter::point_t(7.9, 8.9)
     };
 
@@ -179,16 +179,16 @@ BOOST_AUTO_TEST_CASE(test_box_trunc_precision) {
 BOOST_AUTO_TEST_CASE(test_box_coordinates_violation) {
     // the box must not be rotated
     vcutter::point_t p[4] = {
-        vcutter::point_t(-10, -20), 
-        vcutter::point_t(15, -20), 
-        vcutter::point_t(15, 20), 
+        vcutter::point_t(-10, -20),
+        vcutter::point_t(15, -20),
+        vcutter::point_t(15, 20),
         vcutter::point_t(-10, 20)
     };
 
     vcutter::box_t b1(p[0], p[1], p[2], p[3]);
     auto left_top_violation = b1.left_top_violation(10, 10);
     auto right_bottom_violation = b1.right_bottom_violation(10, 10);
-    
+
     BOOST_CHECK_EQUAL(left_top_violation.x, 10);
     BOOST_CHECK_EQUAL(left_top_violation.y, 20);
     BOOST_CHECK_EQUAL(right_bottom_violation.x, 5);
@@ -197,30 +197,30 @@ BOOST_AUTO_TEST_CASE(test_box_coordinates_violation) {
 
 BOOST_AUTO_TEST_CASE(test_box_countours_point) {
     vcutter::point_t p[4] = {
-        vcutter::point_t(4, -4), 
-        vcutter::point_t(4, 4), 
-        vcutter::point_t(-4, 4), 
+        vcutter::point_t(4, -4),
+        vcutter::point_t(4, 4),
+        vcutter::point_t(-4, 4),
         vcutter::point_t(-4, -4)
     };
 
     vcutter::point_t p2[4] = {
-        vcutter::point_t(0, -10), 
-        vcutter::point_t(10, 0), 
-        vcutter::point_t(0, 10), 
+        vcutter::point_t(0, -10),
+        vcutter::point_t(10, 0),
+        vcutter::point_t(0, 10),
         vcutter::point_t(-10, 0)
     };
 
     vcutter::point_t p3[4] = {
-        vcutter::point_t(6, -6), 
-        vcutter::point_t(6, 6), 
-        vcutter::point_t(-6, 6), 
+        vcutter::point_t(6, -6),
+        vcutter::point_t(6, 6),
+        vcutter::point_t(-6, 6),
         vcutter::point_t(-6, -6)
     };
 
     vcutter::box_t b(p2[0], p2[1], p2[2], p2[3]);
 
-    char i;
-    for (char c = 0; c < 4; ++c) {
+    int i;
+    for (int c = 0; c < 4; ++c) {
         i = (c + 1) % 4;
         p[c].x = (p[c].x + p[i].x) / 2;
         p[c].y = (p[c].y + p[i].y) / 2;

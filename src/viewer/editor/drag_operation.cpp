@@ -29,8 +29,8 @@ void DragOperation::draw_dragging_points() {
     should_redraw_ = false;
 }
 
-clipping_key_t DragOperation::get_transformed_key() {
-    auto key = keeper()->get_key(player()->info()->position());
+ClippingKey DragOperation::get_transformed_key() {
+    auto key = clipping()->at(player()->info()->position());
 
     point_t n(key.px, key.py);
 
@@ -73,7 +73,7 @@ bool DragOperation::should_redraw() {
 }
 
 void DragOperation::mouse_changed(char direction) {
-    auto b = current_clipping_box(view_port(), player(), keeper());
+    auto b = current_clipping_box(view_port(), clipping());
     bool in_box = b.contours_point(mouse_move_x(), mouse_move_y());
 
     if (direction == 0) {
@@ -122,7 +122,7 @@ void DragOperation::cancel() {
 }
 
 Fl_RGB_Image *DragOperation::current_cursor() {
-    if (active_ || current_clipping_box(view_port(), player(), keeper()).contours_point(mouse_move_x(), mouse_move_y())) {
+    if (active_ || current_clipping_box(view_port(), clipping()).contours_point(mouse_move_x(), mouse_move_y())) {
         return cursor_.get();
     }
 

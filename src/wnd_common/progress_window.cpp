@@ -161,7 +161,7 @@ void ProgressWindow::update_progress() {
     }
 }
 
-void ProgressWindow::set_progress(int64_t progress, int64_t max_progress) {
+void ProgressWindow::set_progress(uint32_t progress, uint32_t max_progress) {
     progress_ = progress;
     max_progress_ = max_progress;
 }
@@ -210,7 +210,7 @@ void ProgressWindow::viewer_buffer(BufferViewer *viewer, const unsigned char** b
     }
 }
 
-void ProgressWindow::set_buffer(const unsigned char *buffer, int w, int h) {
+void ProgressWindow::set_buffer(uint8_t *buffer, uint32_t w, uint32_t h) {
     buffer_ = buffer;
     buffer_w_ = w;
     buffer_h_ = h;

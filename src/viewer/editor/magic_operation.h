@@ -16,7 +16,7 @@ class MagicOperation: public ClippingOperation {
     void activate() override;
     bool active() override;
     void draw() override;
-    clipping_key_t get_transformed_key() override;
+    ClippingKey get_transformed_key() override;
     void cancel() override;
     bool should_redraw() override;
     void mouse_changed(char direction) override;
@@ -36,7 +36,7 @@ class MagicOperation: public ClippingOperation {
     uint32_t py1_;
     uint32_t px2_;
     uint32_t py2_;
-    int frame_;
+    uint32_t frame_;
     bool opt_x_enabled_;
     bool opt_y_enabled_;
     bool opt_scale_enabled_;

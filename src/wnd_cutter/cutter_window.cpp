@@ -17,14 +17,12 @@ namespace vcutter {
 
 
 CutterWindow::CutterWindow(Fl_Group *parent) {
-    keeper_.reset(new ClippingKeeper());
-
     parent_ = parent;
-    video_opened_ = false;
     open_failure_ = false;
     in_key_list_ = false;
     wink_comparison_ = false;
     in_seek_bar_callback_ = false;
+    clipping_version_ = 0;
     selected_clip_ = 0;
     wink_lap_ = 0;
     has_key_copy_ = false;
@@ -181,8 +179,8 @@ void CutterWindow::update_title() {
     char title[1024] = "";
     snprintf(title, sizeof(title), "Smart Loop Creator (%dx%d)->(%dx%d) %s",
         clipping_->player()->info()->w(), clipping_->player()->info()->h(),
-        keeper_->get_width(), keeper_->get_height(),
-        video_path_.c_str());
+        clipping_->w(), clipping_->h(),
+        clipping_->video_path().c_str());
     parent_->window()->copy_label(title);
 }
 
@@ -274,13 +272,11 @@ void CutterWindow::next() {
 
 void CutterWindow::clear(bool clear_controls) {
     clipping_.reset();
-    video_path_ = std::string();
-    video_opened_ = false;
     open_failure_ = false;
     has_key_copy_ = false;
     wink_lap_ = 0;
+    clipping_version_ = 0;
     wink_comparison_ = false;
-    keeper_.reset(new ClippingKeeper());
     viewer_->invalidate();
     clipping_editor_->invalidate();
     if (clear_controls) {
@@ -294,95 +290,130 @@ void CutterWindow::clear(bool clear_controls) {
 }
 
 std::string CutterWindow::get_video_path() {
-    return video_path_;
+    if (clipping_) {
+        return clipping_->video_path();
+    }
+    return "";
 }
 
 bool CutterWindow::modified() {
-    return visible() && keeper_->modified();
+
+    return visible() && clipping_version_ != clipping_->version();
 }
 
 uint64_t CutterWindow::modified_version() {
     if (!modified()) {
         return 0;
     }
-
-    keeper_->modified_version();
+    return clipping_->version();
 }
 
 void CutterWindow::clear_modified() {
-    return keeper_->clear_modified();
+    clipping_version_ = clipping_->version();
 }
 
 bool CutterWindow::open_video(const std::string& video_path) {
     clear();
 
-    video_path_ = video_path;
-    bool opened = wait_video_open();
+    clipping_.reset(new ClippingSession("cwnd", video_path.c_str(), true));
+    return handle_opened_clipping();
 }
 
-bool CutterWindow::open_clipping(const clipping_t & clip) {
-    clear();
-    keeper_->load(clip);
-    video_path_ = clip.video_path;
-    if (video_path_.empty()) {
-        show_error("Could not open the project video file");
+bool CutterWindow::handle_opened_clipping() {
+    if (!clipping_->good()) {
+        open_failure_ = true;
+        clear(true);
+        show_error("Não foi possivel abrir o arquivo de video.");
         return false;
     }
-    open_video();
-    return wait_video_open();
+
+    clipping_->player()->seek_frame(clipping_->first_frame());
+
+    update_seek_bar();
+    redraw_frame();
+
+    window_->show();
+    update_title();
+    clipping_version_ = clipping_->version();
+
+    update_buffers(true);
+
+    return true;
 }
+
+bool CutterWindow::restore_session() {
+    std::shared_ptr<ClippingSession> restored(std::move(ClippingSession::restore_session("cwnd")));
+
+    if (!restored) {
+        return false;
+    }
+
+    clipping_.swap(restored);
+
+    return handle_opened_clipping();
+}
+
+bool CutterWindow::open_clipping(const std::string& path) {
+    clear();
+    clipping_.reset(new ClippingSession("cwnd", path.c_str(), false));
+    return handle_opened_clipping();
+}
+
+
+bool CutterWindow::save(History *history) {
+    if (!visible() || !clipping_) {
+        return true;
+    }
+
+    if (clipping_->saved_path().empty()) {
+        return save_as(history);
+    }
+
+    clipping_->save(clipping_->saved_path().c_str());
+    return true;
+}
+
+bool CutterWindow::save_as(History *history) {
+    if (!visible() || !clipping_) {
+        return true;
+    }
+
+    const char *key = "main-window-project-dir";
+    std::string directory = (*history)[key];
+    std::string path = output_prj_file_chooser(&directory);
+
+    if (!directory.empty()) {
+        history->set(key, directory.c_str());
+    }
+
+    if (path.empty()) {
+        return false;
+    }
+
+    if (filepath_exists(path.c_str()) && !ask("The file already exists. Overwrite it ?")) {
+        return false;
+    }
+
+    clipping_->save(path.c_str());
+    return true;
+}
+
 
 void CutterWindow::close() {
     clear(true);
 }
 
-bool CutterWindow::wait_video_open() {
-    open_video();
-
-    while (!video_opened_ && !open_failure_) {
-        Fl::wait(0.1);
-        poll_actions();
-    }
-
-    if (video_opened_) {
-        keeper_->clear_modified();
-        window_->show();
-        update_title();
-        return true;
-    } else {
-        show_error("Não foi possivel abrir o arquivo de video.");
-    }
-
-    clear(true);
-
-    return false;
-}
 
 bool CutterWindow::visible() {
     return window_->visible();
 }
 
 void CutterWindow::open_video() {
-    clipping_.reset(new ClippingSession("cwnd", video_path_.c_str(), true));
-    if (clipping_->player()->info()->error()) {
-        open_failure_ = true;
-        clipping_.reset();
-        return;
-    }
 
-    keeper_->set_video_path(video_path_, clipping_->player()->info()->count());
-    keeper_->set_video_dimensions(clipping_->player()->info()->w(), clipping_->player()->info()->h());
-
-    clipping_->player()->seek_frame(keeper_->get_first_frame());
-
-    update_buffers(true);
-    update_seek_bar();
-    redraw_frame();
-    video_opened_ = true;
 }
 
-clipping_t CutterWindow::to_clipping() {
-    return keeper_->to_clipping();
+std::shared_ptr<Clipping> CutterWindow::to_clipping() {
+    return clipping_;
 }
 
 void CutterWindow::button_callback(Fl_Widget* widget, void *userdata) {
@@ -420,9 +451,10 @@ void CutterWindow::goto_selected_clipping_key() {
     if (!key_list_->value()) {
         return;
     }
-    int index = key_list_->value() - 1;
-    if (index < keeper_->get_key_count()) {
-        auto frame = keeper_->get_key_at_index(index).frame;
+
+    uint32_t index = key_list_->value() - 1;
+    if (index < clipping_->keys().size()) {
+        auto frame = clipping_->at_index(index).frame;
 
         clipping_->player()->pause();
         clipping_->player()->seek_frame(frame);
@@ -446,14 +478,14 @@ void CutterWindow::video_list_callback(Fl_Widget* widget, void *userdata) {
 }
 
 void CutterWindow::action_clear_keys() {
-    if (keeper_->empty()) {
+    if (clipping_->keys().empty()) {
         show_error("There is no keys to clear");
         return;
     }
     if (!ask("Are you sure to delete all keys ?")) {
         return;
     }
-    keeper_->clear();
+    clipping_->remove_all();
     update_clipping_list();
 }
 
@@ -495,10 +527,10 @@ void CutterWindow::action_properties() {
         return;
     }
 
-    unsigned int w = keeper_->get_width();
-    unsigned int h = keeper_->get_height();
+    unsigned int w = clipping_->w();
+    unsigned int h = clipping_->h();
     if (CutterOptionsWindow::edit_properties(clipping_->player()->info()->w(), clipping_->player()->info()->h(), &w, &h)) {
-        keeper_->set_dimensions(w, h);
+        clipping_->wh(w, h);
         redraw_frame();
         update_title();
     }
@@ -540,11 +572,11 @@ void CutterWindow::action_play_interval() {
         return;
     }
 
-    if (keeper_->empty()) {
+    if (clipping_->keys().empty()) {
         return;
     }
 
-    clipping_->player()->play(keeper_->get_first_frame(), keeper_->get_last_frame());
+    clipping_->player()->play(clipping_->first_frame(), clipping_->last_frame());
 }
 
 void CutterWindow::pause() {
@@ -572,11 +604,10 @@ void CutterWindow::action_insert() {
         return;
     }
 
-    bool computed = true;
-    auto key = keeper_->get_key(clipping_->player()->info()->position(), &computed);
+    auto key = clipping_->at(clipping_->player()->info()->position());
 
-    if (computed) {
-        keeper_->add_key(key);
+    if (key.computed()) {
+        clipping_->add(key);
         update_clipping_list();
     } else {
         show_error("There already is a mark at this frame.");
@@ -600,7 +631,7 @@ void CutterWindow::copy() {
         return;
     }
 
-    key_copy_ = keeper_->get_key(clipping_->player()->info()->position());
+    key_copy_ = clipping_->at(clipping_->player()->info()->position());
     has_key_copy_ = true;
 }
 
@@ -614,7 +645,7 @@ void CutterWindow::past() {
     }
     auto copy = key_copy_;
     copy.frame = clipping_->player()->info()->position();
-    keeper_->add_key(copy);
+    clipping_->add(copy);
     update_clipping_list();
     redraw_frame(true);
 }
@@ -623,9 +654,9 @@ void CutterWindow::past_rotation() {
     if (!has_copy("It's necessary to pause the video before paste the mark's rotation.")) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.angle(key_copy_.angle());
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -633,9 +664,9 @@ void CutterWindow::past_scale() {
     if (!has_copy("It's necessary to pause the video before paste the mark's scale.")) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.scale = key_copy_.scale;
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -643,12 +674,12 @@ void CutterWindow::past_position(bool x, bool y) {
     if (!has_copy("It's necessary to pause the video before paste the mark's position.")) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     if (x)
         key.px = key_copy_.px;
     if (y)
         key.py = key_copy_.py;
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -656,9 +687,9 @@ void CutterWindow::clear_rotation() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.angle(0);
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -666,9 +697,9 @@ void CutterWindow::clear_scale() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.scale = 1;
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -676,9 +707,9 @@ void CutterWindow::scale_half() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.scale = 0.5;
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -686,9 +717,9 @@ void CutterWindow::scale_half_2() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.scale = 0.25;
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -696,9 +727,9 @@ void CutterWindow::scale_2() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.scale = 2;
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -706,9 +737,9 @@ void CutterWindow::scale_3() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.scale = 3;
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -716,10 +747,10 @@ void CutterWindow::clear_position() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.px = clipping_->player()->info()->w() / 2;
     key.py = clipping_->player()->info()->h() / 2;
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -727,9 +758,9 @@ void CutterWindow::rotation_90() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.angle(90);
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -737,9 +768,9 @@ void CutterWindow::rotation_180() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.angle(180);
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -747,9 +778,9 @@ void CutterWindow::rotation_270() {
     if (!is_paused(true)) {
         return;
     }
-    auto key = keeper_->get_key(clipping_->player()->info()->position());
+    auto key = clipping_->at(clipping_->player()->info()->position());
     key.angle(270);
-    keeper_->add_key(key);
+    clipping_->add(key);
     redraw_frame(true);
 }
 
@@ -758,8 +789,8 @@ void CutterWindow::swap_wh() {
         return;
     }
 
-    int video_w = clipping_->player()->info()->w();
-    int video_h = clipping_->player()->info()->h();
+    uint32_t video_w = clipping_->player()->info()->w();
+    uint32_t video_h = clipping_->player()->info()->h();
 
     if (!video_h || !video_w) {
         show_error("Unxpected error width or height invalid in this video");
@@ -770,8 +801,8 @@ void CutterWindow::swap_wh() {
         return;
     }
 
-    uint32_t width = keeper_->get_width();
-    uint32_t height = keeper_->get_height();
+    uint32_t width = clipping_->w();
+    uint32_t height = clipping_->h();
     double scale = 1.0;
     double scaled = 1.0;
 
@@ -807,13 +838,12 @@ void CutterWindow::swap_wh() {
         height -= 1;
     }
 
-    keeper_->set_dimensions(height, width);
+    clipping_->wh(height, width);
 
-    auto keys = keeper_->get_keys();
-    for (auto k : keys) {
+    for (auto k : clipping_->keys()) {
         k.angle(k.angle() + 90);
         k.scale *= (1.0 / scaled);
-        keeper_->add_key(k);
+        clipping_->add(k);
     }
 
     redraw_frame(true);
@@ -828,10 +858,9 @@ void CutterWindow::rotate_all_180() {
         return;
     }
 
-    auto keys = keeper_->get_keys();
-    for (auto k : keys) {
+    for (auto k : clipping_->keys()) {
         k.angle(k.angle() + 180);
-        keeper_->add_key(k);
+        clipping_->add(k);
     }
 
     redraw_frame(true);
@@ -858,10 +887,9 @@ void CutterWindow::scale_all() {
         return;
     }
 
-    auto keys = keeper_->get_keys();
-    for (auto k : keys) {
+    for (auto k : clipping_->keys()) {
         k.scale *= scale;
-        keeper_->add_key(k);
+        clipping_->add(k);
     }
 
     redraw_frame(true);
@@ -875,21 +903,20 @@ void CutterWindow::action_delete() {
         show_error("It's necessary to pause the video before delete a mark.");
         return;
     }
-    if (keeper_->get_key_count() < 1) {
+    if (clipping_->keys().size() < 1) {
         show_error("There is no item to remove.");
         return;
     }
 
-    bool computed = true;
-    auto key = keeper_->get_key(clipping_->player()->info()->position(), &computed);
+    auto key = clipping_->at(clipping_->player()->info()->position());
 
-    if (computed) {
+    if (key.computed()) {
         show_error("The current video's frame does not have a mark to remove.");
         return;
     }
 
     if (ask("Are you sure to delete current")) {
-        keeper_->remove_key(key.frame);
+        clipping_->remove(key.frame);
         update_clipping_list();
     }
 }
@@ -903,7 +930,7 @@ void CutterWindow::action_cutoff1() {
         return;
     }
     if (ask("This action will remove several marks from begin. Are you sure ?")) {
-        keeper_->cutoff(clipping_->player()->info()->position(), true);
+        clipping_->define_start(clipping_->player()->info()->position());
         update_clipping_list();
     }
 }
@@ -917,8 +944,7 @@ void CutterWindow::action_cutoff12() {
         return;
     }
     if (ask("This action will remove several marks. Are you sure ?")) {
-
-        keeper_->cutoff_center(clipping_->player()->info()->position());
+        clipping_->remove_all(clipping_->player()->info()->position());
         update_clipping_list();
     }
 }
@@ -934,7 +960,7 @@ void CutterWindow::action_cutoff2() {
     }
 
     if (ask("This action will remove several marks to the end. Are you sure ?")) {
-        keeper_->cutoff(clipping_->player()->info()->position(), false);
+        clipping_->define_end(clipping_->player()->info()->position());
         update_clipping_list();
     }
 }
@@ -947,7 +973,7 @@ void CutterWindow::action_use_ref(bool positionate_x, bool positionate_y, bool r
         show_error("It's necessary to pause the video.");
         return;
     }
-    if (!keeper_->has_ref()) {
+    if (!clipping_->ref().has_ref()) {
         show_error("It's necessary to create references before use it.");
         return;
     }
@@ -966,7 +992,7 @@ void CutterWindow::action_create_ref() {
         show_error("It's necessary to pause the video.");
         return;
     }
-    keeper_->clear_reference();
+    clipping_->ref().clear_reference();
     clipping_editor_->activate_operation(MAGIC_DEFINE_OPERATION_NAME);
 }
 
@@ -974,13 +1000,13 @@ void CutterWindow::action_clear_ref() {
     if (!visible()) {
         return;
     }
-    keeper_->clear_reference();
+    clipping_->ref().clear_reference();
     update_buffers(true);
 }
 
 void CutterWindow::action_goto_reference() {
-    int frame = 0;
-    if (keeper_->get_reference_frame(&frame)) {
+    uint32_t frame = 0;
+    if (clipping_->ref().get_reference_frame(&frame)) {
         clipping_->player()->pause();
         clipping_->player()->seek_frame(frame);
         update_buffers(true);
@@ -991,7 +1017,7 @@ void CutterWindow::action_position_top() {
      if (!is_paused(true)) {
         return;
     }
-    keeper_->positionate_top(clipping_->player()->info()->position());
+    clipping_->positionate_top(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -999,7 +1025,7 @@ void CutterWindow::action_position_left() {
      if (!is_paused(true)) {
         return;
     }
-    keeper_->positionate_left(clipping_->player()->info()->position());
+    clipping_->positionate_left(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1007,7 +1033,7 @@ void CutterWindow::action_position_right() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->positionate_right(clipping_->player()->info()->position());
+    clipping_->positionate_right(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1015,7 +1041,7 @@ void CutterWindow::action_position_bottom() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->positionate_bottom(clipping_->player()->info()->position());
+    clipping_->positionate_bottom(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1023,7 +1049,7 @@ void CutterWindow::action_position_vertical() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->center_vertical(clipping_->player()->info()->position());
+    clipping_->center_vertical(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1031,7 +1057,7 @@ void CutterWindow::action_position_horizontal() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->center_horizontal(clipping_->player()->info()->position());
+    clipping_->center_horizontal(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1039,7 +1065,7 @@ void CutterWindow::action_align_top() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->align_top(clipping_->player()->info()->position());
+    clipping_->fit_top(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1047,7 +1073,7 @@ void CutterWindow::action_align_bottom() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->align_bottom(clipping_->player()->info()->position());
+    clipping_->fit_bottom(clipping_->player()->info()->position());
     redraw_frame(true);
 
 }
@@ -1056,7 +1082,7 @@ void CutterWindow::action_align_left() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->align_left(clipping_->player()->info()->position());
+    clipping_->fit_left(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1064,7 +1090,7 @@ void CutterWindow::action_align_right() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->align_right(clipping_->player()->info()->position());
+    clipping_->fit_right(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1072,7 +1098,7 @@ void CutterWindow::action_align_all() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->align_all(clipping_->player()->info()->position());
+    clipping_->fit_all(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1080,7 +1106,7 @@ void CutterWindow::action_norm_scale() {
     if (!is_paused(true)) {
         return;
     }
-    keeper_->normalize_scale(clipping_->player()->info()->position());
+    clipping_->normalize_scale(clipping_->player()->info()->position());
     redraw_frame(true);
 }
 
@@ -1094,20 +1120,19 @@ void CutterWindow::update_clipping_list() {
     in_key_list_ = true;
     char temp_buffer[100] = "";
     int selection = key_list_->value();
-    int size = key_list_->size();
-    size_t i = 0;
-    key_list_->clear();
-    int ref_frame = -1;
-    keeper_->get_reference_frame(&ref_frame);
+    uint32_t size = key_list_->size();
 
-    for (auto it = keeper_->keys_begin(); it != keeper_->keys_end(); ++it) {
+    key_list_->clear();
+    uint32_t ref_frame = -1;
+    clipping_->ref().get_reference_frame(&ref_frame);
+
+    for (auto k : clipping_->keys()) {
         snprintf(temp_buffer, sizeof(temp_buffer),
-            "%07u s:%4.2f r:%4.2f (%0.1f, %0.1f) %s", it->frame, it->scale, it->angle(), it->px, it->py, ref_frame == it->frame ? " <r" : "");
+            "%07u s:%4.2f r:%4.2lf (%u, %u) %s", k.frame, k.scale, k.angle(), k.px, k.py, ref_frame == k.frame ? " <r" : "");
         key_list_->add(temp_buffer);
-        ++i;
     }
 
-    if (size == key_list_->size() && selection) {
+    if (size == static_cast<uint32_t>(key_list_->size()) && selection != 0) {
         key_list_->deselect();
         key_list_->value(selection);
         key_list_->select(selection);
@@ -1165,8 +1190,8 @@ void CutterWindow::update_seek_bar() {
 
 void CutterWindow::key_list_auto_selection() {
     in_key_list_ = true;
-    selected_clip_ = keeper_->key_index_at_frame(clipping_->player()->info()->position()) + 1;
-    if (selected_clip_ > 0 && selected_clip_ <= key_list_->size()) {
+    selected_clip_ = clipping_->find_index(clipping_->player()->info()->position()) + 1;
+    if (selected_clip_ > 0 && selected_clip_ <= static_cast<uint32_t>(key_list_->size())) {
         key_list_->value(selected_clip_);
     }
     in_key_list_ = false;
@@ -1181,21 +1206,21 @@ void CutterWindow::update_buffers(bool frame_changed) {
         update_seek_bar();
         redraw_frame();
         key_list_auto_selection();
-        clipping_editor_->update(clipping_->player(), keeper_.get());
-        viewer_->update_preview(clipping_->player(), keeper_.get());
+        clipping_editor_->update(clipping_.get());
+        viewer_->update_preview(clipping_.get());
     } else {
         clipping_editor_->draw_operations();
         if (clipping_editor_->key_changed(true)) {
             update_clipping_list();
-            viewer_->update_preview(clipping_->player(), keeper_.get());
+            viewer_->update_preview(clipping_.get());
         }
     }
 
-    if (keeper_->get_width() < 15 || keeper_->get_height() < 15) {
-        keeper_->set_dimensions(clipping_->player()->info()->w(), clipping_->player()->info()->h());
+    if (clipping_->w() < 15 || clipping_->h() < 15) {
+        clipping_->wh(clipping_->player()->info()->w(), clipping_->player()->info()->h());
     }
 
-    if (keeper_->get_key_count() != key_list_->size()) {
+    if (clipping_->keys().size() != static_cast<u_int32_t>(key_list_->size())) {
         update_clipping_list();
     }
 }

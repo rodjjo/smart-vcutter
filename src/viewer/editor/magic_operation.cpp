@@ -109,19 +109,19 @@ void MagicOperation::draw() {
     }
 }
 
-clipping_key_t MagicOperation::get_transformed_key() {
-    auto key = keeper()->get_key(player()->info()->position());
+ClippingKey MagicOperation::get_transformed_key() {
+    auto key = clipping()->at(player()->info()->position());
     if (!use_reference_ || (!preview_line_ && !points_defined_)) {
         return key;
     }
 
-    int ref_frame;
+    uint32_t ref_frame = 0;
     float px1, py1, px2, py2, rx1, ry1, rx2, ry2;
-    if (!keeper()->get_reference(&ref_frame, &rx1, &ry1, &rx2, &ry2)) {
+    if (!clipping()->ref().get_reference(&ref_frame, &rx1, &ry1, &rx2, &ry2)) {
         return key;
     }
 
-    key = keeper()->get_key(ref_frame);
+    key = clipping()->at(ref_frame);
     key.frame = player()->info()->position();
 
     if (points_defined_) {
@@ -136,13 +136,12 @@ clipping_key_t MagicOperation::get_transformed_key() {
         py2 = mouse_move_y();
     }
 
-    return magic_tool(
-        key,
-        keeper()->get_width(), keeper()->get_height(),
-        player()->info()->w(), player()->info()->h(),
+    key = key.magic_tool(
+        clipping(),
         rx1, ry1, rx2, ry2,
         px1, py1, px2, py2,
         opt_rotate_enabled_, opt_scale_enabled_, opt_x_enabled_, opt_y_enabled_);
+    return key;
 }
 
 void MagicOperation::cancel() {
@@ -290,7 +289,7 @@ void MagicOperation::apply() {
     if (use_reference_) {
         add_key();
     } else {
-        keeper()->set_reference(player()->info()->position(), px1_, py1_, px2_, py2_);
+        clipping()->ref().set_reference(player()->info()->position(), px1_, py1_, px2_, py2_);
         modify();
     }
 

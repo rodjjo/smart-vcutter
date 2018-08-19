@@ -14,14 +14,14 @@ namespace vcutter {
 class ViewerTexture {
  public:
     ViewerTexture();
-    ViewerTexture(const uint8_t *buffer, int w, int h, bool resize_texture=false, bool rgba=false);
+    ViewerTexture(const uint8_t *buffer, uint32_t w, uint32_t h, bool resize_texture=false, bool rgba=false);
     virtual ~ViewerTexture();
-    void update(const uint8_t *buffer, int w, int h, bool resize_texture=false, bool rgba=false);
+    void update(const uint8_t *buffer, uint32_t w, uint32_t h, bool resize_texture=false, bool rgba=false);
     void draw(const viewport_t &vp, float x, float y, float zoom);
-    void draw(const viewport_t &vp, const uint8_t *buffer=NULL, int w=0, int h=0, bool resize_texture=false, bool rgba=false);
-    void draw(const viewport_t &vp, int vw, int vh, box_t texture_coords, box_t view_coords, float alpha);
+    void draw(const viewport_t &vp, const uint8_t *buffer=NULL, uint32_t w=0, uint32_t h=0, bool resize_texture=false, bool rgba=false);
+    void draw(const viewport_t &vp, uint32_t vw, uint32_t vh, box_t texture_coords, box_t view_coords, float alpha);
  private:
-    void update_texture(const viewport_t &vp, const uint8_t* buffer, int w, int h, bool resize_texture, bool rgba);
+    void update_texture(const viewport_t &vp, const uint8_t* buffer, uint32_t w, uint32_t h, bool resize_texture, bool rgba);
 
  private:
     uint32_t texture_id_;
@@ -30,10 +30,10 @@ class ViewerTexture {
     bool resize_texture_;
     std::shared_ptr<uint8_t> buffer_;
     bool rgba_;
-    int buffer_w_;
-    int buffer_h_;
-    int view_w_;
-    int view_h_;
+    uint32_t buffer_w_;
+    uint32_t buffer_h_;
+    uint32_t view_w_;
+    uint32_t view_h_;
 };
 
 }  // namespace vcutter

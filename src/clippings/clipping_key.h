@@ -22,6 +22,20 @@ class ClippingKey {
     ClippingKey constrained(ClippingFrame *owner);
     box_t clipping_box(ClippingFrame *owner);
     bool computed();
+    ClippingKey magic_tool(
+        ClippingFrame *owner,
+        float source_rx1,
+        float source_ry1,
+        float source_rx2,
+        float source_ry2,
+        float curr_rx1,
+        float curr_ry1,
+        float curr_rx2,
+        float curr_ry2,
+        bool should_rotate,
+        bool should_scale,
+        bool should_positionate_x,
+        bool should_positionate_y) const;
 private:
     void limit_scale(ClippingFrame *owner);
 

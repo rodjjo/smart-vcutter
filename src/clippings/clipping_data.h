@@ -20,7 +20,6 @@ class ClippingData: private boost::noncopyable {
  public:
     explicit ClippingData(const Json::Value * root);
     explicit ClippingData(const char *path);
-    ClippingData();
     virtual ~ClippingData();
     uint32_t w();
     uint32_t h();
@@ -29,6 +28,7 @@ class ClippingData: private boost::noncopyable {
     void add(const ClippingKey & key);
     ClippingKey at(uint32_t frame);
     void save(const char *path);
+    std::string saved_path();
     Json::Value serialize();
     uint32_t req_buffer_size();
     const std::list<ClippingKey> keys() const;
@@ -38,7 +38,8 @@ class ClippingData: private boost::noncopyable {
     void remove_all(uint32_t frame_to_keep);
     void remove_all(); // clear
     uint32_t first_frame();
-    virtual uint32_t last_frame();
+    uint32_t last_frame();
+    uint32_t duration_frames();
     void wh(uint32_t w, uint32_t h);
     ClippingKey at_index(uint32_t index);
     int find_index(uint32_t frame);
@@ -61,6 +62,7 @@ class ClippingData: private boost::noncopyable {
     uint32_t output_w_;
     uint32_t output_h_;
     std::string video_path_;
+    std::string saved_path_;
  protected:
     std::list<ClippingKey> keys_;
 };

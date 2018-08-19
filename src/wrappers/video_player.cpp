@@ -12,6 +12,7 @@ namespace vcutter {
 PlayerWrapper::PlayerWrapper(const std::string& path) {
     player_ = vs::open_file(path.c_str());
     frame_changed_.store(true);
+    context_finished_.store(true);
     finished_ = false;
     playing_ = false;
     playing_interval_ = false;
@@ -50,6 +51,10 @@ bool PlayerWrapper::frame_changed(bool clear_flag) {
         return frame_changed_.exchange(false) == true;
     }
     return frame_changed_.load();
+}
+
+bool PlayerWrapper::context_finished() {
+    return context_finished_.load();
 }
 
 bool PlayerWrapper::is_playing() {
@@ -153,7 +158,7 @@ void PlayerWrapper::run_callback() {
     }
 }
 
-bool PlayerWrapper::change_speed(bool increment) {
+void PlayerWrapper::change_speed(bool increment) {
     float step = 0.20 * (increment ? 1: -1);
 
     if (get_speed() + step <= 5.0 && get_speed() + step >= 0.20) {
@@ -215,6 +220,14 @@ bool PlayerWrapper::grab_frame() {
 
 void PlayerWrapper::pause() {
     stop_playing();
+}
+
+void PlayerWrapper::assync_context(context_callback_t callback) {
+    context_finished_.store(false);
+    replace_callback([this, callback] () {
+        callback(player_.get());
+        context_finished_.store(true);
+    });
 }
 
 void PlayerWrapper::run() {

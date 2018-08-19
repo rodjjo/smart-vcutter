@@ -16,9 +16,7 @@
 #include <FL/Fl_Native_File_Chooser.H>
 #include <FL/fl_ask.H>
 
-#include "src/data/project.h"
 #include "src/wnd_cutter/cutter_window.h"
-#include "src/data/session.h"
 #include "src/data/history.h"
 #include "src/wnd_main/menu.h"
 
@@ -37,8 +35,6 @@ class MainWindow : Fl_Menu_Window {
     void init_tool_bar();
     void init_controls();
     void poll_actions();
-    void save_session();
-    void close_session();
     void load_sessions();
 
     void poll_key_repeat();
@@ -131,13 +127,11 @@ class MainWindow : Fl_Menu_Window {
     uint64_t key_time_lap_;
  private:
     std::unique_ptr<CutterWindow> cutter_window_;
-    std::unique_ptr<Session> clipping_session_;
  private:
     History history_;
     Fl_Window *window_;
     Fl_Menu_Bar *menu_;
     Fl_Group *bottom_group_;
-    std::unique_ptr<Project> project_;
     std::unique_ptr<Menu> menu_file_;
     std::unique_ptr<Menu> menu_edit_;
     std::unique_ptr<Menu> menu_tools_;

@@ -36,11 +36,11 @@ BOOST_AUTO_TEST_CASE(test_viewport_screen_to_frame_coords__point) {
 
 BOOST_AUTO_TEST_CASE(test_viewport_screen_to_frame_coords__box) {
     vcutter::viewport_t vp(0, 0, 856, 480);
-    
+
     vcutter::point_t p[4] = {
-        vcutter::point_t(214, 120), 
-        vcutter::point_t(640, 120), 
-        vcutter::point_t(640, 360), 
+        vcutter::point_t(214, 120),
+        vcutter::point_t(640, 120),
+        vcutter::point_t(640, 360),
         vcutter::point_t(214, 360)
     };
 
@@ -69,11 +69,11 @@ BOOST_AUTO_TEST_CASE(test_viewport_frame_to_screen_coords__point) {
 
 BOOST_AUTO_TEST_CASE(test_viewport_frame_to_screen_coords__box) {
     vcutter::viewport_t vp(0, 0, 856, 480);
-    
+
     vcutter::point_t p[4] = {
-        vcutter::point_t(319, 180), 
-        vcutter::point_t(958, 180), 
-        vcutter::point_t(958, 540), 
+        vcutter::point_t(319, 180),
+        vcutter::point_t(958, 180),
+        vcutter::point_t(958, 540),
         vcutter::point_t(319, 540)
     };
 
@@ -109,23 +109,23 @@ BOOST_AUTO_TEST_CASE(test_viewport_raster_coords) {
         vp.raster_coords(1280, 720),
         vp.raster_coords(720, 1280)
     };
-    
+
     BOOST_CHECK_EQUAL(coord[0].x, 0);
     BOOST_CHECK_EQUAL(coord[0].y, 0);
     BOOST_CHECK_EQUAL(coord[1].x, 0);
     BOOST_CHECK_EQUAL(coord[1].y, 0.25);
     BOOST_CHECK_CLOSE(coord[2].x, 0.57812, 0.1);
     BOOST_CHECK_EQUAL(coord[2].y, 0);
-        
+
 }
 
 BOOST_AUTO_TEST_CASE(test_viewport_fit) {
     vcutter::viewport_t vp(0, 0, 1280, 720);
 
     uint32_t w = 100, h = 90;
-    BOOST_CHECK_EQUAL(vp.fit(&w, &h), 1.0);
-    BOOST_CHECK_EQUAL(w, 100);
-    BOOST_CHECK_EQUAL(h, 90);
+    BOOST_CHECK_EQUAL(vp.fit(&w, &h), 0.125);
+    BOOST_CHECK_EQUAL(w, 800);
+    BOOST_CHECK_EQUAL(h, 720);
 
     w = 1280 * 2;
     h = 90;

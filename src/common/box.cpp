@@ -19,11 +19,13 @@ box_t box_t::rotated(float angle) const {
 }
 
 void box_t::rotate(float angle) {
-    for (char c = 0; c < 4; ++c) p_[c].rotate(angle);
+    for (int c = 0; c < 4; ++c) {
+        p_[c].rotate(angle);
+    }
 }
 
 void box_t::translate(float px, float py) {
-    for (char i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i) {
         (*this)[i].x += px;
         (*this)[i].y += py;
     }
@@ -31,7 +33,7 @@ void box_t::translate(float px, float py) {
 
 void box_t::scale(float scale) {
     if (scale != 1.0f) {
-        for (char i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             p_[i].x *= scale;
             p_[i].y *= scale;
         }
@@ -40,7 +42,7 @@ void box_t::scale(float scale) {
 
 point_t box_t::center() {
     point_t r;
-    for (char i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i) {
         r.x += p_[i].x;
         r.y += p_[i].y;
     }
@@ -79,7 +81,7 @@ point_t box_t::size() {
 
 box_t box_t::occupied_area() {
     box_t result(*this);
-    for (char i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i) {
         if (p_[i].x > result[1].x)
             result[1].x = p_[i].x;
         if (p_[i].x < result[0].x)
@@ -99,7 +101,7 @@ box_t box_t::occupied_area() {
 }
 
 void box_t::trunc_precision() {
-    for (char i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i) {
         p_[i].trunc_precision();
     }
 }

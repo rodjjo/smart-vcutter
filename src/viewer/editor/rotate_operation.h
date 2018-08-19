@@ -15,7 +15,7 @@ class RotateOperation: public ClippingOperation {
     virtual ~RotateOperation();
     bool active() override;
     void draw_dragging_points() override;
-    clipping_key_t get_transformed_key() override;
+    ClippingKey get_transformed_key() override;
     void cancel() override;
     bool should_redraw() override;
     void mouse_changed(char direction) override;

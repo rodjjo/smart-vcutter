@@ -13,6 +13,8 @@ namespace vcutter {
 
 typedef std::function<void()> async_callback_t;
 
+typedef std::function<void(vs::Player *player)> context_callback_t;
+
 class PlayerWrapper {
  public:
     PlayerWrapper(const std::string& path);
@@ -26,12 +28,14 @@ class PlayerWrapper {
     void stop();
     void next();
     void prior();
-    bool change_speed(bool increment);
+    void change_speed(bool increment);
     void seek_frame(int64_t frame);
     void seek_time(int64_t ms_time);
     bool is_playing();
     bool is_playing_interval();
     bool frame_changed(bool clear_flag);
+    bool context_finished();
+    void assync_context(context_callback_t callback);
   private:
     void replace_callback(async_callback_t callback);
     void wait_callback();
@@ -47,6 +51,7 @@ class PlayerWrapper {
     bool playing_interval_;
     std::atomic_int speed_;
     std::atomic_bool frame_changed_;
+    std::atomic_bool context_finished_;
     unsigned int start_;
     unsigned int end_;
     std::shared_ptr<vs::Player> player_;

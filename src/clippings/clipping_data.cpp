@@ -20,12 +20,6 @@ ClippingData::ClippingData(const Json::Value * root) {
     version_ = 0;
 }
 
-ClippingData::ClippingData() {
-    version_ = 0;
-    output_w_ = 0;
-    output_h_ = 0;
-}
-
 ClippingData::~ClippingData() {
 
 }
@@ -79,12 +73,18 @@ void ClippingData::load_file(const char *path) {
     }
 
     load_json(jsf["ClippingData"]);
+    saved_path_ = path;
 }
 
 void ClippingData::save(const char *path) {
     JsonFile jsf(path, false, false);
     jsf["ClippingData"] = serialize();
     jsf.save();
+    saved_path_ = path;
+}
+
+std::string ClippingData::saved_path() {
+    return saved_path_;
 }
 
 void ClippingData::inc_version() {
@@ -92,8 +92,6 @@ void ClippingData::inc_version() {
 }
 
 void ClippingData::add(const ClippingKey & key) {
-    double last_angle = key.angle();
-
     inc_version();
 
     auto it = keys_.begin();
@@ -318,6 +316,10 @@ uint32_t ClippingData::last_frame() {
     }
 
     return keys_.rbegin()->frame;
+}
+
+uint32_t ClippingData::duration_frames() {
+    return 1 + last_frame() - first_frame();
 }
 
 void ClippingData::wh(uint32_t w, uint32_t h) {
