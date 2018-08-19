@@ -104,6 +104,24 @@ void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, uint32_t w
     float coord_w = ((2.0 / vp[2]) * texture_w_) / 2.0;
     float coord_h = ((2.0 / vp[3]) * texture_h_) / 2.0;
 
+    if (coord_w < 1.0 && coord_h < 1.0) {
+        float scale = 1.0 / coord_w;
+        float scale_h = 1.0 / coord_h;
+        if (scale_h > scale) {
+            scale = scale_h;
+        }
+        coord_w *= scale;
+        coord_h *= scale;
+        if (coord_w > 1.0) {
+            coord_h /= coord_w;
+            coord_w = 1.0;
+        }
+        if (coord_h > 1.0) {
+            coord_w /= coord_h;
+            coord_h = 1.0;
+        }
+    }
+
     if (rgba) {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

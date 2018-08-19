@@ -182,10 +182,9 @@ void BufferViewer::draw_buffer(const unsigned char* buffer, uint32_t w, uint32_t
 }
 
 void BufferViewer::update_cache(const unsigned char** buffer, uint32_t *w, uint32_t *h) {
-    unsigned int required_size = (*w) * (*h) * 3;
     unsigned int nw = *w, nh = *h;
-
     view_port().fit(&nw, &nh);
+    unsigned int required_size = nw * nh * 3;
 
     unsigned int vp_size = nw * nh * 3;
 

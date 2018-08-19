@@ -115,9 +115,11 @@ box_t viewport_t::frame_to_screen_coords(uint32_t video_w, uint32_t video_h, con
 }
 
 float viewport_t::fit(uint32_t *w, uint32_t *h) const {
-    if (static_cast<int>(*w) <= vp_[2] && static_cast<int>(*h) <= vp_[3]) {
-        return 1.0;
-    }
+    /*
+        if (static_cast<int>(*w) <= vp_[2] && static_cast<int>(*h) <= vp_[3]) {
+            return 1.0;
+        }
+    */
 
     float fx = vp_[2];
     float fy = vp_[3];

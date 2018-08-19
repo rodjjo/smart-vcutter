@@ -123,9 +123,9 @@ BOOST_AUTO_TEST_CASE(test_viewport_fit) {
     vcutter::viewport_t vp(0, 0, 1280, 720);
 
     uint32_t w = 100, h = 90;
-    BOOST_CHECK_EQUAL(vp.fit(&w, &h), 1.0);
-    BOOST_CHECK_EQUAL(w, 100);
-    BOOST_CHECK_EQUAL(h, 90);
+    BOOST_CHECK_EQUAL(vp.fit(&w, &h), 0.125);
+    BOOST_CHECK_EQUAL(w, 800);
+    BOOST_CHECK_EQUAL(h, 720);
 
     w = 1280 * 2;
     h = 90;

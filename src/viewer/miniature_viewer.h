@@ -28,11 +28,9 @@ private:
     Clipping *clipping_;
     std::unique_ptr<ViewerTexture> viewer_texture_;
     bool modified_;
-    bool should_update_;
     uint32_t miniature_buffer_w_;
     uint32_t miniature_buffer_h_;
-    uint32_t buffer_size_;
-    std::shared_ptr<unsigned char> clipping_buffer_;
+    std::shared_ptr<unsigned char> render_buffer_;
 };
 
 }  // namespace vcutter
