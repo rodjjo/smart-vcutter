@@ -62,7 +62,7 @@ class ClippingConversion: private boost::noncopyable {
     uint32_t player_buffer_size();
 
  private:
-    std::atomic_uint32_t current_position_;
+    std::atomic<uint32_t> current_position_;
     uint32_t max_position_;
     uint32_t buffer_index_;
     bool buffer_push(vs::Player *player);
