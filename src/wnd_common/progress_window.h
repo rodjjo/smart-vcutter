@@ -11,8 +11,7 @@
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Check_Button.H>
-
-
+#include "src/clippings/clipping_conversion.h"
 #include "src/viewer/buffer_viewer.h"
 
 
@@ -20,21 +19,20 @@ namespace vcutter {
 
 typedef std::function<void(int64_t* progress, int64_t* max_progess)> progress_func_t;
 typedef std::function<void(const unsigned char **buffer, uint32_t *w, uint32_t *h)> buffer_func_t;
-typedef std::function<bool()> progress_task_t;
 
-class ProgressWindow: public BufferSupplier {
+class ProgressWindow: public BufferSupplier, public ProgressHandler {
  public:
     explicit ProgressWindow(bool show_video=false);
     ProgressWindow(buffer_func_t buffer_func);
     ProgressWindow(progress_func_t progress_func);
     ProgressWindow(progress_func_t progress_func, buffer_func_t buffer_func);
     virtual ~ProgressWindow();
-    void set_progress(int64_t progress, int64_t max_progress);
-    bool wait(progress_task_t task);  // return true if not canceled
-    bool wait();  // return true if not canceled
+    void set_progress(uint32_t progress, uint32_t max_progress) override;
+    bool wait(progress_task_t task) override;
+    bool wait();
     void cancel(bool confirm=false);
-    bool canceled();
-    void set_buffer(const unsigned char *buffer, int w, int h);
+    bool canceled() override;
+    void set_buffer(uint8_t *buffer, uint32_t w, uint32_t h) override;
  private:
     static void handle_cancel_action(Fl_Widget *widget, void *this_window);
     static void timeout_handler(void* data);

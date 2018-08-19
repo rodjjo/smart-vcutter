@@ -6,7 +6,8 @@
 #include <Fl/Fl.H>
 
 #include "src/common/utils.h"
-#include "src/wrappers/video_conversion.h"
+#include "src/clippings/clipping_conversion.h"
+#include "src/wnd_common/progress_window.h"
 #include "src/wnd_common/common_dialogs.h"
 #include "src/wnd_tools/encoder_window.h"
 
@@ -482,29 +483,30 @@ void EncoderWindow::action_convert() {
 
     session.save();
 
-    if (clip_) {
-        VideoConversionWrapper converter(
-            clip_,
-            format,
-            edt_output_->value(),
-            choosen_bitrate(),
-            choosen_fps(),
-            btn_start_backward_->value() != 0
-        );
+    std::shared_ptr<ProgressHandler> prog(new ProgressWindow(true));
+    std::shared_ptr<Clipping> clip = clip_;
 
-        converter.convert(btn_append_reverse_->value() != 0, btn_merge_->value() != 0);
+    if (!clip) {
+        clip.reset(new Clipping(edt_path_->value(), true));
+        auto key1 = clip->at(start_frame);
+        auto key2 = clip->at(end_frame);
+
+        clip->add(key1);
+        clip->add(key2);
+    }
+
+    ClippingConversion conv(prog, clip);
+    conv.convert(
+        format,
+        edt_output_->value(),
+        choosen_bitrate(),
+        choosen_fps(),
+        btn_start_backward_->value() != 0,
+        btn_append_reverse_->value() != 0,
+        btn_merge_->value() ? 1: 0);
+
+    if (clip_ == clip) {
         save_sugestion();
-    } else {
-        VideoConversionWrapper converter(
-            edt_path_->value(),
-            start_frame,
-            end_frame,
-            format,
-            edt_output_->value(),
-            choosen_bitrate(),
-            choosen_fps());
-
-        converter.convert(btn_append_reverse_->value() != 0, btn_merge_->value() != 0);
     }
 }
 
