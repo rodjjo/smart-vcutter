@@ -7,8 +7,10 @@
 #include <inttypes.h>
 #include <functional>
 #include <memory>
+#include <atomic>
 #include <boost/core/noncopyable.hpp>
 #include "src/clippings/clipping.h"
+#include "src/vstream/video_stream.h"
 
 namespace vcutter {
 
@@ -40,7 +42,7 @@ class ClippingConversion {
  public:
     ClippingConversion(std::shared_ptr<ProgressHandler> prog_handler, std::shared_ptr<Clipping> clipping, uint32_t max_memory=419430400);
 
-    void convert(
+    bool convert(
         const char *codec,
         const char *path,
         uint32_t bitrate,
@@ -48,13 +50,24 @@ class ClippingConversion {
         bool from_start=true,
         bool append_reverse=false,
         uint8_t transition_frames=0);
- private:
-    void allocate_buffers();
 
  private:
+    void allocate_buffers(bool from_start, bool append_reverse, uint8_t transition_frames);
+    void process(vs::Player *player, vs::Encoder *encoder, bool from_start, bool append_reverse);
+    void encode_frame(vs::Encoder *encoder, uint8_t *buffer);
+    void encode_from_begin(vs::Player *player, vs::Encoder *encoder);
+    void encode_from_end(vs::Player *player, vs::Encoder *encoder);
+    void copy_buffer(vs::Player *player, uint8_t *buffer);
+    float transparency_increment();
+
+ private:
+    std::atomic<uint8_t*> current_buffer_;
+    std::atomic_uint32_t current_position_;
+    uint32_t max_position_;
     std::shared_ptr<Clipping> clipping_;
     std::shared_ptr<ProgressHandler> prog_handler_;
     std::vector<std::shared_ptr<ConversionBuffer> > buffers_;
+    std::vector<std::shared_ptr<ConversionBuffer> > transitions_;
     uint32_t max_memory_;
 };
 

@@ -38,7 +38,8 @@ class ClippingData: private boost::noncopyable {
     void remove_all(uint32_t frame_to_keep);
     void remove_all(); // clear
     uint32_t first_frame();
-    virtual uint32_t last_frame();
+    uint32_t last_frame();
+    uint32_t duration_frames();
     void wh(uint32_t w, uint32_t h);
     ClippingKey at_index(uint32_t index);
     int find_index(uint32_t frame);

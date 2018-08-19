@@ -318,6 +318,10 @@ uint32_t ClippingData::last_frame() {
     return keys_.rbegin()->frame;
 }
 
+uint32_t ClippingData::duration_frames() {
+    return 1 + last_frame() - first_frame();
+}
+
 void ClippingData::wh(uint32_t w, uint32_t h) {
     this->w(w);
     this->h(h);

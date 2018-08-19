@@ -62,7 +62,7 @@ ClippingRender::ClippingRender(const char *path, bool path_is_video) : ClippingF
 ClippingRender::ClippingRender(const Json::Value * root) : ClippingFrame(root) {
 }
 
-void ClippingRender::render(ClippingKey key, uint8_t *source_buffer, uint32_t target_w, uint32_t target_h, uint8_t *buffer, bool transparent) {
+void ClippingRender::render(ClippingKey key, uint8_t *source_buffer, uint32_t target_w, uint32_t target_h, uint8_t *buffer, float alpha) {
     // TODO(Rodrigo Simplify this logic):
     int source_w = player()->info()->w();
     int source_h = player()->info()->h();
@@ -80,12 +80,12 @@ void ClippingRender::render(ClippingKey key, uint8_t *source_buffer, uint32_t ta
         cv::Rect roi_input(bbox[0].x, bbox[0].y, bbox_w, bbox_h);
         cv::Mat roi_img_in(frame(roi_input));
 
-        if (!transparent) {
+        if (alpha >= 1.0) {
             cv::resize(roi_img_in, output, output.size(), CV_INTER_LANCZOS4);
         } else {
             cv::Mat temp_output(target_h, target_w, CV_8UC3);
             cv::resize(roi_img_in, temp_output, temp_output.size(), CV_INTER_LANCZOS4);
-            cv::addWeighted(temp_output, 0.5, output, 0.5, 0.0, output);
+            cv::addWeighted(temp_output, alpha, output, 1.0 - alpha, 0.0, output);
         }
 
         return;
@@ -115,7 +115,7 @@ void ClippingRender::render(ClippingKey key, uint8_t *source_buffer, uint32_t ta
 
     tmp::copy_center(temp, rotated);
 
-    if (transparent) {
+    if (alpha < 1.0) {
         cv::Mat temp_output(target_h, target_w, CV_8UC3);
         cv::resize(rotated, temp_output, temp_output.size(), CV_INTER_LANCZOS4);
         cv::addWeighted(temp_output, 0.5, output, 0.5, 0.0, output);
@@ -131,17 +131,17 @@ void ClippingRender::render(ClippingKey key, uint8_t *player_buffer, uint8_t *bu
         w(),
         h(),
         buffer,
-        false);
+        1.0);
 }
 
-void ClippingRender::render_transparent(ClippingKey key, uint8_t *player_buffer, uint8_t *buffer) {
+void ClippingRender::render(ClippingKey key, float alpha, uint8_t *player_buffer, uint8_t *buffer) {
     render(
         key,
         player_buffer,
         w(),
         h(),
         buffer,
-        true);
+        alpha);
 }
 
 void ClippingRender::render(ClippingKey key, uint32_t target_w, uint32_t target_h, uint8_t *buffer) {
@@ -151,7 +151,7 @@ void ClippingRender::render(ClippingKey key, uint32_t target_w, uint32_t target_
         target_w,
         target_h,
         buffer,
-        false);
+        1.0);
 }
 
 void ClippingRender::render(ClippingKey key, uint8_t *buffer) {
@@ -161,7 +161,7 @@ void ClippingRender::render(ClippingKey key, uint8_t *buffer) {
         w(),
         h(),
         buffer,
-        false);
+        1.0);
 }
 
 }  // namespace vcutter
