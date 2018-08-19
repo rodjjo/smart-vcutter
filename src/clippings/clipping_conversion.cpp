@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
+#include <string.h>
 #include <Fl/Fl.H>
 #include "src/clippings/clipping_conversion.h"
 
@@ -32,6 +33,7 @@ bool ClippingConversion::convert(
     current_position_.store(0);
     max_position_ = clipping_->duration_frames() * (append_reverse ? 2 : 1);
     allocate_buffers(from_start, append_reverse, transition_frames);
+    max_position_ -= transitions_.size();
 
     auto encoder = vs::encoder(
             codec,
@@ -78,7 +80,7 @@ bool ClippingConversion::convert(
 }
 
 void ClippingConversion::copy_buffer(vs::Player *player, uint8_t *buffer) {
-
+    mempcpy(buffer, player->buffer(), player_buffer_size());
 }
 
 void ClippingConversion::encode_from_begin(vs::Player *player, vs::Encoder *encoder) {
@@ -133,9 +135,9 @@ float ClippingConversion::transparency_increment() {
             return 0.35;
         case 1:
             return 0.50;
+        default:
+            return 0;
     }
-
-    return 0;
 }
 
 void ClippingConversion::process(vs::Player *player, vs::Encoder *encoder, bool from_start, bool append_reverse) {
@@ -168,10 +170,9 @@ void ClippingConversion::allocate_buffers(bool from_start, bool append_reverse, 
     }
 
     uint32_t buffer_count = 1;
-    uint32_t buffer_size = 3 * clipping_->player()->info()->w() * clipping_->player()->info()->h();
 
     if (!from_start || append_reverse) {
-        buffer_count = max_memory_ / buffer_size;
+        buffer_count = max_memory_ / player_buffer_size();
         if (buffer_count < 1)
             buffer_count = 1;
     }
@@ -188,14 +189,14 @@ void ClippingConversion::allocate_buffers(bool from_start, bool append_reverse, 
 
     for (uint32_t i = 0; i < buffer_count; ++i) {
         buffers_.push_back(
-            std::shared_ptr<ConversionBuffer>(new ConversionBuffer(buffer_size))
+            std::shared_ptr<ConversionBuffer>(new ConversionBuffer(player_buffer_size()))
         );
     }
 
     transitions_.reserve(transition_frames);
     for (uint32_t i = 0; i < transition_frames; ++i) {
         transitions_.push_back(
-            std::shared_ptr<ConversionBuffer>(new ConversionBuffer(buffer_size))
+            std::shared_ptr<ConversionBuffer>(new ConversionBuffer(player_buffer_size()))
         );
     }
 }
@@ -206,6 +207,8 @@ void ClippingConversion::encode_frame(vs::Encoder *encoder, u_int8_t *buffer) {
     ++current_position_;
 }
 
-
+uint32_t ClippingConversion::player_buffer_size() {
+    return 3 * clipping_->player()->info()->w() * clipping_->player()->info()->h();
+}
 
 }  // namespace vcutter

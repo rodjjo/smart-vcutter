@@ -59,6 +59,7 @@ class ClippingConversion {
     void encode_from_end(vs::Player *player, vs::Encoder *encoder);
     void copy_buffer(vs::Player *player, uint8_t *buffer);
     float transparency_increment();
+    uint32_t player_buffer_size();
 
  private:
     std::atomic<uint8_t*> current_buffer_;
