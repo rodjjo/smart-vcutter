@@ -15,6 +15,7 @@
 #include <FL/Fl_Float_Input.H>
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Box.H>
+#include <FL/Fl_Spinner.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Check_Button.H>
 
@@ -60,6 +61,7 @@ class EncoderWindow {
     void update_filesize();
     double choosen_fps();
     uint32_t choosen_bitrate();
+    uint8_t choosen_transitions();
     double calc_fps();
     double calc_duration();
     int64_t calc_filesize();
@@ -92,7 +94,7 @@ class EncoderWindow {
     Fl_Box *box_file_size_;
     Fl_Check_Button *btn_start_backward_;
     Fl_Check_Button *btn_append_reverse_;
-    Fl_Check_Button *btn_merge_;
+    Fl_Spinner *spn_transitions_;
     Fl_Input *edt_start_;
     Fl_Input *edt_end_;
     Fl_Button *btn_fps_;

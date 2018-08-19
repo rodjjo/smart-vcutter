@@ -29,7 +29,7 @@ const char *kEDT_BITRATE_FIELD = "bitrate";
 const char *kEDT_FPS_FIELD = "fps";
 const char *kCHE_BACKWARD_FIELD = "backward";
 const char *kCHE_REVERSE_FIELD = "reverse";
-const char *kCHE_MERGE_FIELD = "merge";
+const char *kSPN_TRANSITION_FIELD = "transitions";
 const char *kEDT_START_FIELD = "start";
 const char *kEDT_END_FIELD = "end";
 const char *kORI_FPS_FIELD = "original_fps";
@@ -84,7 +84,10 @@ void EncoderWindow::init(History* history, std::shared_ptr<Clipping> clip) {
 
     btn_start_backward_ = new Fl_Check_Button(edt_start_->x(), edt_end_->y() + edt_end_->h() + 1, window_->w() * 0.3, 25, "Start at the end");
     btn_append_reverse_ = new Fl_Check_Button(btn_start_backward_->x() + btn_start_backward_->w() + 5, edt_end_->y() + edt_end_->h() + 1, window_->w() * 0.3, 25, "Append a reverse copy");
-    btn_merge_ = new Fl_Check_Button(btn_append_reverse_->x() + btn_append_reverse_->w() + 5, edt_end_->y() + edt_end_->h() + 1, window_->w() * 0.3, 25, "Combine last and first frames");
+    spn_transitions_ = new Fl_Spinner(btn_append_reverse_->x() + btn_append_reverse_->w() + 5 + window_->w() * 0.3 - 60, edt_end_->y() + edt_end_->h() + 1, 70, 25, "Transition frames");
+    spn_transitions_->range(0, 4);
+    spn_transitions_->step(1);
+    spn_transitions_->value(0);
 
     edt_output_ = new Fl_Input(5, btn_append_reverse_->y() + 20 + btn_append_reverse_->h(), window_->w() - 37, 25, "Output path:");
     edt_output_->align(FL_ALIGN_TOP_LEFT);
@@ -171,7 +174,7 @@ void EncoderWindow::adapt_ui() {
         edt_end_->color(fl_rgb_color(200, 200, 200));
         edt_path_->color(fl_rgb_color(200, 200, 200));
     } else {
-        btn_merge_->hide();
+        spn_transitions_->hide();
     }
 }
 
@@ -182,6 +185,7 @@ void EncoderWindow::execute(History* history, Fl_Window *parent) {
 
 
 std::map<std::string, std::string> EncoderWindow::serialize() {
+    char buffer[40] = "";
     std::map<std::string, std::string> result;
     result[kEDT_PATH_FIELD] = edt_path_->value();
     result[kEDT_OUTPUT_FIELD] = edt_output_->value();
@@ -190,7 +194,10 @@ std::map<std::string, std::string> EncoderWindow::serialize() {
     result[kEDT_FPS_FIELD] = edt_fps_->value();
     result[kCHE_BACKWARD_FIELD] = btn_start_backward_->value() ? "yes" : "no";
     result[kCHE_REVERSE_FIELD] = btn_append_reverse_->value() ? "yes" : "no";
-    result[kCHE_MERGE_FIELD] = btn_merge_->value() ? "yes" : "no";
+
+    snprintf(buffer, sizeof(buffer) - 1, "%d", static_cast<int>(spn_transitions_->value()));
+    result[kSPN_TRANSITION_FIELD] = buffer;
+
     result[kEDT_START_FIELD] = edt_start_->value();
     result[kEDT_END_FIELD] = edt_end_->value();
 
@@ -246,8 +253,11 @@ bool EncoderWindow::deserialize(const string_map_t & data) {
 
     if (data.find(kCHE_REVERSE_FIELD) != data.end())
         btn_append_reverse_->value(data.at(kCHE_REVERSE_FIELD) == "yes");
-    if (data.find(kCHE_MERGE_FIELD) != data.end())
-        btn_merge_->value(data.at(kCHE_MERGE_FIELD) == "yes");
+    if (data.find(kSPN_TRANSITION_FIELD) != data.end()) {
+        int value = 0;
+        sscanf(data.at(kSPN_TRANSITION_FIELD).c_str(), "%d", &value);
+        spn_transitions_->value(value);
+    }
 
     if (data.find(kEDT_START_FIELD) != data.end())
         edt_start_->value(data.at(kEDT_START_FIELD).c_str());
@@ -301,7 +311,6 @@ void EncoderWindow::execute(History* history, Fl_Window *parent, std::shared_ptr
     window->show_modal(parent);
 }
 
-
 void EncoderWindow::restore_session(History* history, Fl_Window *parent) {
     JsonFile session(temp_filepath("vcutter-recovery-ews.json").c_str(), true, true);
 
@@ -319,7 +328,7 @@ void EncoderWindow::restore_session(History* history, Fl_Window *parent) {
         kEDT_FPS_FIELD,
         kCHE_BACKWARD_FIELD,
         kCHE_REVERSE_FIELD,
-        kCHE_MERGE_FIELD,
+        kSPN_TRANSITION_FIELD,
         kEDT_START_FIELD,
         kEDT_END_FIELD,
         kORI_FPS_FIELD,
@@ -503,11 +512,18 @@ void EncoderWindow::action_convert() {
         choosen_fps(),
         btn_start_backward_->value() != 0,
         btn_append_reverse_->value() != 0,
-        btn_merge_->value() ? 1: 0);
+        choosen_transitions());
 
     if (clip_ == clip) {
         save_sugestion();
     }
+}
+
+uint8_t EncoderWindow::choosen_transitions() {
+    if (spn_transitions_->visible() && spn_transitions_->value() > 0 && spn_transitions_->value() <= 4) {
+        return spn_transitions_->value();
+    }
+    return 0;
 }
 
 double EncoderWindow::choosen_fps() {
@@ -591,9 +607,9 @@ void EncoderWindow::update_bitrate_cb(Fl_Widget* widget, void *userdata) {
     window->bitrate_action_src_ = NULL;
 
     if (!window->clip_ || window->btn_append_reverse_->value() != 0) {
-        window->btn_merge_->hide();
+        window->spn_transitions_->hide();
     } else if (window->clip_) {
-        window->btn_merge_->show();
+        window->spn_transitions_->show();
     }
 }
 
@@ -709,7 +725,7 @@ void EncoderWindow::action_video_path() {
     std::string path;
     if (clip_) {
         path = clip_->video_path();
-        btn_merge_->show();
+        spn_transitions_->show();
     } else if (!path_.empty()) {
         path = path_;
         path_.clear();
