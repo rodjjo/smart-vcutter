@@ -136,7 +136,7 @@ void ViewerTexture::draw(const viewport_t &vp, uint32_t vw, uint32_t vh, box_t t
         return;
     }
 
-    for (char i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i) {
         view_coords[i] = vp.frame_to_screen_coords(vw, vh, view_coords[i]);
         view_coords[i].x = view_coords[i].x * (2.0f / vp[2]) - 1.0f;
         view_coords[i].y = (vp[3] - view_coords[i].y) * (2.0f / vp[3]) - 1.0f;

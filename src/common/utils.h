@@ -35,7 +35,7 @@ std::string generate_path(
     int start_number);
 
 /*
-    Erase a file from storage
+    Erase a file from the storage
 */
 bool remove_file(const char *filename);
 
@@ -45,7 +45,7 @@ bool remove_file(const char *filename);
 int str_to_milliseconds(const char *timestr);
 
 /*
-    Generate a temp path to the file name
+    Generate a temp path to the filename
 */
 std::string temp_filepath(const char *filename);
 

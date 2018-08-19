@@ -116,7 +116,7 @@ box_t viewport_t::frame_to_screen_coords(uint32_t video_w, uint32_t video_h, con
 
 float viewport_t::fit(uint32_t *w, uint32_t *h) const {
     if (static_cast<int>(*w) <= vp_[2] && static_cast<int>(*h) <= vp_[3]) {
-        return 1.0;  // no upscale
+        return 1.0;
     }
 
     float fx = vp_[2];
@@ -128,20 +128,25 @@ float viewport_t::fit(uint32_t *w, uint32_t *h) const {
     if (xscale < scale)
         scale = xscale;
 
-    *w *= scale;
-    *h *= scale;
+    uint32_t ww = *w, hh = *h;
 
-    if (*w > fx) {
-        scale *= (fx / *w);
-        *w *= scale;
-        *h *= scale;
+    ww *= scale;
+    hh *= scale;
+
+    if (ww > fx) {
+        scale *= (fx / ww);
+        ww *= scale;
+        hh *= scale;
     }
 
-    if (*h > fy) {
-        scale *= fy / *h;
-        *w *= scale;
-        *h *= scale;
+    if (hh > fy) {
+        scale *= fy / hh;
+        ww *= scale;
+        hh *= scale;
     }
+
+    *w = ww;
+    *h = hh;
 
     return (1.0 / scale);
 }

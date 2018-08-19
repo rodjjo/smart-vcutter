@@ -224,7 +224,7 @@ void PlayerWrapper::pause() {
 
 void PlayerWrapper::conversion_thread(async_conversion_t callback) {
     conversion_finished_.store(false);
-    call_async([this, callback] () {
+    replace_callback([this, callback] () {
         callback(player_.get());
         conversion_finished_.store(true);
     });

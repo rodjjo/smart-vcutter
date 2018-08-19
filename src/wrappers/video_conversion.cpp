@@ -9,6 +9,12 @@
 
 #include "src/wrappers/video_conversion.h"
 
+/*
+    TODO(Rodrigo): Remove this file in version 1.2.0
+
+    The conversion process will be refactored.
+*/
+
 
 namespace vcutter {
 
@@ -44,8 +50,8 @@ VideoConversionWrapper::VideoConversionWrapper(
         double fps,
         bool start_at_end
 ) {
-    start_frame_ = 0;
-    end_frame_ = 0;
+    start_frame_ = clipping->first_frame();
+    end_frame_ = clipping->last_frame();
     clipping_start_at_end_ = start_at_end;
     clipping_ = clipping;
     init(codec_name, target_path, bitrate, fps);
@@ -204,19 +210,23 @@ void VideoConversionWrapper::allocate_buffers() {
         end_frame_ = clipping_->player()->info()->count();
     }
 
-    if (!clipping_->keys().empty() && !append_reverse_ && (start_frame_ <= end_frame_)) {
-        count_.store(interval());
-        return;
-    }
-
-    const unsigned int max_memory = 256 * (1024 * 1024); // 256MB of ram of cache
     buffer_size_ = target_w_ * target_h_ * 3;
-    uint32_t buffered_frames = max_memory / buffer_size_;
-    buffers_.reserve(buffered_frames);
 
     auto buffer_deallocator = [] (unsigned char* data) {
         delete[] data;
     };
+
+
+    if (!clipping_->keys().empty() && !append_reverse_ && (start_frame_ <= end_frame_)) {
+        count_.store(interval());
+            buffers_.push_back(std::shared_ptr<unsigned char>(
+                new unsigned char[buffer_size_], buffer_deallocator));
+        return;
+    }
+
+    const unsigned int max_memory = 256 * (1024 * 1024); // 256MB of ram of cache
+    uint32_t buffered_frames = max_memory / buffer_size_;
+    buffers_.reserve(buffered_frames);
 
     if (clipping_) {
         if (clipping_start_at_end_) {
