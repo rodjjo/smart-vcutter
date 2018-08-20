@@ -222,7 +222,7 @@ void PlayerWrapper::pause() {
     stop_playing();
 }
 
-void PlayerWrapper::assync_context(context_callback_t callback) {
+void PlayerWrapper::async_context(context_callback_t callback) {
     context_finished_.store(false);
     replace_callback([this, callback] () {
         callback(player_.get());
