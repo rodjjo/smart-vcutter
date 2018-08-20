@@ -31,7 +31,7 @@ class ClippingData: private boost::noncopyable {
     std::string saved_path();
     Json::Value serialize();
     uint32_t req_buffer_size();
-    const std::list<ClippingKey> keys() const;
+    const std::list<ClippingKey> & keys() const;
     void remove(uint32_t frame);
     void define_start(uint32_t frame);
     void define_end(uint32_t frame);

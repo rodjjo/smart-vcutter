@@ -135,7 +135,7 @@ void ClippingData::h(uint32_t value) {
     output_h_ = value;
 }
 
-const std::list<ClippingKey> ClippingData::keys() const {
+const std::list<ClippingKey> & ClippingData::keys() const {
     return keys_;
 }
 
