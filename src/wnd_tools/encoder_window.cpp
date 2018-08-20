@@ -484,10 +484,8 @@ void EncoderWindow::action_convert() {
     int start_frame = static_cast<int>((start_time / 1000.0f) * original_fps_ + 0.5);
     int end_frame = static_cast<int>((end_time / 1000.0f) * original_fps_ + 0.5);
 
-    if (btn_start_backward_->value()) {
-        start_frame = start_frame ^ end_frame;
-        end_frame = start_frame ^ end_frame;
-        start_frame = start_frame ^ end_frame;
+    if (start_frame < 1) {
+        start_frame = 1;
     }
 
     const char *format = cmb_formats_->text();
@@ -511,7 +509,7 @@ void EncoderWindow::action_convert() {
     if (!clip) {
         clip.reset(new Clipping(edt_path_->value(), true));
         auto key1 = clip->at(start_frame);
-        auto key2 = clip->at(end_frame);
+        auto key2 = clip->at(end_frame - 1);
 
         clip->add(key1);
         clip->add(key2);

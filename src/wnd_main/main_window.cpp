@@ -210,26 +210,26 @@ void MainWindow::init_main_menu() {
 
 menu_callback_t MainWindow::action_utils_clipping() {
     return [this] (Menu *) {
-        /*
         const char *key = "main-window-project-dir";
         std::string directory = history_[key];
         std::string path = input_prj_file_chooser(&directory);
+
         if (!directory.empty()) {
             history_.set(key, directory.c_str());
         }
+
         if (path.empty()) {
             return;
         }
 
-        Project tmp(path) ;
-        auto clipping = tmp.get_clipping();
-        if (!clipping) {
-            show_error(tmp.get_last_error().c_str());
+        std::shared_ptr<Clipping> clip(new Clipping(path.c_str(), false));
+        if (!clip->good()) {
+            show_error("Could not open the clipping project.");
             return;
         }
 
         cutter_window_->pause();
-        EncoderWindow::execute(&history_, window_, *clipping); */
+        EncoderWindow::execute(&history_, window_, clip);
     };
 }
 

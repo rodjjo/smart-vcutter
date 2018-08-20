@@ -13,3 +13,7 @@ repos:
         entry: python misc/checks.py tests
         language: system
         types: [text]
+  - repo: git@github.com:pre-commit/pre-commit-hooks
+    rev: v1.4.0
+    hooks:
+      - id: no-commit-to-branch
