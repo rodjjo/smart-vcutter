@@ -35,7 +35,7 @@ bool ClippingRef::get_reference_frame(uint32_t *frame) {
     if (!has_ref_) {
         return false;
     }
-    for (auto it = clipping_->keys().begin(); it != clipping_->keys().end(); ++it) {
+    for (auto it = clipping_->keys().cbegin(); it != clipping_->keys().cend(); ++it) {
         if (it->frame == ref_frame_) {
             *frame = ref_frame_;
             return true;
