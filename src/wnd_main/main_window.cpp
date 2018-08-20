@@ -154,14 +154,6 @@ void MainWindow::init_main_menu() {
     menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
     menu_edit_->add("Output properties", "", action_edit_properties(), 0, GROUP_CLIPPING_OPEN, xpm::note_16x16);
 
-    // TODO(add alignment function in clipping keeper):
-    // menu_edit_->add("Align/Top", "", action_edit_align_top(), 0, GROUP_CLIPPING_OPEN);
-    // menu_edit_->add("Align/bottom", "", action_edit_align_bottom(), 0, GROUP_CLIPPING_OPEN);
-    // menu_edit_->add("Align/Left", "", action_edit_align_left(), 0, GROUP_CLIPPING_OPEN);
-    // menu_edit_->add("Align/Right", "", action_edit_align_right(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
-    // menu_edit_->add("Align/All", "", action_edit_align_all(), 0, GROUP_CLIPPING_OPEN);
-
-
     menu_tools_.reset(new Menu(menu_, "&Tools"));
     menu_tools_->add("Magic rule/Create", "^m", action_create_ref(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::magic_16x16);
     menu_tools_->add("Magic rule/Use", "^g", action_use_ref(), 0, GROUP_CLIPPING_OPEN, xpm::green_pin_16x16);
@@ -192,9 +184,15 @@ void MainWindow::init_main_menu() {
     menu_tools_->add("Position/Centralize", "#c", action_edit_clear_position(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Position/Center Vertical", "", action_edit_position_vertical(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Position/Ceter Horizontal", "", action_edit_position_horizontal(), 0, GROUP_CLIPPING_OPEN);
+
+    menu_tools_->add("Align/Top", "", action_edit_align_top(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/bottom", "", action_edit_align_bottom(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/Left", "", action_edit_align_left(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/Right", "", action_edit_align_right(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/All", "", action_edit_align_all(), 0, GROUP_CLIPPING_OPEN);
+
     menu_tools_->add("All keys/Rotate +180 degree", "", action_transformation_180(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("All keys/Scale", "", action_transformation_scale(), 0, GROUP_CLIPPING_OPEN);
-
 
     menu_utils_.reset(new Menu(menu_, "Utils"));
 

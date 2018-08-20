@@ -84,7 +84,7 @@ void ClippingFrame::positionate_right(uint32_t frame) {
         return;
     }
 
-    key.px += player_->info()->w() - bb[1].x;
+    key.px = player_->info()->w() - (bb[1].x - bb[0].x) / 2;
     add(key);
 }
 
@@ -110,7 +110,7 @@ void ClippingFrame::positionate_bottom(uint32_t frame) {
         return;
     }
 
-    key.py += player_->info()->h() - bb[2].y;
+    key.py = player_->info()->h() - (bb[2].y - bb[1].y) / 2;
     add(key);
 }
 
@@ -134,14 +134,13 @@ void ClippingFrame::fit_vertical(uint32_t frame) {
     center_vertical(frame);
 
     auto key = at(frame);
-    auto b = key.clipping_box(this).occupied_area();
+    auto b = key.constrained(this).clipping_box(this).occupied_area();
 
     if (b[0].y > 0) {
-        int count = (h() / static_cast<double>(b[2].y - b[0].y)) + 1;
+        int count = (h() / static_cast<double>(b[2].y - b[0].y)) + 2;
         key.scale *= count;
         add(key);
     }
-
 
     normalize_scale(frame);
 }
@@ -150,10 +149,10 @@ void ClippingFrame::fit_horizontal(uint32_t frame) {
     center_horizontal(frame);
 
     auto key = at(frame);
-    auto b = key.clipping_box(this).occupied_area();
+    auto b = key.constrained(this).clipping_box(this).occupied_area();
 
     if (b[0].y > 0) {
-        int count = (w() / static_cast<double>(b[1].x - b[0].x)) + 1;
+        int count = (w() / static_cast<double>(b[1].x - b[0].x)) + 2;
         key.scale *= count;
         add(key);
     }
