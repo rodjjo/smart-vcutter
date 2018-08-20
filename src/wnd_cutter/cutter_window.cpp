@@ -1155,6 +1155,7 @@ void CutterWindow::seek_bar_callback(Fl_Widget* widget, void *userdata) {
 void CutterWindow::redraw_frame(bool update_key_list) {
     if (update_key_list) {
         update_clipping_list();
+        viewer_->update_preview(clipping_.get());
     }
 
     clipping_editor_->redraw();

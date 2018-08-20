@@ -35,7 +35,7 @@ class PlayerWrapper {
     bool is_playing_interval();
     bool frame_changed(bool clear_flag);
     bool context_finished();
-    void assync_context(context_callback_t callback);
+    void async_context(context_callback_t callback);
   private:
     void replace_callback(async_callback_t callback);
     void wait_callback();

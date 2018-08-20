@@ -55,7 +55,7 @@ bool ClippingConversion::convert(
         from_start,
         append_reverse
     ] () -> bool {
-        clipping_->player()->assync_context(
+        clipping_->player()->async_context(
             [
                 this,
                 encoder,

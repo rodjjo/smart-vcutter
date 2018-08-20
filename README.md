@@ -127,20 +127,3 @@ python3 misc/debdist.py
 * Rename functions and variables to make the project easy to understand.
 * Create documentations.
 * Add tests when it's possible.
-
-## My TODO list
-
-* Create a user manual.
-* Generate a .deb package.
-* Add option to run after setup.
-* Add option to associate files on setup.
-* Disable menus when all submenus are disabled (except root ones).
-* Remove repeated code and create functions.
-* Iconize all menu items with xpm.
-* Create a preview window to show how the generated file will be.
-* Remove some scale and rotation menus and let the user choose the value.
-* Detect up-scale offer to resize the output optionally.
-* Create an about dialog to show colaborators.
-* Increase the plaback speed button width.
-* Add support to aligment operations (makes the selected box fit horizontally, fit vertically and other operations)
-* When drag a file to the main window, try to open it. (if fltk supports)
