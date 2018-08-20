@@ -181,13 +181,13 @@ ClippingKey ClippingData::compute_interpolation(uint32_t frame) {
     bool clockwise = true;
 
     if (left.frame < right.frame) {
-        float frame_diff = frame - left.frame;
+        double frame_diff = frame - left.frame;
 
         double interpolation = (1.0f / static_cast<double>(right.frame - left.frame)) * frame_diff;
 
-        float difx = (right.px - left.px);
-        float dify = (right.py - left.py);
-        float difs = (right.scale - left.scale);
+        double difx = static_cast<int>(right.px) - static_cast<int>(left.px);
+        double dify = static_cast<int>(right.py) - static_cast<int>(left.py);
+        double difs = (right.scale - left.scale);
         double difa = right.angle() - left.angle();
 
         if (difa < 0) {
