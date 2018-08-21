@@ -1221,7 +1221,7 @@ void CutterWindow::update_buffers(bool frame_changed) {
         clipping_->wh(clipping_->player()->info()->w(), clipping_->player()->info()->h());
     }
 
-    if (clipping_->keys().size() != static_cast<u_int32_t>(key_list_->size())) {
+    if (clipping_->keys().size() != static_cast<uint32_t>(key_list_->size())) {
         update_clipping_list();
     }
 }
