@@ -295,7 +295,7 @@ void ClippingConversion::allocate_buffers(bool from_start, bool append_reverse, 
     }
 }
 
-void ClippingConversion::encode_frame(vs::Encoder *encoder, u_int8_t *buffer) {
+void ClippingConversion::encode_frame(vs::Encoder *encoder, uint8_t *buffer) {
     encoder->frame(buffer);
     ++current_position_;
 }
