@@ -512,6 +512,27 @@ BOOST_AUTO_TEST_CASE(test_clipping_normalize_scale) {
 }
 
 
+BOOST_AUTO_TEST_CASE(test_interpolation_decrement_position) {
+    ClippingDataStub clipping;
+
+    vcutter::ClippingKey k1;
+    k1.frame = 120;
+    k1.px = 100;
+    k1.py = 100;
+    clipping.add(k1);
+
+    k1.frame = 122;
+    k1.px = 98;
+    k1.py = 98;
+    clipping.add(k1);
+
+    k1 = clipping.at(121);
+
+    BOOST_CHECK_EQUAL(k1.px, 99);
+    BOOST_CHECK_EQUAL(k1.py, 99);
+}
+
+
 /*
 
     functions to test:
