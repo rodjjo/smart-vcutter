@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <map>
 #include <cstring>
 #include "tests/testing.h"
@@ -8,8 +11,8 @@ namespace xpm {
 
 extern std::map<xpm_t, const char * const*> xpm_db;
 
-}  // namespace vcutter
 }  // namespace xpm
+}  // namespace vcutter
 
 
 BOOST_AUTO_TEST_SUITE(xpm_test_suite)

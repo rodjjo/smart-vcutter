@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include "tests/testing.h"
 #include "src/common/point.h"
 
@@ -24,7 +27,7 @@ BOOST_AUTO_TEST_CASE(test_point_to_axis) {
 BOOST_AUTO_TEST_CASE(test_point_rotate) {
     vcutter::point_t p(0, -10);
     p.rotate(45);
-    
+
     BOOST_CHECK_CLOSE(p.x, 7, 2);
     BOOST_CHECK_CLOSE(p.y, -7, 2);
 }
@@ -32,7 +35,7 @@ BOOST_AUTO_TEST_CASE(test_point_rotate) {
 BOOST_AUTO_TEST_CASE(test_point_rotated) {
     vcutter::point_t p(0, -10);
     auto p2 = p.rotated(45);
-    
+
     BOOST_CHECK_CLOSE(p2.x, 7, 2);
     BOOST_CHECK_CLOSE(p2.y, -7, 2);
 }
@@ -40,7 +43,7 @@ BOOST_AUTO_TEST_CASE(test_point_rotated) {
 BOOST_AUTO_TEST_CASE(test_point_trunc_precision) {
     vcutter::point_t p(1.888, 2.999);
     p.trunc_precision();
-    
+
     BOOST_CHECK_EQUAL(p.x, 1);
     BOOST_CHECK_EQUAL(p.y, 2);
 }

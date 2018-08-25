@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <cstdio>
 #include <memory>
 
@@ -53,7 +56,7 @@ class ClippingDataStub: public vcutter::ClippingData {
         return 1280;
     }
 
-    virtual uint32_t default_h() override {
+    uint32_t default_h() override {
         return 720;
     }
 

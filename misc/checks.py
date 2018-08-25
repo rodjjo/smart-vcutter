@@ -16,6 +16,8 @@ def get_sources(dir):
 def get_all_sources():
     for f in get_sources('src'):
         yield f
+    for f in get_sources('tests/test_vcutter'):
+        yield f
 
 
 def cpplint_the_sources():

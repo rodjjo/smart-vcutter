@@ -1,6 +1,9 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <fstream>
 #include <algorithm>
-#include <string> 
+#include <string>
 #include <boost/filesystem.hpp>
 #include "tests/testing.h"
 #include "src/common/utils.h"
@@ -74,16 +77,16 @@ BOOST_AUTO_TEST_CASE(test_seconds_to_str) {
 
     vcutter::seconds_to_str(temp_buffer, 30, 3600);
     BOOST_CHECK_EQUAL(temp_buffer, std::string("01:00:00"));
-    
+
     vcutter::seconds_to_str(temp_buffer, 30, 60);
     BOOST_CHECK_EQUAL(temp_buffer, std::string("00:01:00"));
-    
+
     vcutter::seconds_to_str(temp_buffer, 30, 1);
     BOOST_CHECK_EQUAL(temp_buffer, std::string("00:00:01"));
 
     vcutter::seconds_to_str(temp_buffer, 30, 3661);
     BOOST_CHECK_EQUAL(temp_buffer, std::string("01:01:01"));
-    
+
     vcutter::seconds_to_str(temp_buffer, 30, 3661.009, true);
     BOOST_CHECK_EQUAL(temp_buffer, std::string("01:01:01,009"));
 }
