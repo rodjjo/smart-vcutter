@@ -1273,6 +1273,10 @@ void CutterWindow::action_toggle_compare_wink() {
     wink_comparison_ = wink_comparison_ == false;
 }
 
+bool CutterWindow::compare_alternate() {
+    return wink_comparison_;
+}
+
 bool CutterWindow::compare_enabled() {
     return clipping_editor_->compare_box();
 }

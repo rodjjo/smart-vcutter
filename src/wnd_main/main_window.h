@@ -10,7 +10,6 @@
 #include <FL/Fl_Menu_Window.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Select_Browser.H>
-#include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Native_File_Chooser.H>
@@ -19,9 +18,9 @@
 #include "src/wnd_cutter/cutter_window.h"
 #include "src/data/history.h"
 #include "src/wnd_main/menu.h"
+#include "src/wnd_main/menu_bar.h"
 
 namespace vcutter {
-
 
 class MainWindow : Fl_Menu_Window {
  public:
@@ -51,6 +50,7 @@ class MainWindow : Fl_Menu_Window {
 
  private:
     void enable_controls();
+    menu_callback_t action_menu_popup();
     menu_callback_t action_file_open();
     menu_callback_t action_file_open_project();
     menu_callback_t action_file_save();
@@ -130,7 +130,9 @@ class MainWindow : Fl_Menu_Window {
  private:
     History history_;
     Fl_Window *window_;
-    Fl_Menu_Bar *menu_;
+    MenuBar *menu_;
+    Menu *menu_compare_;
+    Menu *menu_compare_alt_;
     Fl_Group *bottom_group_;
     std::unique_ptr<Menu> menu_file_;
     std::unique_ptr<Menu> menu_edit_;

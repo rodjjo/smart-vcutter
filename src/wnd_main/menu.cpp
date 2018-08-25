@@ -6,23 +6,23 @@
 
 namespace vcutter {
 
-Menu::Menu(Fl_Menu_Bar *menu_bar, const char *label) {
+Menu::Menu(MenuBar *menu_bar, const char *label) {
     init(menu_bar, label);
 }
 
-Menu::Menu(Fl_Menu_Bar *menu_bar, const char *label, menu_callback_t callback) {
+Menu::Menu(MenuBar *menu_bar, const char *label, menu_callback_t callback) {
     init(menu_bar, label);
     callback_ = callback;
 }
 
-Menu::Menu(Fl_Menu_Bar *menu_bar, const char *path, int group, menu_callback_t callback) {
+Menu::Menu(MenuBar *menu_bar, const char *path, int group, menu_callback_t callback) {
     group_ = group;
     path_ = path;
     callback_ = callback;
     menu_bar_ = menu_bar;
 }
 
-void Menu::init(Fl_Menu_Bar *menu_bar, const char *label) {
+void Menu::init(MenuBar *menu_bar, const char *label) {
     path_ = label;
     group_ = 0;
     menu_bar_ = menu_bar;
@@ -82,17 +82,27 @@ void Menu::update_path(Fl_Menu_Item *item) {
     }
 }
 
+Fl_Menu_Item *Menu::menu_item() {
+    return const_cast<Fl_Menu_Item *>(menu_bar_->find_item((path_.c_str())));
+}
+
 void Menu::enable(bool enabled, int group) {
+    if (group == 0) {
+        auto item = menu_item();
+        if (!item) {
+            return;
+        }
+        if (enabled) {
+            item->activate();
+        } else {
+            item->deactivate();
+        }
+        return;
+    }
+
     for (auto m : items_) {
         if (m->group_ == group || (m->group_ & group) != 0) {
-            auto instance = const_cast<Fl_Menu_Item *>(menu_bar_->find_item((m->path_.c_str())));
-            if (instance) {
-                if (enabled) {
-                    instance->activate();
-                } else {
-                    instance->deactivate();
-                }
-            }
+            m->enable(enabled, 0);
         }
         m->enable(enabled, group);
     }
@@ -100,6 +110,20 @@ void Menu::enable(bool enabled, int group) {
 
 void Menu::menu_action(Fl_Widget *widget, void *user_data) {
     static_cast<Menu*>(user_data)->callback_();
+}
+
+void Menu::check(bool checked) {
+    auto item = menu_item();
+
+    if (!item) {
+        return;
+    }
+
+    if (checked) {
+        item->set();
+    } else {
+        item->clear();
+    }
 }
 
 }  // namespace vcutter

@@ -126,10 +126,11 @@ void MainWindow::init_controls() {
 }
 
 void MainWindow::init_main_menu() {
-    menu_ = new Fl_Menu_Bar(0, 0, default_window_width(), kMENU_HEIGHT);
+    menu_ = new MenuBar(default_window_width(), kMENU_HEIGHT, action_menu_popup());
     menu_->align(FL_ALIGN_TOP);
 
     menu_file_.reset(new Menu(menu_, "&File"));
+
     menu_file_->add("&Open video", "^o", action_file_open(), 0, 0, xpm::film_16x16);
     menu_file_->add("Open &project", "^a", action_file_open_project(), 0, 0, xpm::directory_16x16);
     menu_file_->add("&Save project", "", action_file_save(), 0, GROUP_CLIPPING_OPEN, xpm::save_16x16);
@@ -150,8 +151,8 @@ void MainWindow::init_main_menu() {
 
     menu_edit_->add("Swap width and height", "", action_transformation_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
     menu_edit_->add("Clear all keys", "", action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
-    menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), 0, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
-    menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
+    menu_compare_ = menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
+    menu_compare_alt_ = menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER | FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
     menu_edit_->add("Output properties", "", action_edit_properties(), 0, GROUP_CLIPPING_OPEN, xpm::note_16x16);
 
     menu_tools_.reset(new Menu(menu_, "&Tools"));
@@ -206,6 +207,14 @@ void MainWindow::init_main_menu() {
     menu_help_->add("Get help", "", action_help(), 0, 0, xpm::help_16x16);
 }
 
+menu_callback_t MainWindow::action_menu_popup() {
+    return [this] () {
+        menu_compare_alt_->enable(cutter_window_->visible() && cutter_window_->compare_enabled());
+        menu_compare_->check(cutter_window_->compare_enabled());
+        menu_compare_alt_->check(cutter_window_->compare_alternate());
+    };
+}
+
 menu_callback_t MainWindow::action_utils_clipping() {
     return [this] () {
         const char *key = "main-window-project-dir";
@@ -241,8 +250,6 @@ menu_callback_t MainWindow::action_utils_convert_current() {
         EncoderWindow::execute(&history_, window_, cutter_window_->get_video_path());
     };
 }
-
-
 
 menu_callback_t MainWindow::action_edit_copy() {
     return [this] () {
