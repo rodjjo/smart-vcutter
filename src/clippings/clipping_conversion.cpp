@@ -259,7 +259,7 @@ void ClippingConversion::allocate_buffers(bool from_start, bool append_reverse, 
         buffer_count -= transition_frames;
     }
 
-    buffers_.reset(new FifoBuffer(player_buffer_size(), player_buffer_size() * buffer_count));
+    buffers_.reset(new FifoBuffer(player_buffer_size(), buffer_count));
 
     transitions_.reserve(transition_frames);
     for (uint32_t i = 0; i < transition_frames; ++i) {
