@@ -18,7 +18,6 @@ ClippingConversion::ClippingConversion(
     prog_handler_ = prog_handler;
     current_position_.store(0);
     max_position_ = 1;
-    buffer_index_ = 0;
 }
 
 bool ClippingConversion::convert(
@@ -31,7 +30,6 @@ bool ClippingConversion::convert(
     uint8_t transition_frames
 ) {
     current_position_.store(0);
-    buffer_index_ = 0;
     max_position_ = clipping_->duration_frames() * (append_reverse ? 2 : 1);
     allocate_buffers(from_start, append_reverse, transition_frames);
     max_position_ -= transitions_.size();
@@ -76,9 +74,8 @@ bool ClippingConversion::convert(
 
     prog_handler_->set_buffer(NULL, 0, 0);
     prog_handler_->set_progress(100, 100);
-
     render_buffer_.reset();
-    buffers_.clear();
+    buffers_.reset();
     transitions_.clear();
 
     return result;
@@ -123,23 +120,6 @@ void ClippingConversion::encode_from_begin(vs::Player *player, vs::Encoder *enco
     } while(player->position() < clipping_->last_frame() && !prog_handler_->canceled());
 }
 
-bool ClippingConversion::buffer_push(vs::Player *player) {
-    if (buffer_index_ < buffers_.size()) {
-        copy_buffer(player, buffers_[buffer_index_]->data);
-        ++buffer_index_;
-        return true;
-    }
-    return false;
-}
-
-uint8_t *ClippingConversion::buffer_pop() {
-    if (buffer_index_) {
-        --buffer_index_;
-        return buffers_[buffer_index_]->data;
-    }
-    return NULL;
-}
-
 void ClippingConversion::encode_from_end(vs::Player *player, vs::Encoder *encoder) {
     uint32_t remaining = clipping_->duration_frames() - transitions_.size();
 
@@ -156,7 +136,7 @@ void ClippingConversion::encode_from_end(vs::Player *player, vs::Encoder *encode
     bool accumulating = true;
     uint32_t save_pos = 0;
     uint32_t use_pos = 0;
-    uint32_t position = clipping_->last_frame() - buffers_.size();
+    uint32_t position = clipping_->last_frame() - buffers_->count();
     uint32_t render_pos = clipping_->last_frame();
     float alpha = transparency_increment();
 
@@ -168,7 +148,7 @@ void ClippingConversion::encode_from_end(vs::Player *player, vs::Encoder *encode
 
     do {
         if (accumulating) {
-            if (accumulate_count < clipping_->duration_frames() && buffer_push(player)) {
+            if (accumulate_count < clipping_->duration_frames() && buffers_->push(player->buffer())) {
                 ++accumulate_count;
                 player->next();
                 continue;
@@ -176,15 +156,15 @@ void ClippingConversion::encode_from_end(vs::Player *player, vs::Encoder *encode
             accumulating = false;
         }
 
-        buffer = buffer_pop();
+        buffer = buffers_->pop();
 
         if (!buffer) {
             if (accumulate_count >= clipping_->duration_frames()) {
                 break;
             }
 
-            if (position - buffers_.size() >= clipping_->first_frame()) {
-                position -= buffers_.size();
+            if (position - buffers_->count() >= clipping_->first_frame()) {
+                position -= buffers_->count();
             } else {
                 position = clipping_->first_frame();
             }
@@ -249,10 +229,10 @@ void ClippingConversion::process(vs::Player *player, vs::Encoder *encoder, bool 
 }
 
 void ClippingConversion::allocate_buffers(bool from_start, bool append_reverse, uint8_t transition_frames) {
-    buffers_.clear();
+    buffers_.reset();
     transitions_.clear();
 
-    render_buffer_.reset(new ConversionBuffer(clipping_->req_buffer_size()));
+    render_buffer_.reset(new CharBuffer(clipping_->req_buffer_size()));
 
     if (append_reverse) {
         // not necessary because reversed copies are smooth
@@ -279,18 +259,12 @@ void ClippingConversion::allocate_buffers(bool from_start, bool append_reverse, 
         buffer_count -= transition_frames;
     }
 
-    buffers_.reserve(buffer_count);
-
-    for (uint32_t i = 0; i < buffer_count; ++i) {
-        buffers_.push_back(
-            std::shared_ptr<ConversionBuffer>(new ConversionBuffer(player_buffer_size()))
-        );
-    }
+    buffers_.reset(new FifoBuffer(player_buffer_size(), player_buffer_size() * buffer_count));
 
     transitions_.reserve(transition_frames);
     for (uint32_t i = 0; i < transition_frames; ++i) {
         transitions_.push_back(
-            std::shared_ptr<ConversionBuffer>(new ConversionBuffer(player_buffer_size()))
+            std::shared_ptr<CharBuffer>(new CharBuffer(player_buffer_size()))
         );
     }
 }

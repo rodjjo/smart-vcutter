@@ -10,6 +10,7 @@
 #include <atomic>
 #include <boost/core/noncopyable.hpp>
 #include "src/clippings/clipping.h"
+#include "src/common/buffers.h"
 #include "src/vstream/video_stream.h"
 
 namespace vcutter {
@@ -23,19 +24,6 @@ class ProgressHandler {
     virtual bool canceled() = 0;
     virtual void set_buffer(uint8_t *buffer, uint32_t w, uint32_t h) = 0;
     virtual void set_progress(uint32_t progress, uint32_t max_progress) = 0;
-};
-
-class ConversionBuffer: private boost::noncopyable {
-  public:
-    ConversionBuffer(uint32_t size) {
-        data = new uint8_t[size];
-    }
-
-    ~ConversionBuffer() {
-        delete[] data;
-    }
-
-    uint8_t *data;
 };
 
 class ClippingConversion: private boost::noncopyable {
@@ -64,14 +52,11 @@ class ClippingConversion: private boost::noncopyable {
  private:
     std::atomic<uint32_t> current_position_;
     uint32_t max_position_;
-    uint32_t buffer_index_;
-    bool buffer_push(vs::Player *player);
-    uint8_t *buffer_pop();
-    std::unique_ptr<ConversionBuffer> render_buffer_;
+    std::unique_ptr<CharBuffer> render_buffer_;
     std::shared_ptr<Clipping> clipping_;
     std::shared_ptr<ProgressHandler> prog_handler_;
-    std::vector<std::shared_ptr<ConversionBuffer> > buffers_;
-    std::vector<std::shared_ptr<ConversionBuffer> > transitions_;
+    std::unique_ptr<FifoBuffer> buffers_;
+    std::vector<std::shared_ptr<CharBuffer> > transitions_;
     uint32_t max_memory_;
 };
 
