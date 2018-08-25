@@ -17,23 +17,25 @@
 
 namespace vcutter {
 
-class Menu;
-
-typedef std::function<void(Menu *menu_item)> menu_callback_t;
+typedef std::function<void()> menu_callback_t;
 
 class Menu {
  public:
-   Menu(Fl_Menu_Bar *menu_bar, const char *label);
-   virtual ~Menu();
-   Menu *add(const char *label, const char *shortcut, menu_callback_t callback, int flags=0, int group=0, xpm::xpm_t icon=xpm::no_image);
-   void enable(bool enabled, int group = 0);
+    Menu(Fl_Menu_Bar *menu_bar, const char *label, menu_callback_t callback);
+    Menu(Fl_Menu_Bar *menu_bar, const char *label);
+    virtual ~Menu();
+    Menu *add(const char *label, const char *shortcut, menu_callback_t callback, int flags=0, int group=0, xpm::xpm_t icon=xpm::no_image);
+    void enable(bool enabled, int group = 0);
  private:
-   Menu(int group, menu_callback_t callback);
-   static void menu_action(Fl_Widget *widget, void *user_data);
+    Menu(Fl_Menu_Bar *menu_bar, const char *path, int group, menu_callback_t callback);
+    static void menu_action(Fl_Widget *widget, void *user_data);
+    void init(Fl_Menu_Bar *menu_bar, const char *label);
+    void define_image(xpm::xpm_t icon);
+    void define_root_callback();
+    void update_path(Fl_Menu_Item *item);
 
  private:
     std::string path_;
-    int index_;
     Fl_Menu_Bar *menu_bar_;
     int group_;
     menu_callback_t callback_;
