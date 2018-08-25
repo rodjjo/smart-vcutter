@@ -103,6 +103,7 @@ class CutterWindow {
     void action_toggle_compare();
     void action_toggle_compare_wink();
     bool compare_enabled();
+    bool compare_alternate();
 
     void resize_controls();
  private:

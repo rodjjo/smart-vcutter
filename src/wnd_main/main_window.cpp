@@ -126,10 +126,11 @@ void MainWindow::init_controls() {
 }
 
 void MainWindow::init_main_menu() {
-    menu_ = new Fl_Menu_Bar(0, 0, default_window_width(), kMENU_HEIGHT);
+    menu_ = new MenuBar(default_window_width(), kMENU_HEIGHT, action_menu_popup());
     menu_->align(FL_ALIGN_TOP);
 
     menu_file_.reset(new Menu(menu_, "&File"));
+
     menu_file_->add("&Open video", "^o", action_file_open(), 0, 0, xpm::film_16x16);
     menu_file_->add("Open &project", "^a", action_file_open_project(), 0, 0, xpm::directory_16x16);
     menu_file_->add("&Save project", "", action_file_save(), 0, GROUP_CLIPPING_OPEN, xpm::save_16x16);
@@ -150,8 +151,8 @@ void MainWindow::init_main_menu() {
 
     menu_edit_->add("Swap width and height", "", action_transformation_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
     menu_edit_->add("Clear all keys", "", action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
-    menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), 0, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
-    menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
+    menu_compare_ = menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
+    menu_compare_alt_ = menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER | FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
     menu_edit_->add("Output properties", "", action_edit_properties(), 0, GROUP_CLIPPING_OPEN, xpm::note_16x16);
 
     menu_tools_.reset(new Menu(menu_, "&Tools"));
@@ -206,8 +207,16 @@ void MainWindow::init_main_menu() {
     menu_help_->add("Get help", "", action_help(), 0, 0, xpm::help_16x16);
 }
 
+menu_callback_t MainWindow::action_menu_popup() {
+    return [this] () {
+        menu_compare_alt_->enable(cutter_window_->visible() && cutter_window_->compare_enabled());
+        menu_compare_->check(cutter_window_->compare_enabled());
+        menu_compare_alt_->check(cutter_window_->compare_alternate());
+    };
+}
+
 menu_callback_t MainWindow::action_utils_clipping() {
-    return [this] (Menu *) {
+    return [this] () {
         const char *key = "main-window-project-dir";
         std::string directory = history_[key];
         std::string path = input_prj_file_chooser(&directory);
@@ -232,7 +241,7 @@ menu_callback_t MainWindow::action_utils_clipping() {
 }
 
 menu_callback_t MainWindow::action_utils_convert_current() {
-    return [this] (Menu *) {
+    return [this] () {
         if (!cutter_window_->visible()) {
             return;
         }
@@ -242,131 +251,129 @@ menu_callback_t MainWindow::action_utils_convert_current() {
     };
 }
 
-
-
 menu_callback_t MainWindow::action_edit_copy() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->copy();
     };
 }
 
 menu_callback_t MainWindow::action_edit_paste() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->past();
     };
 }
 
 menu_callback_t MainWindow::action_edit_paste_rotation() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->past_rotation();
     };
 }
 
 menu_callback_t MainWindow::action_edit_paste_scale() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->past_scale();
     };
 }
 
 menu_callback_t MainWindow::action_edit_paste_position() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->past_position(true, true);
     };
 }
 
 menu_callback_t MainWindow::action_edit_paste_positionx() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->past_position(true, false);
     };
 }
 
 menu_callback_t MainWindow::action_edit_paste_positiony() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->past_position(false, true);
     };
 }
 
 
 menu_callback_t MainWindow::action_edit_clear_rotation() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->clear_rotation();
     };
 }
 
 menu_callback_t MainWindow::action_edit_clear_scale() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->clear_scale();
     };
 }
 
 menu_callback_t MainWindow::action_edit_clear_position() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->clear_position();
     };
 }
 
 menu_callback_t MainWindow::action_edit_scale_half() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->scale_half();
     };
 }
 
 menu_callback_t MainWindow::action_edit_scale_half2() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->scale_half_2();
     };
 }
 
 menu_callback_t MainWindow::action_edit_scale2() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->scale_2();
     };
 }
 
 menu_callback_t MainWindow::action_edit_scale3() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->scale_3();
     };
 }
 
 menu_callback_t MainWindow::action_rotation_90() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->rotation_90();
     };
 }
 
 menu_callback_t MainWindow::action_rotation_180() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->rotation_180();
     };
 }
 
 menu_callback_t MainWindow::action_rotation_270() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->rotation_270();
     };
 }
 
 menu_callback_t MainWindow::action_transformation_swap_wh() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->swap_wh();
     };
 }
 
 menu_callback_t MainWindow::action_transformation_180() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->rotate_all_180();
     };
 }
 
 menu_callback_t MainWindow::action_transformation_scale() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->scale_all();
     };
 }
 
 menu_callback_t MainWindow::action_file_close() {
-    return [this] (Menu*) {
+    return [this] () {
         if (ask_for_save()) {
             cutter_window_->close();
         }
@@ -376,7 +383,7 @@ menu_callback_t MainWindow::action_file_close() {
 }
 
 menu_callback_t MainWindow::action_file_generate() {
-    return [this] (Menu*) {
+    return [this] () {
         if (cutter_window_->visible()) {
             cutter_window_->pause();
             EncoderWindow::execute(&history_, window_, cutter_window_->to_clipping());
@@ -438,7 +445,7 @@ void MainWindow::open_video_or_project(const std::string& path) {
 
 
 menu_callback_t MainWindow::action_file_open_project() {
-    return [this] (Menu*) {
+    return [this] () {
         if (!ask_for_save()) {
             return;
         }
@@ -453,7 +460,7 @@ menu_callback_t MainWindow::action_file_open_project() {
 }
 
 menu_callback_t MainWindow::action_file_open() {
-    return [this] (Menu*) {
+    return [this] () {
         if (!ask_for_save()) {
             return;
         }
@@ -475,181 +482,181 @@ bool MainWindow::save_project(bool create_new_file) {
 }
 
 menu_callback_t MainWindow::action_file_save() {
-    return [this] (Menu*) {
+    return [this] () {
         save_project(false);
     };
 }
 
 menu_callback_t MainWindow::action_file_save_as() {
-    return [this] (Menu*) {
+    return [this] () {
         save_project(true);
     };
 }
 
 menu_callback_t MainWindow::action_create_ref() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_create_ref();
     };
 }
 
 menu_callback_t MainWindow::action_toggle_compare_box() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_toggle_compare();
     };
 }
 
 menu_callback_t MainWindow::action_wink_comparison() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_toggle_compare_wink();
     };
 }
 
 menu_callback_t MainWindow::action_use_ref() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_use_ref(true, true, true, true);
     };
 }
 
 menu_callback_t MainWindow::action_edit_use_ref_rotation() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_use_ref(false, false, true, false);
     };
 }
 
 menu_callback_t MainWindow::action_edit_use_ref_drag() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_use_ref(true, true, false, false);
     };
 }
 
 menu_callback_t MainWindow::action_edit_use_ref_dragx() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_use_ref(true, false, false, false);
     };
 }
 
 menu_callback_t MainWindow::action_edit_use_ref_dragy() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_use_ref(false, true, false, false);
     };
 }
 
 menu_callback_t MainWindow::action_edit_use_ref_scale() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_use_ref(false, false, false, true);
     };
 }
 
 menu_callback_t MainWindow::action_edit_use_ref_no_rotate() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_use_ref(true, true, false, true);
     };
 }
 
 menu_callback_t MainWindow::action_edit_use_ref_no_scale() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_use_ref(true, true, true, false);
     };
 }
 
 menu_callback_t MainWindow::action_edit_use_ref_no_drag() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_use_ref(false, false, true, true);
     };
 }
 
 menu_callback_t MainWindow::action_edit_go_ref() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_goto_reference();
     };
 }
 
 menu_callback_t MainWindow::action_clear_ref() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_clear_ref();
     };
 }
 
 menu_callback_t MainWindow::action_edit_properties() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_properties();
     };
 }
 
 menu_callback_t MainWindow::action_position_top() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_position_top();
     };
 }
 
 menu_callback_t MainWindow::action_position_left() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_position_left();
     };
 }
 
 menu_callback_t MainWindow::action_position_right() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_position_right();
     };
 }
 
 menu_callback_t MainWindow::action_position_bottom() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_position_bottom();
     };
 }
 
 menu_callback_t MainWindow::action_edit_position_vertical() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_position_vertical();
     };
 }
 
 menu_callback_t MainWindow::action_edit_position_horizontal() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_position_horizontal();
     };
 }
 
 menu_callback_t MainWindow::action_edit_align_top() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_align_top();
     };
 }
 
 menu_callback_t MainWindow::action_edit_align_bottom() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_align_bottom();
     };
 }
 
 menu_callback_t MainWindow::action_edit_align_left() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_align_left();
     };
 }
 
 menu_callback_t MainWindow::action_edit_align_right() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_align_right();
     };
 }
 
 menu_callback_t MainWindow::action_edit_align_all() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_align_all();
     };
 }
 
 menu_callback_t MainWindow::action_edit_norm_scale() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_norm_scale();
     };
 }
 
 menu_callback_t MainWindow::action_clear_keys() {
-    return [this] (Menu*) {
+    return [this] () {
         cutter_window_->action_clear_keys();
     };
 }
@@ -673,7 +680,7 @@ bool MainWindow::ask_for_save() {
 }
 
 menu_callback_t MainWindow::action_file_exit() {
-    return [this] (Menu *) {
+    return [this] () {
         if (!ask_for_save()) {
             return;
         }
@@ -689,26 +696,26 @@ void MainWindow::prevent_close_cb(Fl_Widget *menu, void *this_window) {
 }
 
 menu_callback_t MainWindow::action_utils_convert() {
-    return [this] (Menu *) {
+    return [this] () {
         cutter_window_->pause();
         EncoderWindow::execute(&history_, window_);
     };
 }
 
 menu_callback_t MainWindow::action_about() {
-    return [this] (Menu *) {
+    return [this] () {
         show_error("Rodrigo A. Araujo\nrodjjo@@gmail.com");
     };
 }
 
 menu_callback_t MainWindow::action_help() {
-    return [this] (Menu *) {
+    return [this] () {
         show_error("The help manual is in development");
     };
 }
 
 menu_callback_t MainWindow::action_tip() {
-    return [this] (Menu *) {
+    return [this] () {
         show_error("The tips window will be available soon");
     };
 }

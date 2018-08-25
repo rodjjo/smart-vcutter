@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <memory>
 
 #include "tests/testing.h"
@@ -37,7 +40,7 @@ BOOST_FIXTURE_TEST_SUITE(clipping_key_test_suite, SuiteFixture)
 
 BOOST_AUTO_TEST_CASE(test_clipping_key_constructors) {
     Json::Value data;
-    
+
     data["frame"] = 120;
     data["px"] = 2;
     data["py"] = 3;
@@ -95,7 +98,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_y_constraints) {
     k1.scale = 1;
     k1.px = clp->player()->info()->w() / 2;
     k1.py = clp->player()->info()->h() / 4;
-    
+
     auto k2 = k1.constrained(clp.get());
     BOOST_CHECK_CLOSE(k2.scale, 0.5, 1);
 
@@ -109,9 +112,9 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_individual_x_constraints) {
     k1.scale = 1;
     k1.px = clp->player()->info()->w() / 4;
     k1.py = clp->player()->info()->h() / 2;
-    
+
     auto k2 = k1.constrained(clp.get());
-    
+
     k2 = k1.constrained(clp.get());
     BOOST_CHECK_CLOSE(k2.scale, 0.5, 1);
 
@@ -126,9 +129,9 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_individual_xy_constraints) {
     k1.scale = 1;
     k1.px = clp->player()->info()->w() / 8;
     k1.py = clp->player()->info()->h() / 4;
-    
+
     auto k2 = k1.constrained(clp.get());
-    
+
     k2 = k1.constrained(clp.get());
     BOOST_CHECK_CLOSE(k2.scale, 0.2463, 1);
 }
@@ -140,12 +143,12 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_individual_scaled_constraints) {
     k1.scale = 5;
     clp->w(200);
     clp->h(350);
-    
+
     k1.px = clp->player()->info()->w() / 2.0;
     k1.py = clp->player()->info()->h() / 2.0;
-    
+
     auto k2 = k1.constrained(clp.get());
-    
+
     k2 = k1.constrained(clp.get());
     BOOST_CHECK_CLOSE(k2.scale, 2, 1);
 }
@@ -156,9 +159,9 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_individual_rotated_constraints) {
     k1.angle(90);
     k1.px = clp->player()->info()->w() / 2.0;
     k1.py = clp->player()->info()->h() / 2.0;
-   
+
     auto k2 = k1.constrained(clp.get());
-    
+
     k2 = k1.constrained(clp.get());
     BOOST_CHECK_CLOSE(k2.scale, 0.56111, 1);
 }
@@ -170,9 +173,9 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_individual_rotscale_constraints) {
     k1.angle(45);
     k1.px = clp->player()->info()->w() / 2.0;
     k1.py = clp->player()->info()->h() / 2.0;
-   
+
     auto k2 = k1.constrained(clp.get());
-    
+
     k2 = k1.constrained(clp.get());
     BOOST_CHECK_CLOSE(k2.scale, 0.5075, 1);
 }
@@ -185,9 +188,9 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_individual_rotscale_y_constraints) {
     k1.angle(45);
     k1.px = clp->player()->info()->w() / 2.0;
     k1.py = clp->player()->info()->h() / 4.0;
-   
+
     auto k2 = k1.constrained(clp.get());
-    
+
     k2 = k1.constrained(clp.get());
     BOOST_CHECK_CLOSE(k2.scale, 0.4522, 1);
 }
@@ -199,9 +202,9 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_individual_rotscale_x_constraints) {
     k1.angle(45);
     k1.px = clp->player()->info()->w() / 4.0;
     k1.py = clp->player()->info()->h() / 2.0;
-   
+
     auto k2 = k1.constrained(clp.get());
-    
+
     k2 = k1.constrained(clp.get());
     BOOST_CHECK_CLOSE(k2.scale, 0.2537, 1);
 }

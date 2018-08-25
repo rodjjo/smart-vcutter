@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include "tests/testing.h"
 #include "src/common/box.h"
 

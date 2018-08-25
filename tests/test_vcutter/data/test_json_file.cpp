@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2018 by Rodrigo Antonio de Araujo
+ */
 #include <cstdio>
 #include <fstream>
 #include <boost/filesystem.hpp>
@@ -31,7 +34,7 @@ BOOST_AUTO_TEST_CASE(test_json_file_delete) {
 
         vcutter::JsonFile jf1(pre_existing_file, true);
         vcutter::JsonFile jf2(post_existing_file, true);
-        
+
         std::ofstream of2(post_existing_file);
         of2 << "{}";
         of2.close();
@@ -45,7 +48,7 @@ BOOST_AUTO_TEST_CASE(test_json_file_delete) {
 
 BOOST_AUTO_TEST_CASE(test_json_file_saves) {
     vcutter::JsonFile jf1("data/tmp/test_json_file.json", true);
-    
+
     Json::Value root;
     root["that"] = "works";
     jf1.save(root);
