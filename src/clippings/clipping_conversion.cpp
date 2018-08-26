@@ -7,6 +7,7 @@
 #include <Fl/Fl.H>
 #include "src/clippings/clipping_iterator.h"
 #include "src/clippings/clipping_conversion.h"
+#include "src/common/utils.h"
 
 namespace vcutter {
 
@@ -50,6 +51,10 @@ bool ClippingConversion::convert(
 
     auto encoder = vs::encoder(codec, path, clipping_->w(), clipping_->h(), 1000, fps * 1000, bitrate);
 
+    if (encoder->error()) {
+        return false;
+    }
+
     bool result = prog_handler_->wait([this, encoder{encoder.get()}, from_start, append_reverse, transition_frames] () -> bool {
         ClippingIterator clip_iter(clipping_.get(), max_memory_);
 
@@ -73,6 +78,8 @@ bool ClippingConversion::convert(
 
         prog_handler_->set_buffer(NULL, 0, 0);
         prog_handler_->set_progress(100, 100);
+
+        return true;
     });
 
     return result;
