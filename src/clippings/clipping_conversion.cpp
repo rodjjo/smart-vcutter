@@ -79,25 +79,8 @@ bool ClippingConversion::convert(
 }
 
 void ClippingConversion::define_transition_settings(uint32_t transition_count) {
-    switch(transition_count) {
-        case 5:
-            current_alpha_ = 0.15;
-        break;
-        case 4:
-            current_alpha_ = 0.20;
-        break;
-        case 3:
-            current_alpha_ = 0.25;
-        break;
-        case 2:
-            current_alpha_ = 0.35;
-        break;
-        case 1:
-            current_alpha_ = 0.50;
-        break;
-        default:
-            current_alpha_ = 0;
-    }
+    const float intervals[6] = {0, 0.5, 0.35, 0.25, 0.2, 0.15};
+    current_alpha_ = intervals[transition_count % 6];
     alpha_increment_ = current_alpha_;
 }
 
@@ -105,6 +88,10 @@ void ClippingConversion::combine_buffers(uint8_t *primary_buffer, uint8_t *secon
     cv::Mat output(clipping_->h(), clipping_->w(), CV_8UC3, primary_buffer);
     cv::Mat source(clipping_->h(), clipping_->w(), CV_8UC3, secondary_buffer);
     cv::addWeighted(source, current_alpha_, output, 1.0 - current_alpha_, 0.0, output);
+    current_alpha_ += alpha_increment_;
+    if (current_alpha_ > 1.0) {
+        current_alpha_ = 1;
+    }
 }
 
 void ClippingConversion::encode_frame(vs::Encoder *encoder, uint8_t *buffer) {
