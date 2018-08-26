@@ -36,12 +36,15 @@ class ClippingKey {
         bool should_scale,
         bool should_positionate_x,
         bool should_positionate_y) const;
+    std::string description(const ClippingKey *previous = NULL) const;
+
 private:
     void limit_scale(ClippingFrame *owner);
 
 private:
     friend class ClippingData;
     bool computed_;
+
 public:
     unsigned int frame;
     uint32_t px;

@@ -2,6 +2,7 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 #include <cmath>
+#include <sstream>
 #include "src/clippings/clipping_key.h"
 #include "src/clippings/clipping_frame.h"
 
@@ -206,5 +207,33 @@ ClippingKey ClippingKey::magic_tool(
     return result;
 }
 
+std::string ClippingKey::description(const ClippingKey *previous) const {
+    const char *empty_block = "             ";
+    char temp[40] = "";
+    std::stringstream ss;
+
+    snprintf(temp, sizeof(temp), "%-10u ", frame);
+    ss << temp;
+
+    if (!previous || scale != previous->scale) {
+        snprintf(temp, sizeof(temp), "s: %-5.1f ", scale);
+        ss << temp;
+    } else {
+        ss << empty_block;
+    }
+
+    if (!previous || angle_ != previous->angle_) {
+        snprintf(temp, sizeof(temp), "r: %-5.1lf ", angle());
+        ss << temp;
+    } else {
+        ss << empty_block;
+    }
+
+    if (!previous || previous->px != px || previous->py != py) {
+        ss << " (x:" << px << ", y:" << py << ") ";
+    }
+
+    return ss.str();
+}
 
 }  // namespace vcutter

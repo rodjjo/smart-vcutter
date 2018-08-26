@@ -1126,10 +1126,10 @@ void CutterWindow::update_clipping_list() {
     uint32_t ref_frame = -1;
     clipping_->ref().get_reference_frame(&ref_frame);
 
-    for (auto k : clipping_->keys()) {
-        snprintf(temp_buffer, sizeof(temp_buffer),
-            "%07u s:%4.2f r:%4.2lf (%u, %u) %s", k.frame, k.scale, k.angle(), k.px, k.py, ref_frame == k.frame ? " <r" : "");
-        key_list_->add(temp_buffer);
+    const ClippingKey *previous = NULL;
+    for (const auto & k : clipping_->keys()) {
+        key_list_->add((k.description(previous) + (ref_frame == k.frame ? " <r" : "")).c_str());
+        previous = &k;
     }
 
     if (size == static_cast<uint32_t>(key_list_->size()) && selection != 0) {
