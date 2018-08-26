@@ -66,7 +66,7 @@ void ClippingIterator::iterate(bool from_start, bool append_reverse, frame_itera
 }
 
 void ClippingIterator::from_begin(vs::Player *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb) {
-    uint32_t frame_count = to_frame - from_frame;
+    uint32_t frame_count = (to_frame - from_frame) + 1;
 
     player->seek_frame(from_frame);
     while (frame_count) {
@@ -84,7 +84,7 @@ void ClippingIterator::from_begin(vs::Player *player, bool append_reverse, uint3
 }
 
 void ClippingIterator::from_end(vs::Player *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb) {
-    uint32_t frame_count = to_frame - from_frame;
+    uint32_t frame_count = (to_frame - from_frame) + 1;
     uint32_t position = to_frame;
     bool flushing = false;
 
@@ -93,23 +93,21 @@ void ClippingIterator::from_end(vs::Player *player, bool append_reverse, uint32_
 
         position -= buffers_->count();
         if (position > to_frame) {
-            position = 0;
-        }
-
-        if (position < from_frame) {
+            position = from_frame;
+        } else if (position < from_frame) {
             position = from_frame;
         }
 
         player->seek_frame(position);
 
-        if (!flushing) {
+        while (!flushing) {
             --frame_count;
             render_frame(render_buffer_->data);
             player->next();
             if (buffers_->push(render_buffer_->data)) {
                 continue;
             }
-            flushing = false;
+            flushing = true;
         }
 
         if (!flush_buffers(cb)) {
@@ -152,13 +150,13 @@ void ClippingIterator::grab_all(vs::Player *player, uint32_t from_frame, uint32_
     }
 
     player->seek_frame(from_frame);
-    uint32_t frame_count = (to_frame - from_frame);
+    uint32_t frame_count = (to_frame - from_frame) + 1;
 
     do {
         frames_.push_back(std::shared_ptr<CharBuffer>(new CharBuffer(clipping_->req_buffer_size())));
         render_frame((*frames_.rbegin())->data);
         player->next();
-    } while (frames_.size() >= frame_count);
+    } while (frames_.size() < frame_count);
 
     report_frames(forward, append_reverse, cb);
 }

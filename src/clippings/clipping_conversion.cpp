@@ -59,15 +59,20 @@ bool ClippingConversion::convert(
         ClippingIterator clip_iter(clipping_.get(), max_memory_);
 
         clip_iter.iterate(from_start, append_reverse, [this, encoder, transition_frames] (uint8_t *buffer) -> bool {
+
             if (transitions_.size() < transition_frames) {
                 transitions_.push_back(std::shared_ptr<CharBuffer>(new CharBuffer(clipping_->req_buffer_size())));
                 memcpy((*transitions_.rbegin())->data, buffer, clipping_->req_buffer_size());
+                return !prog_handler_->canceled();
             } else if (transition_frames != 0 && current_position_.load() + transition_frames >= max_position_) {
                 auto it = transitions_.begin();
                 std::advance(it, current_position_.load() + transition_frames - max_position_);
                 combine_buffers(buffer, (*it)->data);
             }
+
             encode_frame(encoder, buffer);
+
+            return !prog_handler_->canceled();
         });
 
         while (!clip_iter.finished()) {
