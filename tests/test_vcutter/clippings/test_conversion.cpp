@@ -75,7 +75,7 @@ BOOST_FIXTURE_TEST_CASE(test_convert_append, TestConversionFixture) {
 }
 
 
-BOOST_FIXTURE_TEST_CASE(test_convert_max_memory, TestConversionFixture) {
+BOOST_FIXTURE_TEST_CASE(test_convert_transition_frames, TestConversionFixture) {
     std::shared_ptr<vcutter::ProgressHandler> prog(new ProgressHandlerMock());
     clp->wh(80, 82);
     clp->add(clp->at(1));
@@ -90,10 +90,6 @@ BOOST_FIXTURE_TEST_CASE(test_convert_max_memory, TestConversionFixture) {
     BOOST_CHECK_EQUAL(clip.w(), 80);
     BOOST_CHECK_EQUAL(clip.h(), 82);
     BOOST_CHECK_EQUAL(clip.last_frame(), 15);
-}
-
-BOOST_FIXTURE_TEST_CASE(test_convert_from_max_memory, TestConversionFixture) {
-
 }
 
 BOOST_AUTO_TEST_SUITE_END()
