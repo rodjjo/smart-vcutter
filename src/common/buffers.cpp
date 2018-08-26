@@ -20,7 +20,7 @@ bool FifoBuffer::push(uint8_t *buffer) {
     if (buffer_index_ < buffers_.size()) {
         memcpy(buffers_[buffer_index_]->data, buffer, individual_size_);
         ++buffer_index_;
-        return true;
+        return buffer_index_ < buffers_.size();
     }
     return false;
 }
