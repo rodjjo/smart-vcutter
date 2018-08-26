@@ -41,6 +41,10 @@ bool ClippingConversion::convert(
     transitions_.clear();
     last_encoded_buffer_.store(NULL);
 
+    if (transition_frames > max_position_) {
+        transition_frames = max_position_ - 1;
+    }
+
     if (append_reverse) {
         transition_frames = 0;
     } else if (transition_frames > 5) {
@@ -63,6 +67,7 @@ bool ClippingConversion::convert(
             if (transitions_.size() < transition_frames) {
                 transitions_.push_back(std::shared_ptr<CharBuffer>(new CharBuffer(clipping_->req_buffer_size())));
                 memcpy((*transitions_.rbegin())->data, buffer, clipping_->req_buffer_size());
+                ++current_position_;
                 return !prog_handler_->canceled();
             } else if (transition_frames != 0 && current_position_.load() + transition_frames >= max_position_) {
                 auto it = transitions_.begin();
@@ -71,7 +76,6 @@ bool ClippingConversion::convert(
             }
 
             encode_frame(encoder, buffer);
-
             return !prog_handler_->canceled();
         });
 

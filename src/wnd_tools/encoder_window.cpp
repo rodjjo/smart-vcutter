@@ -531,7 +531,7 @@ void EncoderWindow::action_convert() {
 }
 
 uint8_t EncoderWindow::choosen_transitions() {
-    if (spn_transitions_->visible() && spn_transitions_->value() > 0 && spn_transitions_->value() <= 4) {
+    if (spn_transitions_->visible() && spn_transitions_->value() > 0) {
         return spn_transitions_->value();
     }
     return 0;
