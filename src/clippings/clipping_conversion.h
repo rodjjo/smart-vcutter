@@ -7,6 +7,7 @@
 #include <inttypes.h>
 #include <functional>
 #include <memory>
+#include <list>
 #include <atomic>
 #include <boost/core/noncopyable.hpp>
 #include "src/clippings/clipping.h"
@@ -40,23 +41,20 @@ class ClippingConversion: private boost::noncopyable {
         uint8_t transition_frames=0);
 
  private:
-    void allocate_buffers(bool from_start, bool append_reverse, uint8_t transition_frames);
-    void process(vs::Player *player, vs::Encoder *encoder, bool from_start, bool append_reverse);
     void encode_frame(vs::Encoder *encoder, uint8_t *buffer);
-    void encode_from_begin(vs::Player *player, vs::Encoder *encoder);
-    void encode_from_end(vs::Player *player, vs::Encoder *encoder);
     void copy_buffer(vs::Player *player, uint8_t *buffer);
     float transparency_increment();
-    uint32_t player_buffer_size();
-
+    void combine_buffers(uint8_t *primary_buffer, uint8_t *secondary_buffer);
+    void define_transition_settings(uint32_t transition_count);
  private:
     std::atomic<uint32_t> current_position_;
+    std::atomic<uint8_t*> last_encoded_buffer_;
     uint32_t max_position_;
-    std::unique_ptr<CharBuffer> render_buffer_;
     std::shared_ptr<Clipping> clipping_;
     std::shared_ptr<ProgressHandler> prog_handler_;
-    std::unique_ptr<FifoBuffer> buffers_;
-    std::vector<std::shared_ptr<CharBuffer> > transitions_;
+    std::list<std::shared_ptr<CharBuffer> > transitions_;
+    float current_alpha_;
+    float alpha_increment_;
     uint32_t max_memory_;
 };
 

@@ -94,7 +94,7 @@ void EncoderWindow::init(History* history, std::shared_ptr<Clipping> clip) {
     btn_start_backward_ = new Fl_Check_Button(edt_start_->x(), edt_end_->y() + edt_end_->h() + 1, window_->w() * 0.3, 25, "Start at the end");
     btn_append_reverse_ = new Fl_Check_Button(btn_start_backward_->x() + btn_start_backward_->w() + 5, edt_end_->y() + edt_end_->h() + 1, window_->w() * 0.3, 25, "Append a reverse copy");
     spn_transitions_ = new Fl_Spinner(btn_append_reverse_->x() + btn_append_reverse_->w() + 5 + window_->w() * 0.3 - 60, edt_end_->y() + edt_end_->h() + 1, 70, 25, "Transition frames");
-    spn_transitions_->range(0, 4);
+    spn_transitions_->range(0, 5);
     spn_transitions_->step(1);
     spn_transitions_->value(0);
 
@@ -531,7 +531,7 @@ void EncoderWindow::action_convert() {
 }
 
 uint8_t EncoderWindow::choosen_transitions() {
-    if (spn_transitions_->visible() && spn_transitions_->value() > 0 && spn_transitions_->value() <= 4) {
+    if (spn_transitions_->visible() && spn_transitions_->value() > 0) {
         return spn_transitions_->value();
     }
     return 0;

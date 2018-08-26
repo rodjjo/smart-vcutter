@@ -17,8 +17,7 @@ BOOST_AUTO_TEST_CASE(test_buffer_push_pop) {
     uint8_t temp2[32] = "test";
 
     BOOST_CHECK(buffer.push(temp1));
-    BOOST_CHECK(buffer.push(temp2));
-    BOOST_CHECK(buffer.push(temp1) == false);
+    BOOST_CHECK(buffer.push(temp2) == false);
 
     uint8_t *first = buffer.pop();
     uint8_t *last = buffer.pop();

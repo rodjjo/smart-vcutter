@@ -20,9 +20,8 @@ class ClippingRender: public ClippingFrame {
     void render(ClippingKey key, uint32_t target_w, uint32_t target_h, uint8_t *buffer);
     void render(ClippingKey key, uint8_t *buffer);
     void render(ClippingKey key, uint8_t *player_buffer, uint8_t *buffer);
-    void render(ClippingKey key, float alpha, uint8_t *player_buffer, uint8_t *buffer);
  private:
-    void render(ClippingKey key, uint8_t *source_buffer, uint32_t target_w, uint32_t target_h, uint8_t *buffer, float alpha=1.0);
+    void render(ClippingKey key, uint8_t *source_buffer, uint32_t target_w, uint32_t target_h, uint8_t *buffer);
 };
 
 }  // namespace vcutter
