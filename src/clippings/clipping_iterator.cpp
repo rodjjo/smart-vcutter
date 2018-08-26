@@ -78,8 +78,8 @@ void ClippingIterator::from_begin(vs::Player *player, bool append_reverse, uint3
         --frame_count;
     }
 
-    if (append_reverse) {
-        from_end(player, false, from_frame, to_frame, cb);
+    if (append_reverse && from_frame + 2 <= to_frame) {
+        from_end(player, false, from_frame + 1, to_frame - 1, cb);
     }
 }
 
@@ -119,8 +119,8 @@ void ClippingIterator::from_end(vs::Player *player, bool append_reverse, uint32_
         return;
     }
 
-    if (append_reverse) {
-        from_begin(player, false, from_frame, to_frame, cb);
+    if (append_reverse && from_frame + 1<= to_frame) {
+        from_begin(player, false, from_frame + 1, to_frame - 1, cb);
     }
 }
 
@@ -163,13 +163,19 @@ void ClippingIterator::grab_all(vs::Player *player, uint32_t from_frame, uint32_
 
 void ClippingIterator::report_frames(bool forward, bool append_reverse, frame_iteration_cb_t cb) {
     if (forward) {
-        for (auto & f : frames_) {
-            if (!cb(f->data)) {
+        for (auto it = frames_.begin(); it != frames_.end(); ++it) {
+            if (append_reverse && (it == frames_.begin() || (*it)->data == (*frames_.rbegin())->data)) {
+                continue;
+            }
+            if (!cb((*it)->data)) {
                 return;
             }
         }
     } else {
         for (auto it = frames_.rbegin(); it != frames_.rend(); ++it) {
+            if (append_reverse && (it == frames_.rbegin() || (*it)->data == (*frames_.begin())->data)) {
+                continue;
+            }
             if (!cb((*it)->data)) {
                 return;
             }

@@ -71,7 +71,7 @@ BOOST_FIXTURE_TEST_CASE(test_convert_append, TestConversionFixture) {
 
     BOOST_CHECK_EQUAL(clip.w(), 80);
     BOOST_CHECK_EQUAL(clip.h(), 82);
-    BOOST_CHECK_EQUAL(clip.last_frame(), clp->last_frame() * 2);
+    BOOST_CHECK_EQUAL(clip.last_frame(), clp->last_frame() * 2 - 2);
 }
 
 
