@@ -43,7 +43,7 @@ class CutterWindow {
     bool save_as(History * history);
 
     void close();
-    std::shared_ptr<Clipping> to_clipping();
+    std::shared_ptr<ClippingRender> to_clipping();
     void poll_actions();
     bool visible();
     bool modified();

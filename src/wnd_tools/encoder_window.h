@@ -32,11 +32,11 @@ typedef std::map<std::string,std::string> string_map_t;
 class EncoderWindow {
  public:
     explicit EncoderWindow(History* history);
-    EncoderWindow(History *history, std::shared_ptr<Clipping> clip);
+    EncoderWindow(History *history, std::shared_ptr<ClippingRender> clip);
     EncoderWindow(History *history, const std::string & path);
     virtual ~EncoderWindow();
     static void execute(History* history, Fl_Window *parent);
-    static void execute(History* history, Fl_Window *parent, std::shared_ptr<Clipping> clip);
+    static void execute(History* history, Fl_Window *parent, std::shared_ptr<ClippingRender> clip);
     static void execute(History* history, Fl_Window *parent, const std::string& path);
     static void restore_session(History* history, Fl_Window *parent);
 
@@ -44,7 +44,7 @@ class EncoderWindow {
     string_map_t serialize();
     bool deserialize(const string_map_t & data);
 
-    void init(History* history, std::shared_ptr<Clipping> clip);
+    void init(History* history, std::shared_ptr<ClippingRender> clip);
     void show_modal(Fl_Window *parent);
     void fill_animation_info(int video_frame_count);
     void copy_original_fps();
@@ -71,7 +71,7 @@ class EncoderWindow {
     void sugest_output_file();
     const char *sugest_extension();
  private:
-    std::shared_ptr<Clipping> clip_;
+    std::shared_ptr<ClippingRender> clip_;
     int frame_w_;
     int frame_h_;
     std::string path_;

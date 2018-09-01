@@ -59,6 +59,7 @@ bool JsonFile::save() {
     if (ofile.is_open()) {
         Json::FastWriter writer;
         ofile << writer.write(root_);
+        loaded_ = true;
         return true;
     }
 

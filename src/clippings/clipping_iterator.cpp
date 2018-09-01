@@ -6,7 +6,7 @@
 
 namespace vcutter {
 
-ClippingIterator::ClippingIterator(Clipping *clipping, uint32_t max_memory) {
+ClippingIterator::ClippingIterator(ClippingRender *clipping, uint32_t max_memory) {
     max_memory_ = max_memory;
     clipping_ = clipping;
     render_buffer_.reset(new CharBuffer(clipping_->req_buffer_size()));

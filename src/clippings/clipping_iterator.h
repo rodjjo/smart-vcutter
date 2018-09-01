@@ -17,7 +17,7 @@ typedef std::function<bool(uint8_t *output_buffer)> frame_iteration_cb_t;
 
 class ClippingIterator {
  public:
-    ClippingIterator(Clipping *clipping, uint32_t max_memory);
+    ClippingIterator(ClippingRender *clipping, uint32_t max_memory);
     virtual ~ClippingIterator() {}
     void iterate(bool from_start, bool append_reverse, frame_iteration_cb_t cb);
     bool finished();
@@ -31,7 +31,7 @@ class ClippingIterator {
     bool flush_buffers(frame_iteration_cb_t cb);
 
  private:
-    Clipping *clipping_;
+    ClippingRender *clipping_;
     std::unique_ptr<FifoBuffer> buffers_;
     std::unique_ptr<CharBuffer> render_buffer_;
     std::list<std::shared_ptr<CharBuffer> > frames_;
