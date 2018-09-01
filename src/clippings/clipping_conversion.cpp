@@ -7,6 +7,7 @@
 #include <Fl/Fl.H>
 #include "src/clippings/clipping_iterator.h"
 #include "src/clippings/clipping_conversion.h"
+#include "src/wnd_common/common_dialogs.h"
 #include "src/common/utils.h"
 
 namespace vcutter {
@@ -56,6 +57,7 @@ bool ClippingConversion::convert(
     auto encoder = vs::encoder(codec, path, clipping_->w(), clipping_->h(), 1000, fps * 1000, bitrate);
 
     if (encoder->error()) {
+        show_error(encoder->error());
         return false;
     }
 
