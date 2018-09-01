@@ -10,6 +10,7 @@
 #include <list>
 #include <atomic>
 #include <boost/core/noncopyable.hpp>
+#include "src/clippings/clipping_iterator.h"
 #include "src/clippings/clipping.h"
 #include "src/common/buffers.h"
 #include "src/vstream/video_stream.h"
@@ -40,19 +41,34 @@ class ClippingConversion: private boost::noncopyable {
         bool append_reverse=false,
         uint8_t transition_frames=0);
 
+    const char * error() const;
  private:
-    void encode_frame(vs::Encoder *encoder, uint8_t *buffer);
+    void encode_frame(uint8_t *buffer);
     void copy_buffer(vs::Player *player, uint8_t *buffer);
     float transparency_increment();
     void combine_buffers(uint8_t *primary_buffer, uint8_t *secondary_buffer);
-    void define_transition_settings(uint32_t transition_count);
+    void define_transition_settings(uint8_t *transition_frames);
+    bool prepare_conversion(
+        const char *codec,
+        const char *path,
+        uint32_t bitrate,
+        double fps,
+        bool append_reverse
+    );
+    void start_conversion(bool from_start, bool append_reverse, uint8_t transition_frames);
+    void unprepare_conversion();
+    bool wait_conversion();
+
  private:
     std::atomic<uint32_t> current_position_;
     std::atomic<uint8_t*> last_encoded_buffer_;
     uint32_t max_position_;
+    std::shared_ptr<vs::Encoder> encoder_;
     std::shared_ptr<ClippingRender> clipping_;
     std::shared_ptr<ProgressHandler> prog_handler_;
+    std::unique_ptr<ClippingIterator> clip_iter_;
     std::list<std::shared_ptr<CharBuffer> > transitions_;
+    std::string error_;
     float current_alpha_;
     float alpha_increment_;
     uint32_t max_memory_;

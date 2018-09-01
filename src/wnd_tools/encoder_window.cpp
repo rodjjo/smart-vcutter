@@ -525,6 +525,10 @@ void EncoderWindow::action_convert() {
         btn_append_reverse_->value() != 0,
         choosen_transitions());
 
+    if (conv.error()) {
+        show_error(conv.error());
+    }
+
     if (clip_ == clip) {
         save_sugestion();
     }
