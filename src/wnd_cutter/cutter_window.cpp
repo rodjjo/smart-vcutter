@@ -412,8 +412,8 @@ void CutterWindow::open_video() {
 
 }
 
-std::shared_ptr<Clipping> CutterWindow::to_clipping() {
-    return clipping_;
+std::shared_ptr<ClippingRender> CutterWindow::to_clipping() {
+    return clipping_->clone();
 }
 
 void CutterWindow::button_callback(Fl_Widget* widget, void *userdata) {
