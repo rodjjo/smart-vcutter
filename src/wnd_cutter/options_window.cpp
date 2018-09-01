@@ -145,6 +145,9 @@ void CutterOptionsWindow::sync_wh(const void *who) {
     if (who == edt_width_) {
         copy_number(edt_width_->value(), &v);
         v = (v / scale) + 0.5;
+        if (v % 2 != 0) {
+            v += 1;
+        }
         snprintf(buffer, sizeof(buffer) - 1, "%d", v);
         edt_height_->value(buffer);
     } else {
@@ -175,6 +178,8 @@ bool CutterOptionsWindow::validate_inputs(bool show_errors) {
         error = "The width must be multiple of 2";
     } else if (!copy_number(edt_height_->value(), &h)) {
         error = "You must type a valid width";
+    } else if (h % 2) {
+        error = "The height must be multiple of 2";
     } else if (w > max_w_) {
         snprintf(buffer, sizeof(buffer), "The max allowed with is %u", max_w_);
         error = buffer;
