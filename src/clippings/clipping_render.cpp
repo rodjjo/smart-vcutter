@@ -138,4 +138,15 @@ void ClippingRender::render(ClippingKey key, uint8_t *buffer) {
         buffer);
 }
 
+std::shared_ptr<ClippingRender> ClippingRender::clone() {
+  std::shared_ptr<ClippingRender> clipping(new ClippingRender(video_path().c_str(), true));
+  clipping->wh(w(), h());
+
+  for (const auto & k : keys()) {
+    clipping->add(k);
+  }
+
+  return clipping;
+}
+
 }  // namespace vcutter

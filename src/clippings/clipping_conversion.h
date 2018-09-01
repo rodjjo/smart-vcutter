@@ -29,7 +29,7 @@ class ProgressHandler {
 
 class ClippingConversion: private boost::noncopyable {
  public:
-    ClippingConversion(std::shared_ptr<ProgressHandler> prog_handler, std::shared_ptr<Clipping> clipping, uint32_t max_memory=419430400);
+    ClippingConversion(std::shared_ptr<ProgressHandler> prog_handler, std::shared_ptr<ClippingRender> clipping, uint32_t max_memory=419430400);
 
     bool convert(
         const char *codec,
@@ -50,7 +50,7 @@ class ClippingConversion: private boost::noncopyable {
     std::atomic<uint32_t> current_position_;
     std::atomic<uint8_t*> last_encoded_buffer_;
     uint32_t max_position_;
-    std::shared_ptr<Clipping> clipping_;
+    std::shared_ptr<ClippingRender> clipping_;
     std::shared_ptr<ProgressHandler> prog_handler_;
     std::list<std::shared_ptr<CharBuffer> > transitions_;
     float current_alpha_;

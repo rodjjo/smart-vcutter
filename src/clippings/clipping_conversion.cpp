@@ -14,7 +14,7 @@ namespace vcutter {
 
 ClippingConversion::ClippingConversion(
     std::shared_ptr<ProgressHandler> prog_handler,
-    std::shared_ptr<Clipping> clipping,
+    std::shared_ptr<ClippingRender> clipping,
     uint32_t max_memory
 ) {
     max_memory_ = max_memory;

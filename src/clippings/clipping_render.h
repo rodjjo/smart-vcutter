@@ -6,6 +6,7 @@
 #define SRC_CLIPPINGS_CLIPPING_RENDER_H_
 
 #include <inttypes.h>
+#include <memory>
 
 #include "src/wrappers/video_player.h"
 #include "src/clippings/clipping_frame.h"
@@ -20,6 +21,7 @@ class ClippingRender: public ClippingFrame {
     void render(ClippingKey key, uint32_t target_w, uint32_t target_h, uint8_t *buffer);
     void render(ClippingKey key, uint8_t *buffer);
     void render(ClippingKey key, uint8_t *player_buffer, uint8_t *buffer);
+    std::shared_ptr<ClippingRender> clone();
  private:
     void render(ClippingKey key, uint8_t *source_buffer, uint32_t target_w, uint32_t target_h, uint8_t *buffer);
 };

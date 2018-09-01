@@ -50,7 +50,7 @@ bool should_replace(const char *path) {
     return true;
 }
 
-EncoderWindow::EncoderWindow(History *history, std::shared_ptr<Clipping> clip) {
+EncoderWindow::EncoderWindow(History *history, std::shared_ptr<ClippingRender> clip) {
     init(history, clip);
 }
 
@@ -64,7 +64,7 @@ EncoderWindow::EncoderWindow(History* history, const std::string& path) {
 }
 
 
-void EncoderWindow::init(History* history, std::shared_ptr<Clipping> clip) {
+void EncoderWindow::init(History* history, std::shared_ptr<ClippingRender> clip) {
     history_ = history;
     clip_ = clip;
 
@@ -292,7 +292,7 @@ bool EncoderWindow::deserialize(const string_map_t & data) {
             return false;
         }
 
-        clip_.reset(new Clipping(&clipping_data));
+        clip_.reset(new ClippingRender(&clipping_data));
 
         if (!clip_->good()) {
             clip_.reset();
@@ -305,7 +305,7 @@ bool EncoderWindow::deserialize(const string_map_t & data) {
     return true;
 }
 
-void EncoderWindow::execute(History* history, Fl_Window *parent, std::shared_ptr<Clipping> clip) {
+void EncoderWindow::execute(History* history, Fl_Window *parent, std::shared_ptr<ClippingRender> clip) {
     if (clip->video_path().empty()) {
         show_error("The clip must define a path to de video");
         return;
@@ -504,10 +504,10 @@ void EncoderWindow::action_convert() {
     session.save();
 
     std::shared_ptr<ProgressHandler> prog(new ProgressWindow(true));
-    std::shared_ptr<Clipping> clip = clip_;
+    std::shared_ptr<ClippingRender> clip = clip_;
 
     if (!clip) {
-        clip.reset(new Clipping(edt_path_->value(), true));
+        clip.reset(new ClippingRender(edt_path_->value(), true));
         auto key1 = clip->at(start_frame);
         auto key2 = clip->at(end_frame - 1);
 
