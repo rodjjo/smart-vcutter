@@ -610,7 +610,7 @@ callback_t ClippingActions::action_scale_all() {
     };
 }
 
-callback_t ClippingActions::action_prior() {
+callback_t ClippingActions::action_next() {
     return [this] () {
         if (!player()->is_playing() && Fl::event_shift() && player()->info()->position() + 33 < player()->info()->count()) {
             player()->seek_frame(player()->info()->position() + 33);
@@ -622,7 +622,7 @@ callback_t ClippingActions::action_prior() {
     };
 }
 
-callback_t ClippingActions::action_next() {
+callback_t ClippingActions::action_prior() {
     return [this] () {
         if (!player()->is_playing() && Fl::event_shift() && player()->info()->position() - 33 > 0) {
             player()->seek_frame(player()->info()->position() - 33);
