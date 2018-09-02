@@ -3,39 +3,39 @@
  */
 #include "src/common/utils.h"
 #include "src/wnd_common/common_dialogs.h"
-#include "src/wnd_cutter/player_bar.h"
+#include "src/wnd_cutter/clipping_actions.h"
 
 namespace vcutter {
 
-PlayerBar::PlayerBar(PlayerBarHandler * handler) {
+ClippingActions::ClippingActions(ClippingActionsHandler * handler) {
     handler_ = handler;
 }
 
-PlayerBar::~PlayerBar() {
+ClippingActions::~ClippingActions() {
 
 }
 
-Clipping *PlayerBar::clipping() {
+Clipping *ClippingActions::clipping() {
     return clipping_.get();
 }
 
-PlayerWrapper *PlayerBar::player() {
+PlayerWrapper *ClippingActions::player() {
     if (clipping_) {
         return clipping_->player();
     }
     return NULL;
 }
 
-void PlayerBar::close() {
+void ClippingActions::close() {
     clipping_.reset();
 }
 
-bool PlayerBar::open(const std::string& path, bool path_is_video) {
+bool ClippingActions::open(const std::string& path, bool path_is_video) {
     clipping_.reset(new ClippingSession("cwnd", path.c_str(), path_is_video));
     return handle_opened_clipping();
 }
 
-bool PlayerBar::handle_opened_clipping() {
+bool ClippingActions::handle_opened_clipping() {
     if (!clipping_->good()) {
         show_error("Não foi possivel abrir o arquivo de video.");
         handler_->handle_clipping_opened(false);
@@ -46,7 +46,7 @@ bool PlayerBar::handle_opened_clipping() {
     return true;
 }
 
-bool PlayerBar::restore_session() {
+bool ClippingActions::restore_session() {
     std::shared_ptr<ClippingSession> restored(std::move(ClippingSession::restore_session("cwnd")));
 
     if (!restored) {
@@ -58,7 +58,7 @@ bool PlayerBar::restore_session() {
     return handle_opened_clipping();
 }
 
-bool PlayerBar::check_player_paused(bool show_message) {
+bool ClippingActions::check_player_paused(bool show_message) {
     if (!clipping()) {
         return false;
     }
@@ -74,7 +74,7 @@ bool PlayerBar::check_player_paused(bool show_message) {
 }
 
 
-bool PlayerBar::save(History *history) {
+bool ClippingActions::save(History *history) {
     if (!active()) {
         return true;
     }
@@ -87,7 +87,7 @@ bool PlayerBar::save(History *history) {
     return true;
 }
 
-bool PlayerBar::save_as(History *history) {
+bool ClippingActions::save_as(History *history) {
     if (!active()) {
         return true;
     }
@@ -112,11 +112,11 @@ bool PlayerBar::save_as(History *history) {
     return true;
 }
 
-bool PlayerBar::active() {
+bool ClippingActions::active() {
     return handler_->player_bar_active() && clipping_;
 }
 
-menu_callback_t PlayerBar::action_position_top() {
+menu_callback_t ClippingActions::action_position_top() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -127,7 +127,7 @@ menu_callback_t PlayerBar::action_position_top() {
 }
 
 
-menu_callback_t PlayerBar::action_position_left() {
+menu_callback_t ClippingActions::action_position_left() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -137,7 +137,7 @@ menu_callback_t PlayerBar::action_position_left() {
     };
 }
 
-menu_callback_t PlayerBar::action_position_right() {
+menu_callback_t ClippingActions::action_position_right() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -147,7 +147,7 @@ menu_callback_t PlayerBar::action_position_right() {
     };
 }
 
-menu_callback_t PlayerBar::action_position_bottom() {
+menu_callback_t ClippingActions::action_position_bottom() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -157,7 +157,7 @@ menu_callback_t PlayerBar::action_position_bottom() {
     };
 }
 
-menu_callback_t PlayerBar::action_position_vertical() {
+menu_callback_t ClippingActions::action_position_vertical() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -167,7 +167,7 @@ menu_callback_t PlayerBar::action_position_vertical() {
     };
 }
 
-menu_callback_t PlayerBar::action_position_horizontal() {
+menu_callback_t ClippingActions::action_position_horizontal() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -177,7 +177,7 @@ menu_callback_t PlayerBar::action_position_horizontal() {
     };
 }
 
-menu_callback_t PlayerBar::action_align_top() {
+menu_callback_t ClippingActions::action_align_top() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -187,7 +187,7 @@ menu_callback_t PlayerBar::action_align_top() {
     };
 }
 
-menu_callback_t PlayerBar::action_align_bottom() {
+menu_callback_t ClippingActions::action_align_bottom() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -198,7 +198,7 @@ menu_callback_t PlayerBar::action_align_bottom() {
 
 }
 
-menu_callback_t PlayerBar::action_align_left() {
+menu_callback_t ClippingActions::action_align_left() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -208,7 +208,7 @@ menu_callback_t PlayerBar::action_align_left() {
     };
 }
 
-menu_callback_t PlayerBar::action_align_right() {
+menu_callback_t ClippingActions::action_align_right() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -218,7 +218,7 @@ menu_callback_t PlayerBar::action_align_right() {
     };
 }
 
-menu_callback_t PlayerBar::action_align_all() {
+menu_callback_t ClippingActions::action_align_all() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -228,7 +228,7 @@ menu_callback_t PlayerBar::action_align_all() {
     };
 }
 
-menu_callback_t PlayerBar::action_norm_scale() {
+menu_callback_t ClippingActions::action_norm_scale() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -238,7 +238,7 @@ menu_callback_t PlayerBar::action_norm_scale() {
     };
 }
 
-menu_callback_t PlayerBar::action_clear_keys() {
+menu_callback_t ClippingActions::action_clear_keys() {
     return [this] () {
         if (clipping()->keys().empty()) {
             show_error("There is no keys to clear");

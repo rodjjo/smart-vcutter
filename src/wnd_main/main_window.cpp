@@ -99,7 +99,7 @@ void MainWindow::load_sessions() {
     }
     sessions_loaded_ = true;
 
-    if (cutter_window_->player_bar()->restore_session()) {
+    if (cutter_window_->clipping_actions()->restore_session()) {
         enable_controls();
     }
 
@@ -132,7 +132,7 @@ void MainWindow::init_main_menu() {
 
     menu_file_.reset(new Menu(menu_, "&File"));
 
-    auto pb = cutter_window_->player_bar();
+    auto pb = cutter_window_->clipping_actions();
 
     menu_file_->add("&Open video", "^o", action_file_open(), 0, 0, xpm::film_16x16);
     menu_file_->add("Open &project", "^a", action_file_open_project(), 0, 0, xpm::directory_16x16);
@@ -434,12 +434,12 @@ void MainWindow::open_video_or_project(const std::string& path) {
 
     std::string extension(".vcutter");
     if (path.substr(path.size() - extension.size()) == extension) {
-        if (cutter_window_->player_bar()->open(path, false)) {
+        if (cutter_window_->clipping_actions()->open(path, false)) {
             enable_controls();
             return;
         }
     } else {
-        if (cutter_window_->player_bar()->open(path, true)) {
+        if (cutter_window_->clipping_actions()->open(path, true)) {
             enable_controls();
             return;
         }
@@ -483,10 +483,10 @@ bool MainWindow::save_project(bool create_new_file) {
     }
 
     if (create_new_file) {
-        return cutter_window_->player_bar()->save_as(&history_);
+        return cutter_window_->clipping_actions()->save_as(&history_);
     }
 
-    return cutter_window_->player_bar()->save(&history_);
+    return cutter_window_->clipping_actions()->save(&history_);
 }
 
 menu_callback_t MainWindow::action_file_save() {

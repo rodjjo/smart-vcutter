@@ -49,7 +49,7 @@ CutterWindow::CutterWindow(Fl_Group *parent) {
 
     components_group_->end();
 
-    player_bar_.reset(new PlayerBar(this));
+    player_bar_.reset(new ClippingActions(this));
 
     buttons_group_ = new Fl_Group(0,0, window_->w(), 30);
     buttons_group_->box(FL_UP_BOX);
@@ -152,7 +152,7 @@ CutterWindow::~CutterWindow() {
     clear();
 }
 
-PlayerBar *CutterWindow::player_bar() {
+ClippingActions *CutterWindow::clipping_actions() {
     return player_bar_.get();
 }
 

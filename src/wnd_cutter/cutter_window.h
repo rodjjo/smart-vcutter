@@ -22,7 +22,7 @@
 
 #include "src/data/history.h"
 #include "src/wnd_cutter/options_window.h"
-#include "src/wnd_cutter/player_bar.h"
+#include "src/wnd_cutter/clipping_actions.h"
 #include "src/wrappers/video_player.h"
 #include "src/clippings/clipping_session.h"
 #include "src/viewer/miniature_viewer.h"
@@ -31,12 +31,12 @@
 
 namespace vcutter {
 
-class CutterWindow : public PlayerBarHandler {
+class CutterWindow : public ClippingActionsHandler {
  public:
     CutterWindow(Fl_Group *parent);
     virtual ~CutterWindow();
 
-    PlayerBar *player_bar();
+    ClippingActions *clipping_actions();
     Clipping *clipping();
     PlayerWrapper *player();
 
@@ -155,7 +155,7 @@ class CutterWindow : public PlayerBarHandler {
     Fl_Select_Browser *key_list_;
     ClippingEditor *clipping_editor_;
 
-    std::unique_ptr<PlayerBar> player_bar_;
+    std::unique_ptr<ClippingActions> player_bar_;
 
     MiniatureViewer *viewer_;
  private:

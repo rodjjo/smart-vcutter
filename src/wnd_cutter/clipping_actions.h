@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SRC_WND_CUTTER_PLAYER_BAR_H_
-#define SRC_WND_CUTTER_PLAYER_BAR_H_
+#ifndef SRC_WND_CUTTER_CLIPPING_ACTIONS_H_
+#define SRC_WND_CUTTER_CLIPPING_ACTIONS_H_
 
 #include <memory>
 #include "src/data/history.h"
@@ -11,18 +11,18 @@
 
 namespace vcutter {
 
-class PlayerBarHandler {
+class ClippingActionsHandler {
   public:
-    virtual ~PlayerBarHandler() {}
+    virtual ~ClippingActionsHandler() {}
     virtual bool player_bar_active() = 0;
     virtual void handle_clipping_opened(bool opened) = 0;
     virtual void handle_redraw_needed() = 0;
 };
 
-class PlayerBar {
+class ClippingActions {
  public:
-    PlayerBar(PlayerBarHandler * handler);
-    virtual ~PlayerBar();
+    ClippingActions(ClippingActionsHandler * handler);
+    virtual ~ClippingActions();
     PlayerWrapper *player();
     void close();
     Clipping *clipping();
@@ -49,10 +49,10 @@ class PlayerBar {
  private:
     bool active();
  private:
-    PlayerBarHandler * handler_;
+    ClippingActionsHandler * handler_;
     std::shared_ptr<ClippingSession> clipping_;
 };
 
 }  // namespace vcutter
 
-#endif  // SRC_WND_CUTTER_PLAYER_BAR_H_
+#endif  // SRC_WND_CUTTER_CLIPPING_ACTIONS_H_
