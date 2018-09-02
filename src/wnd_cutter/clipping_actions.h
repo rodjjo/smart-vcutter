@@ -14,7 +14,7 @@ namespace vcutter {
 class ClippingActionsHandler {
   public:
     virtual ~ClippingActionsHandler() {}
-    virtual bool player_bar_active() = 0;
+    virtual bool clipping_actions_active() = 0;
     virtual void handle_clipping_opened(bool opened) = 0;
     virtual void handle_clipping_resized() = 0;
     virtual void handle_clipping_keys_changed() = 0;
@@ -26,6 +26,7 @@ class ClippingActions {
     ClippingActions(ClippingActionsHandler * handler);
     virtual ~ClippingActions();
     PlayerWrapper *player();
+    ClippingActionsHandler *handler();
     void close();
     Clipping *clipping();
     bool open(const std::string& path, bool path_is_video);
@@ -38,6 +39,10 @@ class ClippingActions {
     bool has_copy();
     bool has_copy(bool show_require_paused_message);
 
+    callback_t action_play();
+    callback_t action_stop();
+    callback_t action_pause();
+    callback_t action_search();
     callback_t action_position_top();
     callback_t action_position_left();
     callback_t action_position_right();

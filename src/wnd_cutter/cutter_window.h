@@ -22,6 +22,7 @@
 
 #include "src/data/history.h"
 #include "src/wnd_cutter/clipping_actions.h"
+#include "src/wnd_cutter/player_bar.h"
 #include "src/wrappers/video_player.h"
 #include "src/clippings/clipping_session.h"
 #include "src/viewer/miniature_viewer.h"
@@ -68,7 +69,7 @@ class CutterWindow : public ClippingActionsHandler {
     void handle_clipping_opened(bool opened) override;
     void handle_clipping_keys_changed() override;
     void handle_buffer_modified() override;
-    bool player_bar_active() override;
+    bool clipping_actions_active() override;
 
  private:
     void clear(bool clear_controls = true);
@@ -77,7 +78,6 @@ class CutterWindow : public ClippingActionsHandler {
     void update_seek_bar();
     void goto_selected_clipping_key();
     void frame_sleep(double fps);
-    void display_speed();
     void redraw_frame(bool update_key_list=false);
     void load_images();
     void set_widget_image(Fl_Widget* widget, std::shared_ptr<Fl_Image> image);
@@ -90,12 +90,6 @@ class CutterWindow : public ClippingActionsHandler {
     void update_buffers(bool frame_changed);
     void double_click(void *component);
     void key_list_auto_selection();
-    void action_speed();
-
-    void action_play();
-    void action_pause();
-    void action_stop();
-    void action_search();
     void action_delete();
 
     void action_play_interval();
@@ -103,30 +97,14 @@ class CutterWindow : public ClippingActionsHandler {
     Fl_Group *parent_;
     Fl_Group *window_;
     Fl_Group *components_group_;
-    Fl_Group *buttons_group_;
-    Fl_Box *frame_input_;
-    Fl_Box *frame_counter_;
-    Fl_Box *frame_time_;
-    Fl_Box *video_duration_;
-    Fl_Hor_Slider *seek_bar_;
-    Fl_Button *btn_speed_;
-    Fl_Button *btn_play_;
-    Fl_Button *btn_pause_;
-    Fl_Button *btn_stop_;
-    Fl_Button *btn_next_;
-    Fl_Button *btn_prior_;
-    Fl_Button *btn_cutoff1_;
-    Fl_Button *btn_cutoff12_;
-    Fl_Button *btn_cutoff2_;
-    Fl_Button *btn_search_;
-
     Fl_Button *btn_new_key_;
     Fl_Button *btn_del_key_;
     Fl_Button *btn_play_interval_;
     Fl_Select_Browser *key_list_;
     ClippingEditor *clipping_editor_;
 
-    std::unique_ptr<ClippingActions> player_bar_;
+    std::unique_ptr<ClippingActions> clipping_actions_;
+    std::unique_ptr<PlayerBar> player_bar_;
 
     MiniatureViewer *viewer_;
  private:
@@ -138,7 +116,6 @@ class CutterWindow : public ClippingActionsHandler {
     bool wink_comparison_;
     bool open_failure_;
     bool in_key_list_;
-    bool in_seek_bar_callback_;
 };
 
 }  // namespace vcutter

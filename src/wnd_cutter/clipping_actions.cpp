@@ -18,6 +18,10 @@ ClippingActions::~ClippingActions() {
 
 }
 
+ClippingActionsHandler *ClippingActions::handler() {
+    return handler_;
+}
+
 bool ClippingActions::has_copy() {
     return has_key_copy_;
 }
@@ -130,7 +134,7 @@ bool ClippingActions::save_as(History *history) {
 }
 
 bool ClippingActions::active() {
-    return handler_->player_bar_active() && clipping_;
+    return handler_->clipping_actions_active() && clipping_;
 }
 
 callback_t ClippingActions::action_position_top() {
@@ -726,6 +730,60 @@ callback_t ClippingActions::action_cutoff2() {
         }
     };
 }
+
+callback_t ClippingActions::action_play() {
+    return [this] () {
+        player()->play();
+    };
+}
+
+
+
+callback_t ClippingActions::action_stop() {
+    return [this] () {
+        player()->stop();
+    };
+}
+
+callback_t ClippingActions::action_pause() {
+    return [this] () {
+        player()->pause();
+    };
+}
+
+callback_t ClippingActions::action_search() {
+    return [this] () {
+        if (!clipping()) {
+            return;
+        }
+
+        const char *timestr = ask_value("Time in format hh:mm:ss or mm:ss or number of seconds");
+        if (!timestr) {
+            return;
+        }
+
+        int hours, minutes, seconds, frame;
+
+        if (sscanf(timestr, "%d:%d:%d", &hours, &minutes, &seconds) == 3) {
+            seconds = hours * 36000 + minutes * 60 + seconds;
+        } else if (sscanf(timestr, "%d:%d", &minutes, &seconds) == 2) {
+            seconds = minutes * 60 + seconds;
+        } else if (*timestr == 'f' && sscanf(timestr, "f%d", &frame) == 1) {
+            if (frame > 0) {
+                frame -= 1;
+            }
+            player()->seek_frame(frame + 1);
+            handler_->handle_buffer_modified();
+            return;
+        } else if (sscanf(timestr, "%d", &seconds) != 1) {
+            return;
+        }
+
+        player()->seek_time((seconds + 1) * 1000);
+        handler_->handle_buffer_modified();
+    };
+}
+
 
 
 }  // namespace vcutter

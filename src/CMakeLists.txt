@@ -1,7 +1,8 @@
-file(GLOB Sources 
+file(GLOB Sources
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/vstream/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/controls/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/clippings/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/data/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/viewer/*.cpp"
