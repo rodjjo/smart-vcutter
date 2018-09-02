@@ -178,6 +178,8 @@ void PlayerBar::update() {
     video_duration_->copy_label(temp);
 
     in_seek_bar_callback_ = false;
+
+    display_speed();
 }
 
 }  // namespace vcutter

@@ -4,7 +4,6 @@
 #include <cmath>
 #include <GL/gl.h>
 
-#include "src/data/xpm.h"
 #include "src/common/utils.h"
 #include "src/wnd_common/common_dialogs.h"
 #include "src/wnd_cutter/cutter_window.h"
@@ -12,16 +11,15 @@
 
 namespace vcutter {
 
-#define CLIPPING_LIST_WIDTH 320
-
 CutterWindow::CutterWindow(Fl_Group *parent) {
     parent_ = parent;
     open_failure_ = false;
-    in_key_list_ = false;
     wink_comparison_ = false;
     clipping_version_ = 0;
-    selected_clip_ = 0;
     wink_lap_ = 0;
+
+    clipping_actions_.reset(new ClippingActions(this));
+
     int parent_x = parent->x();
     int parent_y = parent->y();
 
@@ -30,52 +28,20 @@ CutterWindow::CutterWindow(Fl_Group *parent) {
     window_ = new Fl_Group(0, 0, parent->w(), parent->h());
     window_->begin();
 
-    components_group_ = new Fl_Group(0,0, window_->w(), window_->h() - 30);
-    components_group_->box(FL_DOWN_BOX);
-    clipping_editor_  = new ClippingEditor(5, 5, window_->w() - CLIPPING_LIST_WIDTH - 10,  window_->h() - 45);
-
-    btn_new_key_ = new Fl_Button(clipping_editor_->w() + 7, 3, 25, 25, "");
-    btn_del_key_ = new Fl_Button(btn_new_key_->x() + 27, 3, 25, 25, "");
-    btn_play_interval_ = new Fl_Button(btn_del_key_->x() + 27, 3, 25, 25, "");
-
-    key_list_ = new Fl_Select_Browser(btn_new_key_->x(), 30, CLIPPING_LIST_WIDTH, window_->h() * 30);
-
-    viewer_ = new MiniatureViewer(btn_new_key_->x(), key_list_->y() + key_list_->h(), key_list_->w(), key_list_->w());
-
-    components_group_->end();
-
-    clipping_actions_.reset(new ClippingActions(this));
-
-
     player_bar_.reset(new PlayerBar(clipping_actions_.get(), window_));
 
-    btn_new_key_->callback(button_callback, this);
-    btn_del_key_->callback(button_callback, this);
-    btn_play_interval_->callback(button_callback, this);
-
-    btn_new_key_->clear_visible_focus();
-    btn_del_key_->clear_visible_focus();
-    btn_play_interval_->clear_visible_focus();
-
-    btn_new_key_->tooltip("[Insert] Insert a mark at current frame.");
-    btn_del_key_->tooltip("[Delete] Remove the current frame mark.");
-    btn_play_interval_->tooltip("Play the animation interval.");
+    components_group_ = new Fl_Group(0,0, window_->w(), window_->h() - 30);
+    components_group_->box(FL_DOWN_BOX);
+    clipping_editor_  = new ClippingEditor(5, 5, window_->w() - SideBar::default_width() - 10,  window_->h() - 45);
+    side_bar_.reset(new SideBar(clipping_actions_.get(), components_group_, clipping_editor_));
+    components_group_->end();
 
     window_->end();
     parent->end();
 
-    key_list_->callback(video_list_callback, this);
-
-    viewer_->cursor(FL_CURSOR_HAND);
-
-    btn_del_key_->shortcut(FL_Delete);
-    btn_new_key_->shortcut(FL_Insert);
-
     parent->position(parent_x, parent_y);
-
     window_->hide();
 
-    load_images();
     update_title();
 }
 
@@ -96,18 +62,6 @@ PlayerWrapper *CutterWindow::player() {
         return clipping()->player();
     }
     return NULL;
-}
-
-void CutterWindow::set_widget_image(Fl_Widget* widget, std::shared_ptr<Fl_Image> image) {
-    images_.insert(image);
-    widget->image(image.get());
-    widget->align(FL_ALIGN_IMAGE_BACKDROP);
-}
-
-void CutterWindow::load_images() {
-    set_widget_image(btn_new_key_, xpm::image(xpm::button_add));
-    set_widget_image(btn_del_key_, xpm::image(xpm::button_delete));
-    set_widget_image(btn_play_interval_, xpm::image(xpm::button_play));
 }
 
 void CutterWindow::update_title() {
@@ -133,24 +87,11 @@ void CutterWindow::resize_controls() {
 
     player_bar_->resize_controls();
 
-    clipping_editor_->size(parent_->w() - CLIPPING_LIST_WIDTH - 10,  parent_->h() - player_bar_->h() - parent_->y() - 10);
+    clipping_editor_->size(parent_->w() - SideBar::default_width() - 10,  parent_->h() - player_bar_->h() - parent_->y() - 10);
     clipping_editor_->position(5, 5);
     clipping_editor_->invalidate();
 
-    btn_new_key_->position(parent_->w() - CLIPPING_LIST_WIDTH, 3);
-    btn_del_key_->position(btn_new_key_->x() + 27, 3);
-    btn_play_interval_->position(btn_del_key_->x() + 27, 3);
-
-    static_cast<Fl_Widget *>(key_list_)->position(btn_new_key_->x(), 33);
-    int key_list_w = parent_->w() - btn_new_key_->x();
-    key_list_->size(key_list_w, clipping_editor_->h() - key_list_w - player_bar_->h() - 38);
-
-    viewer_->position(btn_new_key_->x(), key_list_->y() + key_list_->h());
-    viewer_->size(key_list_->w(), key_list_->w());
-
-    btn_new_key_->size(25, 25);
-    btn_del_key_->size(25, 25);
-    btn_play_interval_->size(25, 25);
+    side_bar_->resize_controls();
 
     parent_->position(parent_x, parent_y);
 
@@ -166,14 +107,15 @@ void CutterWindow::clear(bool clear_controls) {
     wink_lap_ = 0;
     clipping_version_ = 0;
     wink_comparison_ = false;
-    viewer_->invalidate();
+    side_bar_->viewer()->invalidate();
     clipping_editor_->invalidate();
+
     if (clear_controls) {
-        key_list_->clear();
+        side_bar_->update();
         player_bar_->update();
         window_->hide();
-        player_bar_->display_speed();
     }
+
     update_title();
 }
 
@@ -181,6 +123,7 @@ std::string CutterWindow::get_video_path() {
     if (clipping()) {
         return clipping()->video_path();
     }
+
     return "";
 }
 
@@ -212,7 +155,7 @@ void CutterWindow::handle_clipping_opened(bool opened) {
 
     player()->seek_frame(clipping()->first_frame());
 
-    update_seek_bar();
+    player_bar_->update();
     redraw_frame();
 
     window_->show();
@@ -239,70 +182,10 @@ std::shared_ptr<ClippingRender> CutterWindow::to_clipping() {
     return clipping()->clone();
 }
 
-void CutterWindow::button_callback(Fl_Widget* widget, void *userdata) {
-    auto window = static_cast<CutterWindow *>(userdata);
-    if (widget == window->btn_del_key_) {
-        window->clipping_actions()->action_delete()();
-    } else if (widget == window->btn_new_key_) {
-        window->clipping_actions()->action_insert()();
-    } else if (widget == window->btn_play_interval_) {
-        window->action_play_interval();
-    }
-}
-
-void CutterWindow::goto_selected_clipping_key() {
-    if (!key_list_->value()) {
-        return;
-    }
-
-    uint32_t index = key_list_->value() - 1;
-    if (index < clipping()->keys().size()) {
-        auto frame = clipping()->at_index(index).frame;
-
-        player()->pause();
-        player()->seek_frame(frame);
-        update_buffers(true);
-    }
-}
-
-void CutterWindow::video_list_callback(Fl_Widget* widget, void *userdata) {
-    auto window = static_cast<CutterWindow *>(userdata);
-    if (window->in_key_list_) {
-        return;
-    }
-    window->in_key_list_ = true;
-    auto selected_index = window->key_list_->value();
-    if (selected_index) {
-        window->key_list_->deselect();
-        window->key_list_->select(selected_index);
-        window->goto_selected_clipping_key();
-    }
-    window->in_key_list_ = false;
-}
-
 void CutterWindow::handle_clipping_resized() {
     redraw_frame();
     update_title();
 }
-
-void CutterWindow::action_play_interval() {
-    if (!clipping()) {
-        return;
-    }
-
-    if (clipping()->keys().empty()) {
-        return;
-    }
-
-    player()->play(clipping()->first_frame(), clipping()->last_frame());
-}
-
-void CutterWindow::pause() {
-    if (visible() && clipping()) {
-        player()->pause();
-    }
-}
-
 
 void CutterWindow::action_use_ref(bool positionate_x, bool positionate_y, bool rotate, bool scale) {
     if (!visible()) {
@@ -353,56 +236,20 @@ void CutterWindow::action_goto_reference() {
 }
 
 void CutterWindow::double_click(void *component) {
-    if (component == viewer_) {
+    if (component == side_bar_->viewer()) {
         clipping_actions()->action_properties()();
     }
 }
 
-void CutterWindow::update_clipping_list() {
-    in_key_list_ = true;
-    int selection = key_list_->value();
-    uint32_t size = key_list_->size();
-
-    key_list_->clear();
-    uint32_t ref_frame = -1;
-    clipping()->ref().get_reference_frame(&ref_frame);
-
-    const ClippingKey *previous = NULL;
-    for (const auto & k : clipping()->keys()) {
-        key_list_->add((k.description(previous) + (ref_frame == k.frame ? " <r" : "")).c_str());
-        previous = &k;
-    }
-
-    if (size == static_cast<uint32_t>(key_list_->size()) && selection != 0) {
-        key_list_->deselect();
-        key_list_->value(selection);
-        key_list_->select(selection);
-    }
-    in_key_list_ = false;
-}
-
 void CutterWindow::redraw_frame(bool update_key_list) {
     if (update_key_list) {
-        update_clipping_list();
-        viewer_->update_preview(clipping());
+        side_bar_->update();
+        side_bar_->viewer()->update_preview(clipping());
     }
 
     clipping_editor_->redraw();
-    viewer_->redraw();
-    update_seek_bar();
-}
-
-void CutterWindow::update_seek_bar() {
+    side_bar_->viewer()->redraw();
     player_bar_->update();
-}
-
-void CutterWindow::key_list_auto_selection() {
-    in_key_list_ = true;
-    selected_clip_ = clipping()->find_index(player()->info()->position()) + 1;
-    if (selected_clip_ > 0 && selected_clip_ <= static_cast<uint32_t>(key_list_->size())) {
-        key_list_->value(selected_clip_);
-    }
-    in_key_list_ = false;
 }
 
 void CutterWindow::handle_buffer_modified() {
@@ -415,16 +262,16 @@ void CutterWindow::update_buffers(bool frame_changed) {
     }
 
     if (frame_changed) {
-        update_seek_bar();
+        player_bar_->update();
         redraw_frame();
-        key_list_auto_selection();
+        side_bar_->update_selection();
         clipping_editor_->update(clipping());
-        viewer_->update_preview(clipping());
+        side_bar_->viewer()->update_preview(clipping());
     } else {
         clipping_editor_->draw_operations();
         if (clipping_editor_->key_changed(true)) {
-            update_clipping_list();
-            viewer_->update_preview(clipping());
+            side_bar_->update();
+            side_bar_->viewer()->update_preview(clipping());
         }
     }
 
@@ -432,9 +279,7 @@ void CutterWindow::update_buffers(bool frame_changed) {
         clipping()->wh(player()->info()->w(), player()->info()->h());
     }
 
-    if (clipping()->keys().size() != static_cast<uint32_t>(key_list_->size())) {
-        update_clipping_list();
-    }
+    side_bar_->update(true);
 }
 
 void CutterWindow::poll_actions() {

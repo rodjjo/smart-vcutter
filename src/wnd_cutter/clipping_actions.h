@@ -84,6 +84,8 @@ class ClippingActions {
     callback_t action_cutoff1();
     callback_t action_cutoff12();
     callback_t action_cutoff2();
+    callback_t action_play_interval();
+
  private:
     bool active();
  private:

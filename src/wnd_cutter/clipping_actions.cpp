@@ -737,8 +737,6 @@ callback_t ClippingActions::action_play() {
     };
 }
 
-
-
 callback_t ClippingActions::action_stop() {
     return [this] () {
         player()->stop();
@@ -784,6 +782,19 @@ callback_t ClippingActions::action_search() {
     };
 }
 
+callback_t ClippingActions::action_play_interval() {
+    return [this] () {
+        if (!active()) {
+            return;
+        }
+
+        if (clipping()->keys().empty()) {
+            return;
+        }
+
+        player()->play(clipping()->first_frame(), clipping()->last_frame());
+    };
+}
 
 
 }  // namespace vcutter

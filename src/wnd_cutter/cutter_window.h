@@ -5,27 +5,14 @@
 #define SRC_WND_CUTTER_CUTTER_WINDOW_H_
 
 #include <inttypes.h>
-#include <set>
 #include <string>
 #include <memory>
-#include <atomic>
-#include <vector>
 #include <FL/Fl.H>
-#include <FL/Fl_Image.H>
-#include <FL/Fl_Window.H>
-#include <FL/Fl_Box.H>
 #include <FL/Fl_Group.H>
-#include <FL/Fl_Button.H>
-#include <FL/Fl_Choice.H>
-#include <FL/Fl_Hor_Slider.H>
-#include <FL/Fl_Select_Browser.H>
 
-#include "src/data/history.h"
 #include "src/wnd_cutter/clipping_actions.h"
 #include "src/wnd_cutter/player_bar.h"
-#include "src/wrappers/video_player.h"
-#include "src/clippings/clipping_session.h"
-#include "src/viewer/miniature_viewer.h"
+#include "src/wnd_cutter/side_bar.h"
 #include "src/viewer/editor/clipping_editor.h"
 
 
@@ -47,9 +34,6 @@ class CutterWindow : public ClippingActionsHandler {
     bool modified();
     uint64_t modified_version();
     void clear_modified();
-
-    void pause();
-
     void cancel_operations();
 
     std::string get_video_path();
@@ -74,45 +58,28 @@ class CutterWindow : public ClippingActionsHandler {
  private:
     void clear(bool clear_controls = true);
     void open_video();
-    void update_clipping_list();
-    void update_seek_bar();
-    void goto_selected_clipping_key();
     void frame_sleep(double fps);
     void redraw_frame(bool update_key_list=false);
-    void load_images();
     void set_widget_image(Fl_Widget* widget, std::shared_ptr<Fl_Image> image);
     void update_title();
 
  private:
-    static void button_callback(Fl_Widget* widget, void *userdata);
-    static void video_list_callback(Fl_Widget* widget, void *userdata);
-    static void seek_bar_callback(Fl_Widget* widget, void *userdata);
     void update_buffers(bool frame_changed);
     void double_click(void *component);
-    void key_list_auto_selection();
-    void action_delete();
 
-    void action_play_interval();
  private:
     Fl_Group *parent_;
     Fl_Group *window_;
     Fl_Group *components_group_;
-    Fl_Button *btn_new_key_;
-    Fl_Button *btn_del_key_;
-    Fl_Button *btn_play_interval_;
-    Fl_Select_Browser *key_list_;
     ClippingEditor *clipping_editor_;
 
     std::unique_ptr<ClippingActions> clipping_actions_;
     std::unique_ptr<PlayerBar> player_bar_;
+    std::unique_ptr<SideBar> side_bar_;
 
-    MiniatureViewer *viewer_;
- private:
-    std::set<std::shared_ptr<Fl_Image> > images_;
- private:
+  private:
     uint64_t clipping_version_;
     unsigned int wink_lap_;
-    unsigned int selected_clip_;
     bool wink_comparison_;
     bool open_failure_;
     bool in_key_list_;
