@@ -144,15 +144,15 @@ void MainWindow::init_main_menu() {
 
     menu_edit_.reset(new Menu(menu_, "&Edit"));
 
-    menu_edit_->add("&Copy", "^c", action_edit_copy(), 0, GROUP_CLIPPING_OPEN, xpm::copy_16x16);
-    menu_edit_->add("Paste/Rotation", "", action_edit_paste_rotation(), 0, GROUP_CLIPPING_OPEN, xpm::rotate_16x16);
-    menu_edit_->add("Paste/Scale", "", action_edit_paste_scale(), 0, GROUP_CLIPPING_OPEN, xpm::expand_16x16);
-    menu_edit_->add("Paste/Position", "", action_edit_paste_position(), 0, GROUP_CLIPPING_OPEN, xpm::move_16x16);
-    menu_edit_->add("Paste/Position horiz.", "", action_edit_paste_positionx(), 0, GROUP_CLIPPING_OPEN, xpm::left_right_16x16);
-    menu_edit_->add("Paste/Position vert.", "", action_edit_paste_positiony(), 0, GROUP_CLIPPING_OPEN, xpm::up_down_16x16);
-    menu_edit_->add("&Paste", "^v", action_edit_paste(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::paste_16x16);
+    menu_edit_->add("&Copy", "^c", ca->action_copy(), 0, GROUP_CLIPPING_OPEN, xpm::copy_16x16);
+    menu_edit_->add("Paste/Rotation", "", ca->action_paste_rotation(), 0, GROUP_CLIPPING_OPEN, xpm::rotate_16x16);
+    menu_edit_->add("Paste/Scale", "", ca->action_paste_scale(), 0, GROUP_CLIPPING_OPEN, xpm::expand_16x16);
+    menu_edit_->add("Paste/Position", "", ca->action_paste_position(true, true), 0, GROUP_CLIPPING_OPEN, xpm::move_16x16);
+    menu_edit_->add("Paste/Position horiz.", "", ca->action_paste_position(true, false), 0, GROUP_CLIPPING_OPEN, xpm::left_right_16x16);
+    menu_edit_->add("Paste/Position vert.", "", ca->action_paste_position(false, true), 0, GROUP_CLIPPING_OPEN, xpm::up_down_16x16);
+    menu_edit_->add("&Paste", "^v", ca->action_paste(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::paste_16x16);
 
-    menu_edit_->add("Swap width and height", "", action_transformation_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
+    menu_edit_->add("Swap width and height", "", ca->action_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
     menu_edit_->add("Clear all keys", "", ca->action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
     menu_compare_ = menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
     menu_compare_alt_ = menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER | FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
@@ -171,21 +171,21 @@ void MainWindow::init_main_menu() {
     menu_tools_->add("Magic rule/Use no scale", "^d", action_edit_use_ref_no_scale(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Magic rule/Go to frame", "", action_edit_go_ref(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Magic rule/Clear", "", action_clear_ref(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Rotation/Clear", "#r", action_edit_clear_rotation(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Rotation/90 degrees", "", action_rotation_90(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Rotation/180 degrees", "", action_rotation_180(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Rotation/270 degrees", "", action_rotation_270(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/1.0x Scale", "#s", action_edit_clear_scale(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/0.5x Scale", "", action_edit_scale_half(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/0.25x Scale", "", action_edit_scale_half2(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/2.0x Scale", "", action_edit_scale2(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/3.0x Scale", "", action_edit_scale3(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Rotation/Clear", "#r", ca->action_clear_rotation(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Rotation/90 degrees", "", ca->action_rotation_90(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Rotation/180 degrees", "", ca->action_rotation_180(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Rotation/270 degrees", "", ca->action_rotation_270(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/1.0x Scale", "#s", ca->action_clear_scale(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/0.5x Scale", "", ca->action_scale_half(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/0.25x Scale", "", ca->action_scale_half_2(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/2.0x Scale", "", ca->action_scale_2(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/3.0x Scale", "", ca->action_scale_3(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Scale/Normalize", "", ca->action_norm_scale(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Position/Top", "", ca->action_position_top(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Position/Left", "", ca->action_position_left(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Position/Right", "", ca->action_position_right(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Position/bottom", "", ca->action_position_bottom(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Centralize", "#c", action_edit_clear_position(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Centralize", "#c", ca->action_clear_position(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Position/Center Vertical", "", ca->action_position_vertical(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Position/Ceter Horizontal", "", ca->action_position_horizontal(), 0, GROUP_CLIPPING_OPEN);
 
@@ -195,8 +195,8 @@ void MainWindow::init_main_menu() {
     menu_tools_->add("Align/Right", "", ca->action_align_right(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Align/All", "", ca->action_align_all(), 0, GROUP_CLIPPING_OPEN);
 
-    menu_tools_->add("All keys/Rotate +180 degree", "", action_transformation_180(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("All keys/Scale", "", action_transformation_scale(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("All keys/Rotate +180 degree", "", ca->action_rotate_all_180(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("All keys/Scale", "", ca->action_scale_all(), 0, GROUP_CLIPPING_OPEN);
 
     menu_utils_.reset(new Menu(menu_, "Utils"));
 
@@ -251,127 +251,6 @@ menu_callback_t MainWindow::action_utils_convert_current() {
 
         cutter_window_->pause();
         EncoderWindow::execute(&history_, window_, cutter_window_->get_video_path());
-    };
-}
-
-menu_callback_t MainWindow::action_edit_copy() {
-    return [this] () {
-        cutter_window_->copy();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste() {
-    return [this] () {
-        cutter_window_->past();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_rotation() {
-    return [this] () {
-        cutter_window_->past_rotation();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_scale() {
-    return [this] () {
-        cutter_window_->past_scale();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_position() {
-    return [this] () {
-        cutter_window_->past_position(true, true);
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_positionx() {
-    return [this] () {
-        cutter_window_->past_position(true, false);
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_positiony() {
-    return [this] () {
-        cutter_window_->past_position(false, true);
-    };
-}
-
-
-menu_callback_t MainWindow::action_edit_clear_rotation() {
-    return [this] () {
-        cutter_window_->clear_rotation();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_clear_scale() {
-    return [this] () {
-        cutter_window_->clear_scale();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_clear_position() {
-    return [this] () {
-        cutter_window_->clear_position();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_scale_half() {
-    return [this] () {
-        cutter_window_->scale_half();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_scale_half2() {
-    return [this] () {
-        cutter_window_->scale_half_2();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_scale2() {
-    return [this] () {
-        cutter_window_->scale_2();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_scale3() {
-    return [this] () {
-        cutter_window_->scale_3();
-    };
-}
-
-menu_callback_t MainWindow::action_rotation_90() {
-    return [this] () {
-        cutter_window_->rotation_90();
-    };
-}
-
-menu_callback_t MainWindow::action_rotation_180() {
-    return [this] () {
-        cutter_window_->rotation_180();
-    };
-}
-
-menu_callback_t MainWindow::action_rotation_270() {
-    return [this] () {
-        cutter_window_->rotation_270();
-    };
-}
-
-menu_callback_t MainWindow::action_transformation_swap_wh() {
-    return [this] () {
-        cutter_window_->swap_wh();
-    };
-}
-
-menu_callback_t MainWindow::action_transformation_180() {
-    return [this] () {
-        cutter_window_->rotate_all_180();
-    };
-}
-
-menu_callback_t MainWindow::action_transformation_scale() {
-    return [this] () {
-        cutter_window_->scale_all();
     };
 }
 
@@ -661,12 +540,12 @@ void MainWindow::repeat_current_key() {
     key_time_lap_ = 0;
     switch(key_value_) {
         case FL_Right: {
-            cutter_window_->next();
+            cutter_window_->clipping_actions()->action_next()();
         }
         break;
 
         case FL_Left: {
-            cutter_window_->prior();
+            cutter_window_->clipping_actions()->action_prior()();
         }
         break;
     }
@@ -693,7 +572,7 @@ int MainWindow::handle(int event) {
                 return 1;
             }
             if (Fl::event_key() == 32) {
-                cutter_window_->pause_resume();
+                cutter_window_->clipping_actions()->action_pause_resume()();
                 return 1;
             }
         }
@@ -703,7 +582,7 @@ int MainWindow::handle(int event) {
                 cutter_window_->cancel_operations();
                 return 1;
             }
-             if (should_handle_key(Fl::event_key())) {
+            if (should_handle_key(Fl::event_key())) {
                 key_value_ = Fl::event_key();
                 return 1;
             }

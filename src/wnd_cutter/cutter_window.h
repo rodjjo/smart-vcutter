@@ -47,36 +47,11 @@ class CutterWindow : public ClippingActionsHandler {
     uint64_t modified_version();
     void clear_modified();
 
+    void pause();
+
     void cancel_operations();
 
     std::string get_video_path();
-    bool is_paused(bool show_message=false);
-    void pause();
-    bool has_copy();
-    bool has_copy(const char* paused_message);
-    void no_copy();
-    void copy();
-    void past();
-    void past_rotation();
-    void past_scale();
-    void past_position(bool x, bool y);
-    void clear_rotation();
-    void clear_scale();
-    void scale_half();
-    void scale_half_2();
-    void scale_2();
-    void scale_3();
-    void clear_position();
-    void rotation_90();
-    void rotation_180();
-    void rotation_270();
-    void swap_wh();
-    void rotate_all_180();
-    void pause_resume();
-    void scale_all();
-    void prior();
-    void next();
-
     void action_goto_reference();
     void action_create_ref();
     void action_use_ref(bool positionate_x, bool positionate_y, bool rotate, bool scale);
@@ -92,7 +67,8 @@ class CutterWindow : public ClippingActionsHandler {
     void handle_clipping_resized() override;
     void handle_clipping_opened(bool opened) override;
     void handle_clipping_keys_changed() override;
-    bool player_bar_active();
+    void handle_buffer_modified() override;
+    bool player_bar_active() override;
 
  private:
     void clear(bool clear_controls = true);
@@ -106,6 +82,7 @@ class CutterWindow : public ClippingActionsHandler {
     void load_images();
     void set_widget_image(Fl_Widget* widget, std::shared_ptr<Fl_Image> image);
     void update_title();
+
  private:
     static void button_callback(Fl_Widget* widget, void *userdata);
     static void video_list_callback(Fl_Widget* widget, void *userdata);
@@ -114,17 +91,13 @@ class CutterWindow : public ClippingActionsHandler {
     void double_click(void *component);
     void key_list_auto_selection();
     void action_speed();
+
     void action_play();
     void action_pause();
-    void action_next();
     void action_stop();
-    void action_prior();
     void action_search();
     void action_delete();
-    void action_cutoff1();
-    void action_cutoff12();
-    void action_cutoff2();
-    void action_insert();
+
     void action_play_interval();
  private:
     Fl_Group *parent_;
@@ -158,8 +131,6 @@ class CutterWindow : public ClippingActionsHandler {
     MiniatureViewer *viewer_;
  private:
     std::set<std::shared_ptr<Fl_Image> > images_;
-    bool has_key_copy_;
-    ClippingKey key_copy_;
  private:
     uint64_t clipping_version_;
     unsigned int wink_lap_;
