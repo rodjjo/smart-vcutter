@@ -10,12 +10,12 @@ Menu::Menu(MenuBar *menu_bar, const char *label) {
     init(menu_bar, label);
 }
 
-Menu::Menu(MenuBar *menu_bar, const char *label, menu_callback_t callback) {
+Menu::Menu(MenuBar *menu_bar, const char *label, callback_t callback) {
     init(menu_bar, label);
     callback_ = callback;
 }
 
-Menu::Menu(MenuBar *menu_bar, const char *path, int group, menu_callback_t callback) {
+Menu::Menu(MenuBar *menu_bar, const char *path, int group, callback_t callback) {
     group_ = group;
     path_ = path;
     callback_ = callback;
@@ -31,7 +31,7 @@ void Menu::init(MenuBar *menu_bar, const char *label) {
 Menu::~Menu() {
 }
 
-Menu *Menu::add(const char *label, const char *shortcut, menu_callback_t callback, int flags, int group, xpm::xpm_t icon) {
+Menu *Menu::add(const char *label, const char *shortcut, callback_t callback, int flags, int group, xpm::xpm_t icon) {
     std::shared_ptr<Menu> menu_item(new Menu(menu_bar_, (path_ + "/" + label).c_str(), group, callback));
 
     menu_bar_->add(menu_item->path_.c_str(), shortcut, Menu::menu_action, menu_item.get(), flags);

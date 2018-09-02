@@ -6,7 +6,7 @@
 
 namespace vcutter {
 
-MenuBar::MenuBar(int w, int h, menu_callback_t callback) : Fl_Menu_Bar(0, 0, w, h) {
+MenuBar::MenuBar(int w, int h, callback_t callback) : Fl_Menu_Bar(0, 0, w, h) {
     callback_ = callback;
 }
 

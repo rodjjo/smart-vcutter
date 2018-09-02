@@ -34,10 +34,10 @@ const float kKEY_REPEAT_INTERVAL = 0.333;
 #define GROUP_CLIPPING_OPEN 1
 
 MainWindow::MainWindow() : Fl_Menu_Window(
-        default_window_left(),
-        default_window_top(),
-        default_window_width(),
-        default_window_height()
+    default_window_left(),
+    default_window_top(),
+    default_window_width(),
+    default_window_height()
 ) {
     sessions_loaded_ = false;
     run_called_ = false;
@@ -51,11 +51,10 @@ MainWindow::MainWindow() : Fl_Menu_Window(
 
     window_->color(fl_rgb_color(255, 255, 255));
 
-    init_tool_bar();
+    init_controls();
 
     window_->callback(prevent_close_cb, this);
 
-    init_controls();
 
     window_->end();
     window_->show();
@@ -100,7 +99,7 @@ void MainWindow::load_sessions() {
     }
     sessions_loaded_ = true;
 
-    if (cutter_window_->restore_session()) {
+    if (cutter_window_->clipping_actions()->restore_session()) {
         enable_controls();
     }
 
@@ -123,6 +122,8 @@ void MainWindow::init_controls() {
     bottom_group_->end();
     bottom_group_->color(fl_rgb_color(0, 0, 0));
     cutter_window_.reset(new CutterWindow(bottom_group_));
+
+    init_tool_bar();
 }
 
 void MainWindow::init_main_menu() {
@@ -130,6 +131,8 @@ void MainWindow::init_main_menu() {
     menu_->align(FL_ALIGN_TOP);
 
     menu_file_.reset(new Menu(menu_, "&File"));
+
+    auto ca = cutter_window_->clipping_actions();
 
     menu_file_->add("&Open video", "^o", action_file_open(), 0, 0, xpm::film_16x16);
     menu_file_->add("Open &project", "^a", action_file_open_project(), 0, 0, xpm::directory_16x16);
@@ -141,19 +144,19 @@ void MainWindow::init_main_menu() {
 
     menu_edit_.reset(new Menu(menu_, "&Edit"));
 
-    menu_edit_->add("&Copy", "^c", action_edit_copy(), 0, GROUP_CLIPPING_OPEN, xpm::copy_16x16);
-    menu_edit_->add("Paste/Rotation", "", action_edit_paste_rotation(), 0, GROUP_CLIPPING_OPEN, xpm::rotate_16x16);
-    menu_edit_->add("Paste/Scale", "", action_edit_paste_scale(), 0, GROUP_CLIPPING_OPEN, xpm::expand_16x16);
-    menu_edit_->add("Paste/Position", "", action_edit_paste_position(), 0, GROUP_CLIPPING_OPEN, xpm::move_16x16);
-    menu_edit_->add("Paste/Position horiz.", "", action_edit_paste_positionx(), 0, GROUP_CLIPPING_OPEN, xpm::left_right_16x16);
-    menu_edit_->add("Paste/Position vert.", "", action_edit_paste_positiony(), 0, GROUP_CLIPPING_OPEN, xpm::up_down_16x16);
-    menu_edit_->add("&Paste", "^v", action_edit_paste(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::paste_16x16);
+    menu_edit_->add("&Copy", "^c", ca->action_copy(), 0, GROUP_CLIPPING_OPEN, xpm::copy_16x16);
+    menu_edit_->add("Paste/Rotation", "", ca->action_paste_rotation(), 0, GROUP_CLIPPING_OPEN, xpm::rotate_16x16);
+    menu_edit_->add("Paste/Scale", "", ca->action_paste_scale(), 0, GROUP_CLIPPING_OPEN, xpm::expand_16x16);
+    menu_edit_->add("Paste/Position", "", ca->action_paste_position(true, true), 0, GROUP_CLIPPING_OPEN, xpm::move_16x16);
+    menu_edit_->add("Paste/Position horiz.", "", ca->action_paste_position(true, false), 0, GROUP_CLIPPING_OPEN, xpm::left_right_16x16);
+    menu_edit_->add("Paste/Position vert.", "", ca->action_paste_position(false, true), 0, GROUP_CLIPPING_OPEN, xpm::up_down_16x16);
+    menu_edit_->add("&Paste", "^v", ca->action_paste(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::paste_16x16);
 
-    menu_edit_->add("Swap width and height", "", action_transformation_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
-    menu_edit_->add("Clear all keys", "", action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
+    menu_edit_->add("Swap width and height", "", ca->action_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
+    menu_edit_->add("Clear all keys", "", ca->action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
     menu_compare_ = menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
     menu_compare_alt_ = menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER | FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
-    menu_edit_->add("Output properties", "", action_edit_properties(), 0, GROUP_CLIPPING_OPEN, xpm::note_16x16);
+    menu_edit_->add("Output properties", "", ca->action_properties(), 0, GROUP_CLIPPING_OPEN, xpm::note_16x16);
 
     menu_tools_.reset(new Menu(menu_, "&Tools"));
     menu_tools_->add("Magic rule/Create", "^m", action_create_ref(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::magic_16x16);
@@ -168,32 +171,32 @@ void MainWindow::init_main_menu() {
     menu_tools_->add("Magic rule/Use no scale", "^d", action_edit_use_ref_no_scale(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Magic rule/Go to frame", "", action_edit_go_ref(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Magic rule/Clear", "", action_clear_ref(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Rotation/Clear", "#r", action_edit_clear_rotation(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Rotation/90 degrees", "", action_rotation_90(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Rotation/180 degrees", "", action_rotation_180(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Rotation/270 degrees", "", action_rotation_270(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/1.0x Scale", "#s", action_edit_clear_scale(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/0.5x Scale", "", action_edit_scale_half(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/0.25x Scale", "", action_edit_scale_half2(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/2.0x Scale", "", action_edit_scale2(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/3.0x Scale", "", action_edit_scale3(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/Normalize", "", action_edit_norm_scale(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Top", "", action_position_top(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Left", "", action_position_left(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Right", "", action_position_right(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/bottom", "", action_position_bottom(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Centralize", "#c", action_edit_clear_position(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Center Vertical", "", action_edit_position_vertical(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Ceter Horizontal", "", action_edit_position_horizontal(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Rotation/Clear", "#r", ca->action_clear_rotation(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Rotation/90 degrees", "", ca->action_rotation_90(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Rotation/180 degrees", "", ca->action_rotation_180(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Rotation/270 degrees", "", ca->action_rotation_270(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/1.0x Scale", "#s", ca->action_clear_scale(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/0.5x Scale", "", ca->action_scale_half(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/0.25x Scale", "", ca->action_scale_half_2(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/2.0x Scale", "", ca->action_scale_2(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/3.0x Scale", "", ca->action_scale_3(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/Normalize", "", ca->action_norm_scale(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Top", "", ca->action_position_top(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Left", "", ca->action_position_left(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Right", "", ca->action_position_right(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/bottom", "", ca->action_position_bottom(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Centralize", "#c", ca->action_clear_position(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Center Vertical", "", ca->action_position_vertical(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Ceter Horizontal", "", ca->action_position_horizontal(), 0, GROUP_CLIPPING_OPEN);
 
-    menu_tools_->add("Align/Top", "", action_edit_align_top(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Align/bottom", "", action_edit_align_bottom(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Align/Left", "", action_edit_align_left(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Align/Right", "", action_edit_align_right(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Align/All", "", action_edit_align_all(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/Top", "", ca->action_align_top(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/bottom", "", ca->action_align_bottom(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/Left", "", ca->action_align_left(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/Right", "", ca->action_align_right(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/All", "", ca->action_align_all(), 0, GROUP_CLIPPING_OPEN);
 
-    menu_tools_->add("All keys/Rotate +180 degree", "", action_transformation_180(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("All keys/Scale", "", action_transformation_scale(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("All keys/Rotate +180 degree", "", ca->action_rotate_all_180(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("All keys/Scale", "", ca->action_scale_all(), 0, GROUP_CLIPPING_OPEN);
 
     menu_utils_.reset(new Menu(menu_, "Utils"));
 
@@ -207,7 +210,7 @@ void MainWindow::init_main_menu() {
     menu_help_->add("Get help", "", action_help(), 0, 0, xpm::help_16x16);
 }
 
-menu_callback_t MainWindow::action_menu_popup() {
+callback_t MainWindow::action_menu_popup() {
     return [this] () {
         menu_compare_alt_->enable(cutter_window_->visible() && cutter_window_->compare_enabled());
         menu_compare_->check(cutter_window_->compare_enabled());
@@ -215,7 +218,7 @@ menu_callback_t MainWindow::action_menu_popup() {
     };
 }
 
-menu_callback_t MainWindow::action_utils_clipping() {
+callback_t MainWindow::action_utils_clipping() {
     return [this] () {
         const char *key = "main-window-project-dir";
         std::string directory = history_[key];
@@ -240,7 +243,7 @@ menu_callback_t MainWindow::action_utils_clipping() {
     };
 }
 
-menu_callback_t MainWindow::action_utils_convert_current() {
+callback_t MainWindow::action_utils_convert_current() {
     return [this] () {
         if (!cutter_window_->visible()) {
             return;
@@ -251,128 +254,7 @@ menu_callback_t MainWindow::action_utils_convert_current() {
     };
 }
 
-menu_callback_t MainWindow::action_edit_copy() {
-    return [this] () {
-        cutter_window_->copy();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste() {
-    return [this] () {
-        cutter_window_->past();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_rotation() {
-    return [this] () {
-        cutter_window_->past_rotation();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_scale() {
-    return [this] () {
-        cutter_window_->past_scale();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_position() {
-    return [this] () {
-        cutter_window_->past_position(true, true);
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_positionx() {
-    return [this] () {
-        cutter_window_->past_position(true, false);
-    };
-}
-
-menu_callback_t MainWindow::action_edit_paste_positiony() {
-    return [this] () {
-        cutter_window_->past_position(false, true);
-    };
-}
-
-
-menu_callback_t MainWindow::action_edit_clear_rotation() {
-    return [this] () {
-        cutter_window_->clear_rotation();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_clear_scale() {
-    return [this] () {
-        cutter_window_->clear_scale();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_clear_position() {
-    return [this] () {
-        cutter_window_->clear_position();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_scale_half() {
-    return [this] () {
-        cutter_window_->scale_half();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_scale_half2() {
-    return [this] () {
-        cutter_window_->scale_half_2();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_scale2() {
-    return [this] () {
-        cutter_window_->scale_2();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_scale3() {
-    return [this] () {
-        cutter_window_->scale_3();
-    };
-}
-
-menu_callback_t MainWindow::action_rotation_90() {
-    return [this] () {
-        cutter_window_->rotation_90();
-    };
-}
-
-menu_callback_t MainWindow::action_rotation_180() {
-    return [this] () {
-        cutter_window_->rotation_180();
-    };
-}
-
-menu_callback_t MainWindow::action_rotation_270() {
-    return [this] () {
-        cutter_window_->rotation_270();
-    };
-}
-
-menu_callback_t MainWindow::action_transformation_swap_wh() {
-    return [this] () {
-        cutter_window_->swap_wh();
-    };
-}
-
-menu_callback_t MainWindow::action_transformation_180() {
-    return [this] () {
-        cutter_window_->rotate_all_180();
-    };
-}
-
-menu_callback_t MainWindow::action_transformation_scale() {
-    return [this] () {
-        cutter_window_->scale_all();
-    };
-}
-
-menu_callback_t MainWindow::action_file_close() {
+callback_t MainWindow::action_file_close() {
     return [this] () {
         if (ask_for_save()) {
             cutter_window_->close();
@@ -382,7 +264,7 @@ menu_callback_t MainWindow::action_file_close() {
     };
 }
 
-menu_callback_t MainWindow::action_file_generate() {
+callback_t MainWindow::action_file_generate() {
     return [this] () {
         if (cutter_window_->visible()) {
             cutter_window_->pause();
@@ -431,12 +313,12 @@ void MainWindow::open_video_or_project(const std::string& path) {
 
     std::string extension(".vcutter");
     if (path.substr(path.size() - extension.size()) == extension) {
-        if (cutter_window_->open_clipping(path)) {
+        if (cutter_window_->clipping_actions()->open(path, false)) {
             enable_controls();
             return;
         }
     } else {
-        if (cutter_window_->open_video(path)) {
+        if (cutter_window_->clipping_actions()->open(path, true)) {
             enable_controls();
             return;
         }
@@ -444,7 +326,7 @@ void MainWindow::open_video_or_project(const std::string& path) {
 }
 
 
-menu_callback_t MainWindow::action_file_open_project() {
+callback_t MainWindow::action_file_open_project() {
     return [this] () {
         if (!ask_for_save()) {
             return;
@@ -459,7 +341,7 @@ menu_callback_t MainWindow::action_file_open_project() {
     };
 }
 
-menu_callback_t MainWindow::action_file_open() {
+callback_t MainWindow::action_file_open() {
     return [this] () {
         if (!ask_for_save()) {
             return;
@@ -475,189 +357,110 @@ menu_callback_t MainWindow::action_file_open() {
 }
 
 bool MainWindow::save_project(bool create_new_file) {
-    if (create_new_file) {
-        return cutter_window_->save_as(&history_);
+    if (!cutter_window_->visible()) {
+        return false;
     }
-    return cutter_window_->save(&history_);
+
+    if (create_new_file) {
+        return cutter_window_->clipping_actions()->save_as(&history_);
+    }
+
+    return cutter_window_->clipping_actions()->save(&history_);
 }
 
-menu_callback_t MainWindow::action_file_save() {
+callback_t MainWindow::action_file_save() {
     return [this] () {
         save_project(false);
     };
 }
 
-menu_callback_t MainWindow::action_file_save_as() {
+callback_t MainWindow::action_file_save_as() {
     return [this] () {
         save_project(true);
     };
 }
 
-menu_callback_t MainWindow::action_create_ref() {
+callback_t MainWindow::action_create_ref() {
     return [this] () {
         cutter_window_->action_create_ref();
     };
 }
 
-menu_callback_t MainWindow::action_toggle_compare_box() {
+callback_t MainWindow::action_toggle_compare_box() {
     return [this] () {
         cutter_window_->action_toggle_compare();
     };
 }
 
-menu_callback_t MainWindow::action_wink_comparison() {
+callback_t MainWindow::action_wink_comparison() {
     return [this] () {
         cutter_window_->action_toggle_compare_wink();
     };
 }
 
-menu_callback_t MainWindow::action_use_ref() {
+callback_t MainWindow::action_use_ref() {
     return [this] () {
         cutter_window_->action_use_ref(true, true, true, true);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_rotation() {
+callback_t MainWindow::action_edit_use_ref_rotation() {
     return [this] () {
         cutter_window_->action_use_ref(false, false, true, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_drag() {
+callback_t MainWindow::action_edit_use_ref_drag() {
     return [this] () {
         cutter_window_->action_use_ref(true, true, false, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_dragx() {
+callback_t MainWindow::action_edit_use_ref_dragx() {
     return [this] () {
         cutter_window_->action_use_ref(true, false, false, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_dragy() {
+callback_t MainWindow::action_edit_use_ref_dragy() {
     return [this] () {
         cutter_window_->action_use_ref(false, true, false, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_scale() {
+callback_t MainWindow::action_edit_use_ref_scale() {
     return [this] () {
         cutter_window_->action_use_ref(false, false, false, true);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_no_rotate() {
+callback_t MainWindow::action_edit_use_ref_no_rotate() {
     return [this] () {
         cutter_window_->action_use_ref(true, true, false, true);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_no_scale() {
+callback_t MainWindow::action_edit_use_ref_no_scale() {
     return [this] () {
         cutter_window_->action_use_ref(true, true, true, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_no_drag() {
+callback_t MainWindow::action_edit_use_ref_no_drag() {
     return [this] () {
         cutter_window_->action_use_ref(false, false, true, true);
     };
 }
 
-menu_callback_t MainWindow::action_edit_go_ref() {
+callback_t MainWindow::action_edit_go_ref() {
     return [this] () {
         cutter_window_->action_goto_reference();
     };
 }
 
-menu_callback_t MainWindow::action_clear_ref() {
+callback_t MainWindow::action_clear_ref() {
     return [this] () {
         cutter_window_->action_clear_ref();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_properties() {
-    return [this] () {
-        cutter_window_->action_properties();
-    };
-}
-
-menu_callback_t MainWindow::action_position_top() {
-    return [this] () {
-        cutter_window_->action_position_top();
-    };
-}
-
-menu_callback_t MainWindow::action_position_left() {
-    return [this] () {
-        cutter_window_->action_position_left();
-    };
-}
-
-menu_callback_t MainWindow::action_position_right() {
-    return [this] () {
-        cutter_window_->action_position_right();
-    };
-}
-
-menu_callback_t MainWindow::action_position_bottom() {
-    return [this] () {
-        cutter_window_->action_position_bottom();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_position_vertical() {
-    return [this] () {
-        cutter_window_->action_position_vertical();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_position_horizontal() {
-    return [this] () {
-        cutter_window_->action_position_horizontal();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_top() {
-    return [this] () {
-        cutter_window_->action_align_top();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_bottom() {
-    return [this] () {
-        cutter_window_->action_align_bottom();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_left() {
-    return [this] () {
-        cutter_window_->action_align_left();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_right() {
-    return [this] () {
-        cutter_window_->action_align_right();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_all() {
-    return [this] () {
-        cutter_window_->action_align_all();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_norm_scale() {
-    return [this] () {
-        cutter_window_->action_norm_scale();
-    };
-}
-
-menu_callback_t MainWindow::action_clear_keys() {
-    return [this] () {
-        cutter_window_->action_clear_keys();
     };
 }
 
@@ -679,7 +482,7 @@ bool MainWindow::ask_for_save() {
     return true;
 }
 
-menu_callback_t MainWindow::action_file_exit() {
+callback_t MainWindow::action_file_exit() {
     return [this] () {
         if (!ask_for_save()) {
             return;
@@ -695,26 +498,26 @@ void MainWindow::prevent_close_cb(Fl_Widget *menu, void *this_window) {
     static_cast<MainWindow *>(this_window)->window_->hide();
 }
 
-menu_callback_t MainWindow::action_utils_convert() {
+callback_t MainWindow::action_utils_convert() {
     return [this] () {
         cutter_window_->pause();
         EncoderWindow::execute(&history_, window_);
     };
 }
 
-menu_callback_t MainWindow::action_about() {
+callback_t MainWindow::action_about() {
     return [this] () {
         show_error("Rodrigo A. Araujo\nrodjjo@@gmail.com");
     };
 }
 
-menu_callback_t MainWindow::action_help() {
+callback_t MainWindow::action_help() {
     return [this] () {
         show_error("The help manual is in development");
     };
 }
 
-menu_callback_t MainWindow::action_tip() {
+callback_t MainWindow::action_tip() {
     return [this] () {
         show_error("The tips window will be available soon");
     };
@@ -737,12 +540,12 @@ void MainWindow::repeat_current_key() {
     key_time_lap_ = 0;
     switch(key_value_) {
         case FL_Right: {
-            cutter_window_->next();
+            cutter_window_->clipping_actions()->action_next()();
         }
         break;
 
         case FL_Left: {
-            cutter_window_->prior();
+            cutter_window_->clipping_actions()->action_prior()();
         }
         break;
     }
@@ -769,7 +572,7 @@ int MainWindow::handle(int event) {
                 return 1;
             }
             if (Fl::event_key() == 32) {
-                cutter_window_->pause_resume();
+                cutter_window_->clipping_actions()->action_pause_resume()();
                 return 1;
             }
         }
@@ -779,7 +582,7 @@ int MainWindow::handle(int event) {
                 cutter_window_->cancel_operations();
                 return 1;
             }
-             if (should_handle_key(Fl::event_key())) {
+            if (should_handle_key(Fl::event_key())) {
                 key_value_ = Fl::event_key();
                 return 1;
             }

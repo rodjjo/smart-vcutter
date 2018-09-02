@@ -20,15 +20,15 @@ namespace vcutter {
 
 class Menu {
  public:
-    Menu(MenuBar *menu_bar, const char *label, menu_callback_t callback);
+    Menu(MenuBar *menu_bar, const char *label, callback_t callback);
     Menu(MenuBar *menu_bar, const char *label);
     virtual ~Menu();
-    Menu *add(const char *label, const char *shortcut, menu_callback_t callback, int flags=0, int group=0, xpm::xpm_t icon=xpm::no_image);
+    Menu *add(const char *label, const char *shortcut, callback_t callback, int flags=0, int group=0, xpm::xpm_t icon=xpm::no_image);
     void enable(bool enabled, int group = 0);
     void check(bool checked);
  private:
     Fl_Menu_Item *menu_item();
-    Menu(MenuBar *menu_bar, const char *path, int group, menu_callback_t callback);
+    Menu(MenuBar *menu_bar, const char *path, int group, callback_t callback);
     static void menu_action(Fl_Widget *widget, void *user_data);
     void init(MenuBar *menu_bar, const char *label);
     void define_image(xpm::xpm_t icon);
@@ -39,7 +39,7 @@ class Menu {
     std::string path_;
     MenuBar *menu_bar_;
     int group_;
-    menu_callback_t callback_;
+    callback_t callback_;
     std::list<std::shared_ptr<Menu> > items_;
     std::shared_ptr<Fl_RGB_Image> img_;
     std::string label_text_;

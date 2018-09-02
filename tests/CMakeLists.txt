@@ -1,8 +1,9 @@
 
-file(GLOB ExeSources 
+file(GLOB ExeSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/vstream/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/controls/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/clippings/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/data/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/viewer/*.cpp"
@@ -13,7 +14,7 @@ file(GLOB ExeSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_tools/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/wrappers/*.cpp")
 
-file(GLOB TestSources 
+file(GLOB TestSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../third-party/googlemock/src/gmock-all.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/../third-party/googletest/src/gtest-all.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
@@ -88,7 +89,7 @@ add_test(NAME vcutter_test COMMAND vcutter_test)
 add_custom_command(
      TARGET vcutter_test
      COMMENT "Run the tests"
-     POST_BUILD 
+     POST_BUILD
      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
      COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C Debug  --verbose -R "^vcutter_test.*$"
 )
