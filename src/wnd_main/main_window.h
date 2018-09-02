@@ -84,21 +84,7 @@ class MainWindow : Fl_Menu_Window {
     menu_callback_t action_utils_convert();
     menu_callback_t action_utils_convert_current();
     menu_callback_t action_utils_clipping();
-
-    menu_callback_t action_position_top();
-    menu_callback_t action_position_left();
-    menu_callback_t action_position_right();
-    menu_callback_t action_position_bottom();
     menu_callback_t action_edit_properties();
-    menu_callback_t action_edit_position_vertical();
-    menu_callback_t action_edit_position_horizontal();
-    menu_callback_t action_edit_align_top();
-    menu_callback_t action_edit_align_bottom();
-    menu_callback_t action_edit_align_left();
-    menu_callback_t action_edit_align_right();
-    menu_callback_t action_edit_align_all();
-    menu_callback_t action_edit_norm_scale();
-    menu_callback_t action_clear_keys();
 
     menu_callback_t action_create_ref();
     menu_callback_t action_edit_use_ref_rotation();

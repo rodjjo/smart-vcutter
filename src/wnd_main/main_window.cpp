@@ -51,11 +51,10 @@ MainWindow::MainWindow() : Fl_Menu_Window(
 
     window_->color(fl_rgb_color(255, 255, 255));
 
-    init_tool_bar();
+    init_controls();
 
     window_->callback(prevent_close_cb, this);
 
-    init_controls();
 
     window_->end();
     window_->show();
@@ -123,6 +122,8 @@ void MainWindow::init_controls() {
     bottom_group_->end();
     bottom_group_->color(fl_rgb_color(0, 0, 0));
     cutter_window_.reset(new CutterWindow(bottom_group_));
+
+    init_tool_bar();
 }
 
 void MainWindow::init_main_menu() {
@@ -130,6 +131,8 @@ void MainWindow::init_main_menu() {
     menu_->align(FL_ALIGN_TOP);
 
     menu_file_.reset(new Menu(menu_, "&File"));
+
+    auto pb = cutter_window_->player_bar();
 
     menu_file_->add("&Open video", "^o", action_file_open(), 0, 0, xpm::film_16x16);
     menu_file_->add("Open &project", "^a", action_file_open_project(), 0, 0, xpm::directory_16x16);
@@ -150,7 +153,7 @@ void MainWindow::init_main_menu() {
     menu_edit_->add("&Paste", "^v", action_edit_paste(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::paste_16x16);
 
     menu_edit_->add("Swap width and height", "", action_transformation_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
-    menu_edit_->add("Clear all keys", "", action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
+    menu_edit_->add("Clear all keys", "", pb->action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
     menu_compare_ = menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
     menu_compare_alt_ = menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER | FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
     menu_edit_->add("Output properties", "", action_edit_properties(), 0, GROUP_CLIPPING_OPEN, xpm::note_16x16);
@@ -177,20 +180,20 @@ void MainWindow::init_main_menu() {
     menu_tools_->add("Scale/0.25x Scale", "", action_edit_scale_half2(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Scale/2.0x Scale", "", action_edit_scale2(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Scale/3.0x Scale", "", action_edit_scale3(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Scale/Normalize", "", action_edit_norm_scale(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Top", "", action_position_top(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Left", "", action_position_left(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Right", "", action_position_right(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/bottom", "", action_position_bottom(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Scale/Normalize", "", pb->action_norm_scale(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Top", "", pb->action_position_top(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Left", "", pb->action_position_left(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Right", "", pb->action_position_right(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/bottom", "", pb->action_position_bottom(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
     menu_tools_->add("Position/Centralize", "#c", action_edit_clear_position(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Center Vertical", "", action_edit_position_vertical(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Position/Ceter Horizontal", "", action_edit_position_horizontal(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Center Vertical", "", pb->action_position_vertical(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Position/Ceter Horizontal", "", pb->action_position_horizontal(), 0, GROUP_CLIPPING_OPEN);
 
-    menu_tools_->add("Align/Top", "", action_edit_align_top(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Align/bottom", "", action_edit_align_bottom(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Align/Left", "", action_edit_align_left(), 0, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Align/Right", "", action_edit_align_right(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
-    menu_tools_->add("Align/All", "", action_edit_align_all(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/Top", "", pb->action_align_top(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/bottom", "", pb->action_align_bottom(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/Left", "", pb->action_align_left(), 0, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/Right", "", pb->action_align_right(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN);
+    menu_tools_->add("Align/All", "", pb->action_align_all(), 0, GROUP_CLIPPING_OPEN);
 
     menu_tools_->add("All keys/Rotate +180 degree", "", action_transformation_180(), 0, GROUP_CLIPPING_OPEN);
     menu_tools_->add("All keys/Scale", "", action_transformation_scale(), 0, GROUP_CLIPPING_OPEN);
@@ -585,84 +588,6 @@ menu_callback_t MainWindow::action_clear_ref() {
 menu_callback_t MainWindow::action_edit_properties() {
     return [this] () {
         cutter_window_->action_properties();
-    };
-}
-
-menu_callback_t MainWindow::action_position_top() {
-    return [this] () {
-        cutter_window_->action_position_top();
-    };
-}
-
-menu_callback_t MainWindow::action_position_left() {
-    return [this] () {
-        cutter_window_->action_position_left();
-    };
-}
-
-menu_callback_t MainWindow::action_position_right() {
-    return [this] () {
-        cutter_window_->action_position_right();
-    };
-}
-
-menu_callback_t MainWindow::action_position_bottom() {
-    return [this] () {
-        cutter_window_->action_position_bottom();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_position_vertical() {
-    return [this] () {
-        cutter_window_->action_position_vertical();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_position_horizontal() {
-    return [this] () {
-        cutter_window_->action_position_horizontal();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_top() {
-    return [this] () {
-        cutter_window_->action_align_top();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_bottom() {
-    return [this] () {
-        cutter_window_->action_align_bottom();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_left() {
-    return [this] () {
-        cutter_window_->action_align_left();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_right() {
-    return [this] () {
-        cutter_window_->action_align_right();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_align_all() {
-    return [this] () {
-        cutter_window_->action_align_all();
-    };
-}
-
-menu_callback_t MainWindow::action_edit_norm_scale() {
-    return [this] () {
-        cutter_window_->action_norm_scale();
-    };
-}
-
-menu_callback_t MainWindow::action_clear_keys() {
-    return [this] () {
-        cutter_window_->action_clear_keys();
     };
 }
 

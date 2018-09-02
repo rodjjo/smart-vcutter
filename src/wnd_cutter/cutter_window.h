@@ -84,30 +84,17 @@ class CutterWindow : public PlayerBarHandler {
     void action_clear_ref();
 
     void action_properties();
-    void action_position_top();
-    void action_position_left();
-    void action_position_right();
-    void action_position_bottom();
-    void action_position_vertical();
-    void action_position_horizontal();
-    void action_align_top();
-    void action_align_bottom();
-    void action_align_left();
-    void action_align_right();
-    void action_align_all();
-    void action_norm_scale();
-    void action_clear_keys();
-
     void action_toggle_compare();
     void action_toggle_compare_wink();
+
     bool compare_enabled();
     bool compare_alternate();
 
     void resize_controls();
-
  private:
     void handle_clipping_opened(bool opened) override;
     void handle_redraw_needed() override;
+    bool player_bar_active();
 
  private:
     void clear(bool clear_controls = true);

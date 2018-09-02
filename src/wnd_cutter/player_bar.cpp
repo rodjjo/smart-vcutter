@@ -75,7 +75,7 @@ bool PlayerBar::check_player_paused(bool show_message) {
 
 
 bool PlayerBar::save(History *history) {
-    if (!clipping()) {
+    if (!active()) {
         return true;
     }
 
@@ -88,7 +88,7 @@ bool PlayerBar::save(History *history) {
 }
 
 bool PlayerBar::save_as(History *history) {
-    if (!clipping()) {
+    if (!active()) {
         return true;
     }
 
@@ -110,6 +110,149 @@ bool PlayerBar::save_as(History *history) {
 
     clipping()->save(path.c_str());
     return true;
+}
+
+bool PlayerBar::active() {
+    return handler_->player_bar_active() && clipping_;
+}
+
+menu_callback_t PlayerBar::action_position_top() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->positionate_top(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+
+menu_callback_t PlayerBar::action_position_left() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->positionate_left(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_position_right() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->positionate_right(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_position_bottom() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->positionate_bottom(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_position_vertical() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->center_vertical(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_position_horizontal() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->center_horizontal(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_align_top() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->fit_top(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_align_bottom() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->fit_bottom(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+
+}
+
+menu_callback_t PlayerBar::action_align_left() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->fit_left(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_align_right() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->fit_right(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_align_all() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->fit_all(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_norm_scale() {
+    return [this] () {
+        if (!check_player_paused(true)) {
+            return;
+        }
+        clipping()->normalize_scale(player()->info()->position());
+        handler_->handle_redraw_needed();
+    };
+}
+
+menu_callback_t PlayerBar::action_clear_keys() {
+    return [this] () {
+        if (clipping()->keys().empty()) {
+            show_error("There is no keys to clear");
+            return;
+        }
+
+        if (!ask("Are you sure to delete all keys ?")) {
+            return;
+        }
+
+        clipping()->remove_all();
+
+        handler_->handle_redraw_needed();
+    };
 }
 
 

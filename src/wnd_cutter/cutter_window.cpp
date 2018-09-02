@@ -360,6 +360,10 @@ bool CutterWindow::visible() {
     return window_->visible();
 }
 
+bool CutterWindow::player_bar_active() {
+    return visible();
+}
+
 std::shared_ptr<ClippingRender> CutterWindow::to_clipping() {
     return clipping()->clone();
 }
@@ -423,18 +427,6 @@ void CutterWindow::video_list_callback(Fl_Widget* widget, void *userdata) {
         window->goto_selected_clipping_key();
     }
     window->in_key_list_ = false;
-}
-
-void CutterWindow::action_clear_keys() {
-    if (clipping()->keys().empty()) {
-        show_error("There is no keys to clear");
-        return;
-    }
-    if (!ask("Are you sure to delete all keys ?")) {
-        return;
-    }
-    clipping()->remove_all();
-    update_clipping_list();
 }
 
 void CutterWindow::action_play() {
@@ -961,102 +953,6 @@ void CutterWindow::action_goto_reference() {
     }
 }
 
-void CutterWindow::action_position_top() {
-     if (!is_paused(true)) {
-        return;
-    }
-    clipping()->positionate_top(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_position_left() {
-     if (!is_paused(true)) {
-        return;
-    }
-    clipping()->positionate_left(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_position_right() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->positionate_right(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_position_bottom() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->positionate_bottom(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_position_vertical() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->center_vertical(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_position_horizontal() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->center_horizontal(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_align_top() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->fit_top(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_align_bottom() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->fit_bottom(player()->info()->position());
-    redraw_frame(true);
-
-}
-
-void CutterWindow::action_align_left() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->fit_left(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_align_right() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->fit_right(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_align_all() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->fit_all(player()->info()->position());
-    redraw_frame(true);
-}
-
-void CutterWindow::action_norm_scale() {
-    if (!is_paused(true)) {
-        return;
-    }
-    clipping()->normalize_scale(player()->info()->position());
-    redraw_frame(true);
-}
 
 void CutterWindow::double_click(void *component) {
     if (component == viewer_) {
