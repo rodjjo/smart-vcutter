@@ -34,10 +34,10 @@ const float kKEY_REPEAT_INTERVAL = 0.333;
 #define GROUP_CLIPPING_OPEN 1
 
 MainWindow::MainWindow() : Fl_Menu_Window(
-        default_window_left(),
-        default_window_top(),
-        default_window_width(),
-        default_window_height()
+    default_window_left(),
+    default_window_top(),
+    default_window_width(),
+    default_window_height()
 ) {
     sessions_loaded_ = false;
     run_called_ = false;
@@ -100,7 +100,7 @@ void MainWindow::load_sessions() {
     }
     sessions_loaded_ = true;
 
-    if (cutter_window_->restore_session()) {
+    if (cutter_window_->player_bar()->restore_session()) {
         enable_controls();
     }
 
@@ -431,12 +431,12 @@ void MainWindow::open_video_or_project(const std::string& path) {
 
     std::string extension(".vcutter");
     if (path.substr(path.size() - extension.size()) == extension) {
-        if (cutter_window_->open_clipping(path)) {
+        if (cutter_window_->player_bar()->open(path, false)) {
             enable_controls();
             return;
         }
     } else {
-        if (cutter_window_->open_video(path)) {
+        if (cutter_window_->player_bar()->open(path, true)) {
             enable_controls();
             return;
         }
@@ -475,10 +475,15 @@ menu_callback_t MainWindow::action_file_open() {
 }
 
 bool MainWindow::save_project(bool create_new_file) {
-    if (create_new_file) {
-        return cutter_window_->save_as(&history_);
+    if (!cutter_window_->visible()) {
+        return false;
     }
-    return cutter_window_->save(&history_);
+
+    if (create_new_file) {
+        return cutter_window_->player_bar()->save_as(&history_);
+    }
+
+    return cutter_window_->player_bar()->save(&history_);
 }
 
 menu_callback_t MainWindow::action_file_save() {

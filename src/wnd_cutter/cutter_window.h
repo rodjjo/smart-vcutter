@@ -22,6 +22,7 @@
 
 #include "src/data/history.h"
 #include "src/wnd_cutter/options_window.h"
+#include "src/wnd_cutter/player_bar.h"
 #include "src/wrappers/video_player.h"
 #include "src/clippings/clipping_session.h"
 #include "src/viewer/miniature_viewer.h"
@@ -30,17 +31,14 @@
 
 namespace vcutter {
 
-class CutterWindow {
+class CutterWindow : public PlayerBarHandler {
  public:
     CutterWindow(Fl_Group *parent);
     virtual ~CutterWindow();
 
-    bool restore_session();
-    bool open_clipping(const std::string& path);
-    bool open_video(const std::string& video_path);
-
-    bool save(History * history);
-    bool save_as(History * history);
+    PlayerBar *player_bar();
+    Clipping *clipping();
+    PlayerWrapper *player();
 
     void close();
     std::shared_ptr<ClippingRender> to_clipping();
@@ -106,10 +104,13 @@ class CutterWindow {
     bool compare_alternate();
 
     void resize_controls();
+
+ private:
+    void handle_clipping_opened(bool opened) override;
+    void handle_redraw_needed() override;
+
  private:
     void clear(bool clear_controls = true);
-    bool handle_opened_clipping();
-    //void load(Project* project, unsigned int index);
     void open_video();
     void update_clipping_list();
     void update_seek_bar();
@@ -167,7 +168,7 @@ class CutterWindow {
     Fl_Select_Browser *key_list_;
     ClippingEditor *clipping_editor_;
 
-    std::shared_ptr<ClippingSession> clipping_;
+    std::unique_ptr<PlayerBar> player_bar_;
 
     MiniatureViewer *viewer_;
  private:
