@@ -50,36 +50,36 @@ class MainWindow : Fl_Menu_Window {
 
  private:
     void enable_controls();
-    menu_callback_t action_menu_popup();
-    menu_callback_t action_file_open();
-    menu_callback_t action_file_open_project();
-    menu_callback_t action_file_save();
-    menu_callback_t action_file_save_as();
-    menu_callback_t action_file_generate();
-    menu_callback_t action_file_close();
-    menu_callback_t action_file_exit();
-    menu_callback_t action_use_ref();
-    menu_callback_t action_edit_go_ref();
-    menu_callback_t action_clear_ref();
-    menu_callback_t action_utils_convert();
-    menu_callback_t action_utils_convert_current();
-    menu_callback_t action_utils_clipping();
+    callback_t action_menu_popup();
+    callback_t action_file_open();
+    callback_t action_file_open_project();
+    callback_t action_file_save();
+    callback_t action_file_save_as();
+    callback_t action_file_generate();
+    callback_t action_file_close();
+    callback_t action_file_exit();
+    callback_t action_use_ref();
+    callback_t action_edit_go_ref();
+    callback_t action_clear_ref();
+    callback_t action_utils_convert();
+    callback_t action_utils_convert_current();
+    callback_t action_utils_clipping();
 
-    menu_callback_t action_create_ref();
-    menu_callback_t action_edit_use_ref_rotation();
-    menu_callback_t action_edit_use_ref_drag();
-    menu_callback_t action_edit_use_ref_dragx();
-    menu_callback_t action_edit_use_ref_dragy();
-    menu_callback_t action_edit_use_ref_scale();
-    menu_callback_t action_edit_use_ref_no_rotate();
-    menu_callback_t action_edit_use_ref_no_scale();
-    menu_callback_t action_edit_use_ref_no_drag();
-    menu_callback_t action_toggle_compare_box();
-    menu_callback_t action_wink_comparison();
+    callback_t action_create_ref();
+    callback_t action_edit_use_ref_rotation();
+    callback_t action_edit_use_ref_drag();
+    callback_t action_edit_use_ref_dragx();
+    callback_t action_edit_use_ref_dragy();
+    callback_t action_edit_use_ref_scale();
+    callback_t action_edit_use_ref_no_rotate();
+    callback_t action_edit_use_ref_no_scale();
+    callback_t action_edit_use_ref_no_drag();
+    callback_t action_toggle_compare_box();
+    callback_t action_wink_comparison();
 
-    menu_callback_t action_about();
-    menu_callback_t action_help();
-    menu_callback_t action_tip();
+    callback_t action_about();
+    callback_t action_help();
+    callback_t action_tip();
 
     bool save_project(bool create_new_file);
     bool ask_for_save();

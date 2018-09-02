@@ -210,7 +210,7 @@ void MainWindow::init_main_menu() {
     menu_help_->add("Get help", "", action_help(), 0, 0, xpm::help_16x16);
 }
 
-menu_callback_t MainWindow::action_menu_popup() {
+callback_t MainWindow::action_menu_popup() {
     return [this] () {
         menu_compare_alt_->enable(cutter_window_->visible() && cutter_window_->compare_enabled());
         menu_compare_->check(cutter_window_->compare_enabled());
@@ -218,7 +218,7 @@ menu_callback_t MainWindow::action_menu_popup() {
     };
 }
 
-menu_callback_t MainWindow::action_utils_clipping() {
+callback_t MainWindow::action_utils_clipping() {
     return [this] () {
         const char *key = "main-window-project-dir";
         std::string directory = history_[key];
@@ -243,7 +243,7 @@ menu_callback_t MainWindow::action_utils_clipping() {
     };
 }
 
-menu_callback_t MainWindow::action_utils_convert_current() {
+callback_t MainWindow::action_utils_convert_current() {
     return [this] () {
         if (!cutter_window_->visible()) {
             return;
@@ -254,7 +254,7 @@ menu_callback_t MainWindow::action_utils_convert_current() {
     };
 }
 
-menu_callback_t MainWindow::action_file_close() {
+callback_t MainWindow::action_file_close() {
     return [this] () {
         if (ask_for_save()) {
             cutter_window_->close();
@@ -264,7 +264,7 @@ menu_callback_t MainWindow::action_file_close() {
     };
 }
 
-menu_callback_t MainWindow::action_file_generate() {
+callback_t MainWindow::action_file_generate() {
     return [this] () {
         if (cutter_window_->visible()) {
             cutter_window_->pause();
@@ -326,7 +326,7 @@ void MainWindow::open_video_or_project(const std::string& path) {
 }
 
 
-menu_callback_t MainWindow::action_file_open_project() {
+callback_t MainWindow::action_file_open_project() {
     return [this] () {
         if (!ask_for_save()) {
             return;
@@ -341,7 +341,7 @@ menu_callback_t MainWindow::action_file_open_project() {
     };
 }
 
-menu_callback_t MainWindow::action_file_open() {
+callback_t MainWindow::action_file_open() {
     return [this] () {
         if (!ask_for_save()) {
             return;
@@ -368,97 +368,97 @@ bool MainWindow::save_project(bool create_new_file) {
     return cutter_window_->clipping_actions()->save(&history_);
 }
 
-menu_callback_t MainWindow::action_file_save() {
+callback_t MainWindow::action_file_save() {
     return [this] () {
         save_project(false);
     };
 }
 
-menu_callback_t MainWindow::action_file_save_as() {
+callback_t MainWindow::action_file_save_as() {
     return [this] () {
         save_project(true);
     };
 }
 
-menu_callback_t MainWindow::action_create_ref() {
+callback_t MainWindow::action_create_ref() {
     return [this] () {
         cutter_window_->action_create_ref();
     };
 }
 
-menu_callback_t MainWindow::action_toggle_compare_box() {
+callback_t MainWindow::action_toggle_compare_box() {
     return [this] () {
         cutter_window_->action_toggle_compare();
     };
 }
 
-menu_callback_t MainWindow::action_wink_comparison() {
+callback_t MainWindow::action_wink_comparison() {
     return [this] () {
         cutter_window_->action_toggle_compare_wink();
     };
 }
 
-menu_callback_t MainWindow::action_use_ref() {
+callback_t MainWindow::action_use_ref() {
     return [this] () {
         cutter_window_->action_use_ref(true, true, true, true);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_rotation() {
+callback_t MainWindow::action_edit_use_ref_rotation() {
     return [this] () {
         cutter_window_->action_use_ref(false, false, true, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_drag() {
+callback_t MainWindow::action_edit_use_ref_drag() {
     return [this] () {
         cutter_window_->action_use_ref(true, true, false, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_dragx() {
+callback_t MainWindow::action_edit_use_ref_dragx() {
     return [this] () {
         cutter_window_->action_use_ref(true, false, false, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_dragy() {
+callback_t MainWindow::action_edit_use_ref_dragy() {
     return [this] () {
         cutter_window_->action_use_ref(false, true, false, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_scale() {
+callback_t MainWindow::action_edit_use_ref_scale() {
     return [this] () {
         cutter_window_->action_use_ref(false, false, false, true);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_no_rotate() {
+callback_t MainWindow::action_edit_use_ref_no_rotate() {
     return [this] () {
         cutter_window_->action_use_ref(true, true, false, true);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_no_scale() {
+callback_t MainWindow::action_edit_use_ref_no_scale() {
     return [this] () {
         cutter_window_->action_use_ref(true, true, true, false);
     };
 }
 
-menu_callback_t MainWindow::action_edit_use_ref_no_drag() {
+callback_t MainWindow::action_edit_use_ref_no_drag() {
     return [this] () {
         cutter_window_->action_use_ref(false, false, true, true);
     };
 }
 
-menu_callback_t MainWindow::action_edit_go_ref() {
+callback_t MainWindow::action_edit_go_ref() {
     return [this] () {
         cutter_window_->action_goto_reference();
     };
 }
 
-menu_callback_t MainWindow::action_clear_ref() {
+callback_t MainWindow::action_clear_ref() {
     return [this] () {
         cutter_window_->action_clear_ref();
     };
@@ -482,7 +482,7 @@ bool MainWindow::ask_for_save() {
     return true;
 }
 
-menu_callback_t MainWindow::action_file_exit() {
+callback_t MainWindow::action_file_exit() {
     return [this] () {
         if (!ask_for_save()) {
             return;
@@ -498,26 +498,26 @@ void MainWindow::prevent_close_cb(Fl_Widget *menu, void *this_window) {
     static_cast<MainWindow *>(this_window)->window_->hide();
 }
 
-menu_callback_t MainWindow::action_utils_convert() {
+callback_t MainWindow::action_utils_convert() {
     return [this] () {
         cutter_window_->pause();
         EncoderWindow::execute(&history_, window_);
     };
 }
 
-menu_callback_t MainWindow::action_about() {
+callback_t MainWindow::action_about() {
     return [this] () {
         show_error("Rodrigo A. Araujo\nrodjjo@@gmail.com");
     };
 }
 
-menu_callback_t MainWindow::action_help() {
+callback_t MainWindow::action_help() {
     return [this] () {
         show_error("The help manual is in development");
     };
 }
 
-menu_callback_t MainWindow::action_tip() {
+callback_t MainWindow::action_tip() {
     return [this] () {
         show_error("The tips window will be available soon");
     };

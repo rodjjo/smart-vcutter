@@ -133,7 +133,7 @@ bool ClippingActions::active() {
     return handler_->player_bar_active() && clipping_;
 }
 
-menu_callback_t ClippingActions::action_position_top() {
+callback_t ClippingActions::action_position_top() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -144,7 +144,7 @@ menu_callback_t ClippingActions::action_position_top() {
 }
 
 
-menu_callback_t ClippingActions::action_position_left() {
+callback_t ClippingActions::action_position_left() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -154,7 +154,7 @@ menu_callback_t ClippingActions::action_position_left() {
     };
 }
 
-menu_callback_t ClippingActions::action_position_right() {
+callback_t ClippingActions::action_position_right() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -164,7 +164,7 @@ menu_callback_t ClippingActions::action_position_right() {
     };
 }
 
-menu_callback_t ClippingActions::action_position_bottom() {
+callback_t ClippingActions::action_position_bottom() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -174,7 +174,7 @@ menu_callback_t ClippingActions::action_position_bottom() {
     };
 }
 
-menu_callback_t ClippingActions::action_position_vertical() {
+callback_t ClippingActions::action_position_vertical() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -184,7 +184,7 @@ menu_callback_t ClippingActions::action_position_vertical() {
     };
 }
 
-menu_callback_t ClippingActions::action_position_horizontal() {
+callback_t ClippingActions::action_position_horizontal() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -194,7 +194,7 @@ menu_callback_t ClippingActions::action_position_horizontal() {
     };
 }
 
-menu_callback_t ClippingActions::action_align_top() {
+callback_t ClippingActions::action_align_top() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -204,7 +204,7 @@ menu_callback_t ClippingActions::action_align_top() {
     };
 }
 
-menu_callback_t ClippingActions::action_align_bottom() {
+callback_t ClippingActions::action_align_bottom() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -215,7 +215,7 @@ menu_callback_t ClippingActions::action_align_bottom() {
 
 }
 
-menu_callback_t ClippingActions::action_align_left() {
+callback_t ClippingActions::action_align_left() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -225,7 +225,7 @@ menu_callback_t ClippingActions::action_align_left() {
     };
 }
 
-menu_callback_t ClippingActions::action_align_right() {
+callback_t ClippingActions::action_align_right() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -235,7 +235,7 @@ menu_callback_t ClippingActions::action_align_right() {
     };
 }
 
-menu_callback_t ClippingActions::action_align_all() {
+callback_t ClippingActions::action_align_all() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -245,7 +245,7 @@ menu_callback_t ClippingActions::action_align_all() {
     };
 }
 
-menu_callback_t ClippingActions::action_norm_scale() {
+callback_t ClippingActions::action_norm_scale() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -255,7 +255,7 @@ menu_callback_t ClippingActions::action_norm_scale() {
     };
 }
 
-menu_callback_t ClippingActions::action_clear_keys() {
+callback_t ClippingActions::action_clear_keys() {
     return [this] () {
         if (clipping()->keys().empty()) {
             show_error("There is no keys to clear");
@@ -273,7 +273,7 @@ menu_callback_t ClippingActions::action_clear_keys() {
 }
 
 
-menu_callback_t ClippingActions::action_properties() {
+callback_t ClippingActions::action_properties() {
     return [this] () {
         if (!active()) {
             return;
@@ -288,7 +288,7 @@ menu_callback_t ClippingActions::action_properties() {
     };
 }
 
-menu_callback_t ClippingActions::action_pause_resume() {
+callback_t ClippingActions::action_pause_resume() {
     return [this] () {
         if (active()) {
             if (player()->is_playing()) {
@@ -300,13 +300,13 @@ menu_callback_t ClippingActions::action_pause_resume() {
     };
 }
 
-menu_callback_t ClippingActions::action_clear_copy() {
+callback_t ClippingActions::action_clear_copy() {
     return [this] () {
         has_key_copy_ = false;
     };
 }
 
-menu_callback_t ClippingActions::action_copy() {
+callback_t ClippingActions::action_copy() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -317,7 +317,7 @@ menu_callback_t ClippingActions::action_copy() {
     };
 }
 
-menu_callback_t ClippingActions::action_paste() {
+callback_t ClippingActions::action_paste() {
     return [this] () {
         if (!has_copy("It's necessary to pause the video before paste a mark.")) {
             return;
@@ -329,7 +329,7 @@ menu_callback_t ClippingActions::action_paste() {
     };
 }
 
-menu_callback_t ClippingActions::action_paste_rotation() {
+callback_t ClippingActions::action_paste_rotation() {
     return [this] () {
         if (!has_copy("It's necessary to pause the video before paste the mark's rotation.")) {
             return;
@@ -341,7 +341,7 @@ menu_callback_t ClippingActions::action_paste_rotation() {
     };
 }
 
-menu_callback_t ClippingActions::action_paste_scale() {
+callback_t ClippingActions::action_paste_scale() {
     return [this] () {
         if (!has_copy("It's necessary to pause the video before paste the mark's scale.")) {
             return;
@@ -353,7 +353,7 @@ menu_callback_t ClippingActions::action_paste_scale() {
     };
 }
 
-menu_callback_t ClippingActions::action_paste_position(bool x, bool y) {
+callback_t ClippingActions::action_paste_position(bool x, bool y) {
     return [this, x, y] () {
         if (!has_copy("It's necessary to pause the video before paste the mark's position.")) {
             return;
@@ -368,7 +368,7 @@ menu_callback_t ClippingActions::action_paste_position(bool x, bool y) {
     };
 }
 
-menu_callback_t ClippingActions::action_clear_rotation() {
+callback_t ClippingActions::action_clear_rotation() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -380,7 +380,7 @@ menu_callback_t ClippingActions::action_clear_rotation() {
     };
 }
 
-menu_callback_t ClippingActions::action_clear_scale() {
+callback_t ClippingActions::action_clear_scale() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -392,7 +392,7 @@ menu_callback_t ClippingActions::action_clear_scale() {
     };
 }
 
-menu_callback_t ClippingActions::action_scale_half() {
+callback_t ClippingActions::action_scale_half() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -404,7 +404,7 @@ menu_callback_t ClippingActions::action_scale_half() {
     };
 }
 
-menu_callback_t ClippingActions::action_scale_half_2() {
+callback_t ClippingActions::action_scale_half_2() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -416,7 +416,7 @@ menu_callback_t ClippingActions::action_scale_half_2() {
     };
 }
 
-menu_callback_t ClippingActions::action_scale_2() {
+callback_t ClippingActions::action_scale_2() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -428,7 +428,7 @@ menu_callback_t ClippingActions::action_scale_2() {
     };
 }
 
-menu_callback_t ClippingActions::action_scale_3() {
+callback_t ClippingActions::action_scale_3() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -440,7 +440,7 @@ menu_callback_t ClippingActions::action_scale_3() {
     };
 }
 
-menu_callback_t ClippingActions::action_clear_position() {
+callback_t ClippingActions::action_clear_position() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -453,7 +453,7 @@ menu_callback_t ClippingActions::action_clear_position() {
     };
 }
 
-menu_callback_t ClippingActions::action_rotation_90() {
+callback_t ClippingActions::action_rotation_90() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -465,7 +465,7 @@ menu_callback_t ClippingActions::action_rotation_90() {
     };
 }
 
-menu_callback_t ClippingActions::action_rotation_180() {
+callback_t ClippingActions::action_rotation_180() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -477,7 +477,7 @@ menu_callback_t ClippingActions::action_rotation_180() {
     };
 }
 
-menu_callback_t ClippingActions::action_rotation_270() {
+callback_t ClippingActions::action_rotation_270() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -489,7 +489,7 @@ menu_callback_t ClippingActions::action_rotation_270() {
     };
 }
 
-menu_callback_t ClippingActions::action_swap_wh() {
+callback_t ClippingActions::action_swap_wh() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -556,7 +556,7 @@ menu_callback_t ClippingActions::action_swap_wh() {
     };
 }
 
-menu_callback_t ClippingActions::action_rotate_all_180() {
+callback_t ClippingActions::action_rotate_all_180() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -575,7 +575,7 @@ menu_callback_t ClippingActions::action_rotate_all_180() {
     };
 }
 
-menu_callback_t ClippingActions::action_scale_all() {
+callback_t ClippingActions::action_scale_all() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -606,7 +606,7 @@ menu_callback_t ClippingActions::action_scale_all() {
     };
 }
 
-menu_callback_t ClippingActions::action_prior() {
+callback_t ClippingActions::action_prior() {
     return [this] () {
         if (!player()->is_playing() && Fl::event_shift() && player()->info()->position() + 33 < player()->info()->count()) {
             player()->seek_frame(player()->info()->position() + 33);
@@ -618,7 +618,7 @@ menu_callback_t ClippingActions::action_prior() {
     };
 }
 
-menu_callback_t ClippingActions::action_next() {
+callback_t ClippingActions::action_next() {
     return [this] () {
         if (!player()->is_playing() && Fl::event_shift() && player()->info()->position() - 33 > 0) {
             player()->seek_frame(player()->info()->position() - 33);
@@ -632,7 +632,7 @@ menu_callback_t ClippingActions::action_next() {
     };
 }
 
-menu_callback_t ClippingActions::action_insert() {
+callback_t ClippingActions::action_insert() {
     return [this] () {
         if (!check_player_paused(true)) {
             return;
@@ -649,7 +649,7 @@ menu_callback_t ClippingActions::action_insert() {
     };
 }
 
-menu_callback_t ClippingActions::action_delete() {
+callback_t ClippingActions::action_delete() {
     return [this] () {
         if (!clipping()) {
             return;
@@ -677,7 +677,7 @@ menu_callback_t ClippingActions::action_delete() {
     };
 }
 
-menu_callback_t ClippingActions::action_cutoff1() {
+callback_t ClippingActions::action_cutoff1() {
     return [this] () {
         if (!clipping()) {
             return;
@@ -693,7 +693,7 @@ menu_callback_t ClippingActions::action_cutoff1() {
     };
 }
 
-menu_callback_t ClippingActions::action_cutoff12() {
+callback_t ClippingActions::action_cutoff12() {
     return [this] () {
         if (!clipping()) {
             return;
@@ -709,7 +709,7 @@ menu_callback_t ClippingActions::action_cutoff12() {
     };
 }
 
-menu_callback_t ClippingActions::action_cutoff2() {
+callback_t ClippingActions::action_cutoff2() {
     return [this] () {
         if (!clipping()) {
             return;
