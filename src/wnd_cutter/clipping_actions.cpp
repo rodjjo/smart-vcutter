@@ -3,6 +3,8 @@
  */
 #include "src/common/utils.h"
 #include "src/wnd_common/common_dialogs.h"
+#include "src/wnd_cutter/options_window.h"
+
 #include "src/wnd_cutter/clipping_actions.h"
 
 namespace vcutter {
@@ -122,7 +124,7 @@ menu_callback_t ClippingActions::action_position_top() {
             return;
         }
         clipping()->positionate_top(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -133,7 +135,7 @@ menu_callback_t ClippingActions::action_position_left() {
             return;
         }
         clipping()->positionate_left(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -143,7 +145,7 @@ menu_callback_t ClippingActions::action_position_right() {
             return;
         }
         clipping()->positionate_right(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -153,7 +155,7 @@ menu_callback_t ClippingActions::action_position_bottom() {
             return;
         }
         clipping()->positionate_bottom(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -163,7 +165,7 @@ menu_callback_t ClippingActions::action_position_vertical() {
             return;
         }
         clipping()->center_vertical(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -173,7 +175,7 @@ menu_callback_t ClippingActions::action_position_horizontal() {
             return;
         }
         clipping()->center_horizontal(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -183,7 +185,7 @@ menu_callback_t ClippingActions::action_align_top() {
             return;
         }
         clipping()->fit_top(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -193,7 +195,7 @@ menu_callback_t ClippingActions::action_align_bottom() {
             return;
         }
         clipping()->fit_bottom(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 
 }
@@ -204,7 +206,7 @@ menu_callback_t ClippingActions::action_align_left() {
             return;
         }
         clipping()->fit_left(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -214,7 +216,7 @@ menu_callback_t ClippingActions::action_align_right() {
             return;
         }
         clipping()->fit_right(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -224,7 +226,7 @@ menu_callback_t ClippingActions::action_align_all() {
             return;
         }
         clipping()->fit_all(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -234,7 +236,7 @@ menu_callback_t ClippingActions::action_norm_scale() {
             return;
         }
         clipping()->normalize_scale(player()->info()->position());
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
@@ -251,9 +253,24 @@ menu_callback_t ClippingActions::action_clear_keys() {
 
         clipping()->remove_all();
 
-        handler_->handle_redraw_needed();
+        handler_->handle_clipping_keys_changed();
     };
 }
 
+
+menu_callback_t ClippingActions::action_properties() {
+    return [this] () {
+        if (!active()) {
+            return;
+        }
+
+        unsigned int w = clipping()->w();
+        unsigned int h = clipping()->h();
+        if (CutterOptionsWindow::edit_properties(player()->info()->w(), player()->info()->h(), &w, &h)) {
+            clipping()->wh(w, h);
+            handler_->handle_clipping_resized();
+        }
+    };
+}
 
 }  // namespace vcutter

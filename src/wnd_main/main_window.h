@@ -84,7 +84,6 @@ class MainWindow : Fl_Menu_Window {
     menu_callback_t action_utils_convert();
     menu_callback_t action_utils_convert_current();
     menu_callback_t action_utils_clipping();
-    menu_callback_t action_edit_properties();
 
     menu_callback_t action_create_ref();
     menu_callback_t action_edit_use_ref_rotation();

@@ -16,7 +16,8 @@ class ClippingActionsHandler {
     virtual ~ClippingActionsHandler() {}
     virtual bool player_bar_active() = 0;
     virtual void handle_clipping_opened(bool opened) = 0;
-    virtual void handle_redraw_needed() = 0;
+    virtual void handle_clipping_resized() = 0;
+    virtual void handle_clipping_keys_changed() = 0;
 };
 
 class ClippingActions {
@@ -45,7 +46,7 @@ class ClippingActions {
     menu_callback_t action_align_all();
     menu_callback_t action_norm_scale();
     menu_callback_t action_clear_keys();
-
+    menu_callback_t action_properties();
  private:
     bool active();
  private:

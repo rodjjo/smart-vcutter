@@ -329,7 +329,7 @@ void CutterWindow::clear_modified() {
     clipping_version_ = clipping()->version();
 }
 
-void CutterWindow::handle_redraw_needed() {
+void CutterWindow::handle_clipping_keys_changed() {
     redraw_frame(true);
 }
 
@@ -462,18 +462,9 @@ void CutterWindow::action_prior() {
     update_buffers(true);
 }
 
-void CutterWindow::action_properties() {
-    if (!visible()) {
-        return;
-    }
-
-    unsigned int w = clipping()->w();
-    unsigned int h = clipping()->h();
-    if (CutterOptionsWindow::edit_properties(player()->info()->w(), player()->info()->h(), &w, &h)) {
-        clipping()->wh(w, h);
-        redraw_frame();
-        update_title();
-    }
+void CutterWindow::handle_clipping_resized() {
+    redraw_frame();
+    update_title();
 }
 
 void CutterWindow::action_search() {
@@ -956,7 +947,7 @@ void CutterWindow::action_goto_reference() {
 
 void CutterWindow::double_click(void *component) {
     if (component == viewer_) {
-        action_properties();
+        clipping_actions()->action_properties()();
     }
 }
 

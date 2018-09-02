@@ -21,7 +21,6 @@
 #include <FL/Fl_Select_Browser.H>
 
 #include "src/data/history.h"
-#include "src/wnd_cutter/options_window.h"
 #include "src/wnd_cutter/clipping_actions.h"
 #include "src/wrappers/video_player.h"
 #include "src/clippings/clipping_session.h"
@@ -82,8 +81,6 @@ class CutterWindow : public ClippingActionsHandler {
     void action_create_ref();
     void action_use_ref(bool positionate_x, bool positionate_y, bool rotate, bool scale);
     void action_clear_ref();
-
-    void action_properties();
     void action_toggle_compare();
     void action_toggle_compare_wink();
 
@@ -92,8 +89,9 @@ class CutterWindow : public ClippingActionsHandler {
 
     void resize_controls();
  private:
+    void handle_clipping_resized() override;
     void handle_clipping_opened(bool opened) override;
-    void handle_redraw_needed() override;
+    void handle_clipping_keys_changed() override;
     bool player_bar_active();
 
  private:
