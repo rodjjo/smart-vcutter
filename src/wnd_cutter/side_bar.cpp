@@ -38,6 +38,10 @@ void SideBar::update(bool check_size) {
         return;
     }
 
+    if (!actions_->clipping()) {
+        return;
+    }
+
     in_key_list_ = true;
 
     int selection = key_list_->value();

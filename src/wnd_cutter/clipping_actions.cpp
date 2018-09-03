@@ -733,25 +733,37 @@ callback_t ClippingActions::action_cutoff2() {
 
 callback_t ClippingActions::action_play() {
     return [this] () {
+        if (!active()) {
+            return;
+        }
+
         player()->play();
     };
 }
 
 callback_t ClippingActions::action_stop() {
     return [this] () {
+        if (!active()) {
+            return;
+        }
+
         player()->stop();
     };
 }
 
 callback_t ClippingActions::action_pause() {
     return [this] () {
+        if (!active()) {
+            return;
+        }
+
         player()->pause();
     };
 }
 
 callback_t ClippingActions::action_search() {
     return [this] () {
-        if (!clipping()) {
+        if (!active()) {
             return;
         }
 
