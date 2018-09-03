@@ -103,7 +103,7 @@ void MainWindow::load_sessions() {
         enable_controls();
     }
 
-    cutter_window_->pause();
+    cutter_window_->clipping_actions()->action_pause()();
     EncoderWindow::restore_session(&history_, window_);
 }
 
@@ -238,7 +238,7 @@ callback_t MainWindow::action_utils_clipping() {
             return;
         }
 
-        cutter_window_->pause();
+        cutter_window_->clipping_actions()->action_pause()();
         EncoderWindow::execute(&history_, window_, clip);
     };
 }
@@ -249,7 +249,7 @@ callback_t MainWindow::action_utils_convert_current() {
             return;
         }
 
-        cutter_window_->pause();
+        cutter_window_->clipping_actions()->action_pause()();
         EncoderWindow::execute(&history_, window_, cutter_window_->get_video_path());
     };
 }
@@ -267,7 +267,7 @@ callback_t MainWindow::action_file_close() {
 callback_t MainWindow::action_file_generate() {
     return [this] () {
         if (cutter_window_->visible()) {
-            cutter_window_->pause();
+            cutter_window_->clipping_actions()->action_pause()();
             EncoderWindow::execute(&history_, window_, cutter_window_->to_clipping());
         }
     };
@@ -500,7 +500,7 @@ void MainWindow::prevent_close_cb(Fl_Widget *menu, void *this_window) {
 
 callback_t MainWindow::action_utils_convert() {
     return [this] () {
-        cutter_window_->pause();
+        cutter_window_->clipping_actions()->action_pause()();
         EncoderWindow::execute(&history_, window_);
     };
 }

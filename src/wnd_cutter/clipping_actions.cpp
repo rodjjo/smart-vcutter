@@ -610,7 +610,7 @@ callback_t ClippingActions::action_scale_all() {
     };
 }
 
-callback_t ClippingActions::action_prior() {
+callback_t ClippingActions::action_next() {
     return [this] () {
         if (!player()->is_playing() && Fl::event_shift() && player()->info()->position() + 33 < player()->info()->count()) {
             player()->seek_frame(player()->info()->position() + 33);
@@ -622,7 +622,7 @@ callback_t ClippingActions::action_prior() {
     };
 }
 
-callback_t ClippingActions::action_next() {
+callback_t ClippingActions::action_prior() {
     return [this] () {
         if (!player()->is_playing() && Fl::event_shift() && player()->info()->position() - 33 > 0) {
             player()->seek_frame(player()->info()->position() - 33);
@@ -733,27 +733,37 @@ callback_t ClippingActions::action_cutoff2() {
 
 callback_t ClippingActions::action_play() {
     return [this] () {
+        if (!active()) {
+            return;
+        }
+
         player()->play();
     };
 }
 
-
-
 callback_t ClippingActions::action_stop() {
     return [this] () {
+        if (!active()) {
+            return;
+        }
+
         player()->stop();
     };
 }
 
 callback_t ClippingActions::action_pause() {
     return [this] () {
+        if (!active()) {
+            return;
+        }
+
         player()->pause();
     };
 }
 
 callback_t ClippingActions::action_search() {
     return [this] () {
-        if (!clipping()) {
+        if (!active()) {
             return;
         }
 
@@ -784,6 +794,19 @@ callback_t ClippingActions::action_search() {
     };
 }
 
+callback_t ClippingActions::action_play_interval() {
+    return [this] () {
+        if (!active()) {
+            return;
+        }
+
+        if (clipping()->keys().empty()) {
+            return;
+        }
+
+        player()->play(clipping()->first_frame(), clipping()->last_frame());
+    };
+}
 
 
 }  // namespace vcutter

@@ -21,13 +21,13 @@ class PlayerBar {
     virtual ~PlayerBar();
     PlayerWrapper *player();
     void resize_controls();
-    void display_speed();
     void update();
     int h();
 
  private:
     callback_t action_speed();
     static void seek_bar_callback(Fl_Widget* widget, void *userdata);
+    void display_speed();
 
  private:
     bool in_seek_bar_callback_;

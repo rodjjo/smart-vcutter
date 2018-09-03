@@ -17,8 +17,6 @@ PlayerBar::PlayerBar(ClippingActions *actions, Fl_Group *parent) {
     group_ = new Fl_Group(0,0, parent->w(), 30);
     group_->box(FL_UP_BOX);
 
-    auto null_action = [](){};
-
     btn_speed_.reset(new Button("1.0", action_speed()));
     btn_play_.reset(new Button(xpm::image(xpm::button_play), actions->action_play()));
     btn_pause_.reset(new Button(xpm::image(xpm::button_pause), actions->action_pause()));
@@ -44,6 +42,8 @@ PlayerBar::PlayerBar(ClippingActions *actions, Fl_Group *parent) {
     int seek_bar_left = video_duration_->x() + video_duration_->w() + 3;
     seek_bar_ = new Fl_Hor_Slider(seek_bar_left, 3, parent->w() - seek_bar_left - 5, 25);
     seek_bar_->step(1);
+
+    seek_bar_->clear_visible_focus();
 
     group_->end();
 
@@ -178,6 +178,8 @@ void PlayerBar::update() {
     video_duration_->copy_label(temp);
 
     in_seek_bar_callback_ = false;
+
+    display_speed();
 }
 
 }  // namespace vcutter
