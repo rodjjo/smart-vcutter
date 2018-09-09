@@ -80,6 +80,11 @@ int SideBar::default_width() {
 }
 
 void SideBar::resize_controls() {
+    int parent_x = parent_->x();
+    int parent_y = parent_->y();
+
+    parent_->position(0, 0);
+
     btn_new_key_->position(parent_->w() - default_width(), 3);
     btn_del_key_->position(btn_new_key_->x() + 27, 3);
     btn_play_interval_->position(btn_del_key_->x() + 27, 3);
@@ -87,14 +92,16 @@ void SideBar::resize_controls() {
     static_cast<Fl_Widget *>(key_list_)->position(btn_new_key_->x(), 33);
     int key_list_w = parent_->w() - btn_new_key_->x();
 
-    int botton_size = parent_->h() - left_component_->h();
-    key_list_->size(key_list_w, left_component_->h() - key_list_w - botton_size - 38);
+    int bottom_size = parent_->h() - left_component_->h();
+    key_list_->size(key_list_w, left_component_->h() - key_list_w - bottom_size - 38);
     viewer_->position(btn_new_key_->x(), key_list_->y() + key_list_->h());
     viewer_->size(key_list_->w(), key_list_->w());
 
     btn_new_key_->size(25, 25);
     btn_del_key_->size(25, 25);
     btn_play_interval_->size(25, 25);
+
+    parent_->position(parent_x, parent_y);
 }
 
 MiniatureViewer *SideBar::viewer() {
