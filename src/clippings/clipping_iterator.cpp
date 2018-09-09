@@ -100,7 +100,7 @@ void ClippingIterator::from_end(vs::Player *player, bool append_reverse, uint32_
 
         player->seek_frame(position);
 
-        while (!flushing) {
+        while (!flushing && frame_count > 0) {
             --frame_count;
             render_frame(render_buffer_->data);
             player->next();
