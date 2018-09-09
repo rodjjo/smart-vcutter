@@ -13,11 +13,19 @@ SideBar::SideBar(ClippingActions *actions, Fl_Group *parent, Fl_Widget *left_com
     actions_ = actions;
     parent_ = parent;
     left_component_ = left_component;
+
+    int parent_x = parent_->x();
+    int parent_y = parent_->y();
+
+    parent_->position(0, 0);
+
     btn_new_key_.reset(new Button(xpm::image(xpm::button_add), actions_->action_insert()));
     btn_del_key_.reset(new Button(xpm::image(xpm::button_delete), actions_->action_delete()));
-    btn_play_interval_.reset(new Button(xpm::image(xpm::button_play), actions_->action_delete()));
-    key_list_ = new Fl_Select_Browser(btn_new_key_->x(), 30, default_width(), parent_->h() * 30);
-    viewer_ = new MiniatureViewer(btn_new_key_->x(), key_list_->y() + key_list_->h(), key_list_->w(), key_list_->w());
+    btn_play_interval_.reset(new Button(xpm::image(xpm::button_play), actions_->action_play_interval()));
+    key_list_ = new Fl_Select_Browser(0, 30, 100, 100);
+    viewer_ = new MiniatureViewer(0, 0, 100, 100);
+
+    parent_->position(parent_x, parent_y);
 
     btn_new_key_->tooltip("[Insert] Insert a mark at current frame.");
     btn_del_key_->tooltip("[Delete] Remove the current frame mark.");
@@ -26,7 +34,6 @@ SideBar::SideBar(ClippingActions *actions, Fl_Group *parent, Fl_Widget *left_com
     viewer_->cursor(FL_CURSOR_HAND);
     btn_del_key_->shortcut(FL_Delete);
     btn_new_key_->shortcut(FL_Insert);
-    resize_controls();
 }
 
 SideBar::~SideBar() {
@@ -85,17 +92,24 @@ void SideBar::resize_controls() {
 
     parent_->position(0, 0);
 
-    btn_new_key_->position(parent_->w() - default_width(), 3);
-    btn_del_key_->position(btn_new_key_->x() + 27, 3);
-    btn_play_interval_->position(btn_del_key_->x() + 27, 3);
-
-    static_cast<Fl_Widget *>(key_list_)->position(btn_new_key_->x(), 33);
-    int key_list_w = parent_->w() - btn_new_key_->x();
-
+    int base_left = parent_->w() - default_width();
+    static_cast<Fl_Widget *>(key_list_)->position(base_left, 33);
+    int key_list_w = parent_->w() - base_left;
     int bottom_size = parent_->h() - left_component_->h();
-    key_list_->size(key_list_w, left_component_->h() - key_list_w - bottom_size - 38);
-    viewer_->position(btn_new_key_->x(), key_list_->y() + key_list_->h());
-    viewer_->size(key_list_->w(), key_list_->w());
+    int key_list_size = left_component_->h() - key_list_w - bottom_size - 38;
+    int key_list_top = 33 + key_list_->h();
+    key_list_->size(key_list_w, key_list_size);
+    viewer_->position(base_left, key_list_top);
+    viewer_->position(base_left, key_list_top + 1);
+
+    btn_new_key_->position(base_left, 3);
+    base_left += 27;
+    btn_del_key_->position(base_left, 3);
+    base_left += 27;
+    btn_play_interval_->position(base_left, 3);
+
+
+    viewer_->size(key_list_w, key_list_w);
 
     btn_new_key_->size(25, 25);
     btn_del_key_->size(25, 25);

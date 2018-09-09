@@ -152,7 +152,7 @@ void MainWindow::init_main_menu() {
     menu_file_->add("&Save project", "", action_file_save(), 0, GROUP_CLIPPING_OPEN, xpm::save_16x16);
     menu_file_->add("&Save project as", "^s", action_file_save_as(), 0, GROUP_CLIPPING_OPEN, xpm::save_as_16x16);
     menu_file_->add("&Save clipping", "^g", action_file_generate(), 0, GROUP_CLIPPING_OPEN, xpm::take_16x16);
-    menu_file_->add("&Close", "^n", action_file_close(), 0, GROUP_CLIPPING_OPEN, xpm::eject_16x16);
+    menu_file_->add("&Close", "", action_file_close(), 0, GROUP_CLIPPING_OPEN, xpm::eject_16x16);
     menu_file_->add("&Exit", "^x", action_file_exit(), 0, 0, xpm::exit_16x16);
 
     menu_edit_.reset(new Menu(menu_, "&Edit"));
@@ -173,7 +173,7 @@ void MainWindow::init_main_menu() {
 
     menu_tools_.reset(new Menu(menu_, "&Tools"));
     menu_tools_->add("Magic rule/Create", "^m", action_create_ref(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::magic_16x16);
-    menu_tools_->add("Magic rule/Use", "^g", action_use_ref(), 0, GROUP_CLIPPING_OPEN, xpm::green_pin_16x16);
+    menu_tools_->add("Magic rule/Use", "^u", action_use_ref(), 0, GROUP_CLIPPING_OPEN, xpm::green_pin_16x16);
     menu_tools_->add("Magic rule/Use rotate only", "", action_edit_use_ref_rotation(), 0, GROUP_CLIPPING_OPEN, xpm::rotate_16x16);
     menu_tools_->add("Magic rule/Use positionate only", "", action_edit_use_ref_drag(), 0, GROUP_CLIPPING_OPEN, xpm::move_16x16);
     menu_tools_->add("Magic rule/Use positionate x only", "", action_edit_use_ref_dragx(), 0, GROUP_CLIPPING_OPEN, xpm::left_right_16x16);

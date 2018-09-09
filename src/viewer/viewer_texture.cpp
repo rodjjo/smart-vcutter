@@ -101,8 +101,11 @@ void ViewerTexture::draw(const viewport_t &vp, const uint8_t *buffer, uint32_t w
         return;
     }
 
-    float coord_w = ((2.0 / vp[2]) * texture_w_) / 2.0;
-    float coord_h = ((2.0 / vp[3]) * texture_h_) / 2.0;
+    uint32_t cw = texture_w_, ch = texture_h_;
+    vp.fit(&cw, &ch);
+
+    float coord_w = ((2.0 / vp[2]) * cw) / 2.0;
+    float coord_h = ((2.0 / vp[3]) * ch) / 2.0;
 
     if (coord_w < 1.0 && coord_h < 1.0) {
         float scale = 1.0 / coord_w;
