@@ -63,8 +63,6 @@ PlayerBar::PlayerBar(ClippingActions *actions, Fl_Group *parent) {
     btn_cutoff1_->shortcut(FL_F + 2);
     btn_cutoff12_->shortcut(FL_F + 3);
     btn_cutoff2_->shortcut(FL_F + 4);
-
-    resize_controls();
 }
 
 PlayerBar::~PlayerBar() {
@@ -78,7 +76,8 @@ void PlayerBar::resize_controls() {
     int parent_x = parent_->x();
     int parent_y = parent_->y();
 
-    group_->position(0, parent_->h() - 30);
+    parent_->position(0, 0);
+    group_->position(0, 0);
     group_->size(parent_->w(), 30);
 
     btn_speed_->size(35, 25);
@@ -97,6 +96,7 @@ void PlayerBar::resize_controls() {
     video_duration_->size(75, 25);
 
     int position = 38;
+    btn_play_->position(0, 3);
     btn_speed_->position(0, btn_play_->y());
     btn_play_->position(position, btn_play_->y());
     btn_pause_->position(position += 27, btn_play_->y());
@@ -117,6 +117,7 @@ void PlayerBar::resize_controls() {
 
     seek_bar_->callback(seek_bar_callback, this);
 
+    group_->position(0, parent_->h() - 30);
     parent_->position(parent_x, parent_y);
 }
 

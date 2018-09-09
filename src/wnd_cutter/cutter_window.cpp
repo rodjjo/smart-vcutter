@@ -13,6 +13,10 @@ namespace vcutter {
 
 CutterWindow::CutterWindow(Fl_Group *parent) {
     parent_ = parent;
+    int parent_x = parent->x();
+    int parent_y = parent->y();
+    parent->position(0, 0);
+
     open_failure_ = false;
     wink_comparison_ = false;
     clipping_version_ = 0;
@@ -20,29 +24,26 @@ CutterWindow::CutterWindow(Fl_Group *parent) {
 
     clipping_actions_.reset(new ClippingActions(this));
 
-    int parent_x = parent->x();
-    int parent_y = parent->y();
-
-    parent->position(0, 0);
     parent->begin();
-    window_ = new Fl_Group(0, 0, parent->w(), parent->h());
+    window_ = new Fl_Group(0, 0, 100, 100);
+    parent->end();
+
     window_->begin();
-
     player_bar_.reset(new PlayerBar(clipping_actions_.get(), window_));
+    components_group_ = new Fl_Group(0, 0, 100, 100);
+    window_->end();
 
-    components_group_ = new Fl_Group(0,0, window_->w(), window_->h() - 30);
+    components_group_->begin();
     components_group_->box(FL_DOWN_BOX);
-    clipping_editor_  = new ClippingEditor(5, 5, window_->w() - SideBar::default_width() - 10,  window_->h() - 45);
+    clipping_editor_  = new ClippingEditor(0, 0, 100,  100);
     side_bar_.reset(new SideBar(clipping_actions_.get(), components_group_, clipping_editor_));
     components_group_->end();
 
-    window_->end();
-    parent->end();
-
-    parent->position(parent_x, parent_y);
     window_->hide();
 
     update_title();
+
+    parent->position(parent_x, parent_y);
 }
 
 CutterWindow::~CutterWindow() {
@@ -84,6 +85,8 @@ void CutterWindow::resize_controls() {
     parent_->position(0, 0);
     window_->position(0, 0);
     window_->size(parent_->w(), parent_->h());
+    components_group_->position(0, 0);
+    components_group_->size(window_->w(), window_->h() - 30);
 
     player_bar_->resize_controls();
 

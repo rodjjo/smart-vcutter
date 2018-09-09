@@ -132,6 +132,9 @@ bool ProgressWindow::wait(progress_task_t task) {
 
     bool result = task();
 
+    set_buffer(NULL, 0, 0);
+    set_progress(100, 100);
+
     unprepare_for_show();
 
     return result;

@@ -108,10 +108,6 @@ bool ClippingConversion::wait_conversion() {
             prog_handler_->set_progress(current_position_.load(), max_position_);
             Fl::wait(0.1);
         }
-
-        prog_handler_->set_buffer(NULL, 0, 0);
-        prog_handler_->set_progress(100, 100);
-
         return true;
     });
 

@@ -50,6 +50,7 @@ class MainWindow : Fl_Menu_Window {
 
  private:
     void enable_controls();
+    void resize_controls();
     callback_t action_menu_popup();
     callback_t action_file_open();
     callback_t action_file_open_project();

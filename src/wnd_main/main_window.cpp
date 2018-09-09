@@ -55,24 +55,30 @@ MainWindow::MainWindow() : Fl_Menu_Window(
 
     window_->callback(prevent_close_cb, this);
 
-
     window_->end();
     window_->show();
 
     enable_controls();
 
-
     Fl::add_timeout(1.0, &MainWindow::timeout_handler, this);
+
+    resize_controls();
 }
 
 MainWindow::~MainWindow() {
 }
 
+void MainWindow::resize_controls() {
+    menu_->position(0, 0);
+    menu_->size(window_->w(), kMENU_HEIGHT);
+    bottom_group_->size(window_->w(), window_->h() - kMENU_HEIGHT);
+    cutter_window_->resize_controls();
+    bottom_group_->position(0, kMENU_HEIGHT);
+}
+
 void MainWindow::resize(int X, int Y, int W, int H) {
     Fl_Window::resize(X, Y, W, H);
-    menu_->size(W,kMENU_HEIGHT);
-    bottom_group_->size(window_->w(), window_->h() -kMENU_HEIGHT);
-    cutter_window_->resize_controls();
+    resize_controls();
 }
 
 void MainWindow::timeout_handler(void* ud) {
@@ -108,22 +114,29 @@ void MainWindow::load_sessions() {
 }
 
 void MainWindow::init_tool_bar() {
+    window_->begin();
     auto top_group = new Fl_Group(0, 0, default_window_width(), kMENU_HEIGHT, "");
+    window_->end();
+
     top_group->align(FL_ALIGN_TOP);
     top_group->begin();
     top_group->box(FL_DOWN_BOX);
-
     init_main_menu();
     top_group->end();
 }
 
 void MainWindow::init_controls() {
-    bottom_group_ = new Fl_Group(0, kMENU_HEIGHT, window_->w(), window_->h() -kMENU_HEIGHT, "");
+    bottom_group_ = new Fl_Group(0, 0, window_->w(), window_->h() - kMENU_HEIGHT, "");
     bottom_group_->end();
     bottom_group_->color(fl_rgb_color(0, 0, 0));
+
+    bottom_group_->begin();
     cutter_window_.reset(new CutterWindow(bottom_group_));
+    bottom_group_->end();
 
     init_tool_bar();
+
+    bottom_group_->position(0, kMENU_HEIGHT);
 }
 
 void MainWindow::init_main_menu() {
