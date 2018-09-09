@@ -3,6 +3,7 @@
  */
 
 #include <regex> // NOLINT
+#include <boost/filesystem.hpp>
 #include <Fl/Fl.H>
 
 #include "src/common/utils.h"
@@ -37,10 +38,6 @@ const char *kCLIP_VAR_NAME = "clipping";
 const char *kPATH_VAR_NAME = "path";
 
 }  // namespace
-
-std::string EncoderWindow::last_filepath_; // NOLINT
-std::string EncoderWindow::last_sugestion_; // NOLINT
-
 
 bool should_replace(const char *path) {
     if (filepath_exists(path) && !ask("The destination filepath already exists. override it ?")) {
@@ -527,10 +524,9 @@ void EncoderWindow::action_convert() {
 
     if (conv.error()) {
         show_error(conv.error());
-    }
-
-    if (clip_ == clip) {
+    } else if (clip_.get() == clip.get()) {
         save_sugestion();
+        history_->set(kCLIPPING_DIR_KEY, boost::filesystem::path(edt_output_->value()).parent_path().string().c_str());
     }
 }
 
@@ -816,24 +812,41 @@ void EncoderWindow::action_close() {
 }
 
 void EncoderWindow::save_sugestion() {
-    last_filepath_ = edt_path_->value();
-    last_sugestion_ = edt_output_->value();
+    last_open_path(edt_path_->value());
+    last_save_path(edt_output_->value());
+}
+
+std::string EncoderWindow::last_save_path() {
+    return (*history_)["conversion_save_path"];
+}
+
+std::string EncoderWindow::last_open_path() {
+    return (*history_)["conversion_open_path"];
+}
+
+void EncoderWindow::last_save_path(const char *value) {
+    history_->set("conversion_save_path", value);
+}
+
+void EncoderWindow::last_open_path(const char *value) {
+    history_->set("conversion_open_path", value);
 }
 
 std::string EncoderWindow::get_sugestion() {
-    if (edt_path_->value() != last_filepath_) {
+    if (edt_path_->value() != last_save_path()) {
         return std::string();
     }
 
-    if (last_sugestion_.empty()) {
-        last_sugestion_ = edt_path_->value();
+    if (last_open_path().empty()) {
+        last_open_path(edt_path_->value());
     }
 
     std::regex index_regex("^(.*\\.)([0-9]+)(\\.[a-z0-9]{3,4})$", std::regex_constants::icase);
     std::regex extension_regex("^(.*)(\\.[a-z0-9]{3,4})$", std::regex_constants::icase);
 
     std::smatch math_1;
-    if (std::regex_search(last_sugestion_, math_1, index_regex)) {
+    std::string last_path = last_open_path();
+    if (std::regex_search(last_path, math_1, index_regex)) {
         int index;
         if (sscanf(math_1[2].str().c_str(), "%d", &index) != 1) {
             index = 1;
@@ -844,7 +857,7 @@ std::string EncoderWindow::get_sugestion() {
     }
 
     std::smatch math_2;
-    if (std::regex_search(last_sugestion_, math_2, extension_regex)) {
+    if (std::regex_search(last_path, math_2, extension_regex)) {
         return generate_path(math_2[1].str().c_str(), math_2[2].str().c_str(), 1);
     }
 
