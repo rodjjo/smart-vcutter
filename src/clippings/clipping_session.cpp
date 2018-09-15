@@ -13,20 +13,16 @@ const char *kCLIPPING_SESSION_NAME = "-clipping-session.vcutter";
 
 ClippingSession::ClippingSession(const char *session_name, const char *path, bool path_is_video)
  : Clipping(path, path_is_video), session_name_(session_name) {
-    should_clear_session_ = false;
     Fl::add_timeout(1.0, &ClippingSession::fltk_timeout_handler, this);
 }
 
 ClippingSession::ClippingSession(const char *session_name, const Json::Value * root)
  : Clipping(root), session_name_(session_name) {
-    should_clear_session_ = false;
 }
 
 ClippingSession::~ClippingSession() {
     Fl::remove_timeout(&ClippingSession::fltk_timeout_handler, this);
-    if (should_clear_session_) {
-        remove_session();
-    }
+    remove_session();
 }
 
 void ClippingSession::fltk_timeout_handler(void* clipping_session) {
@@ -51,8 +47,6 @@ std::unique_ptr<ClippingSession> ClippingSession::restore_session(const char *se
     std::unique_ptr<ClippingSession> result(
         new ClippingSession(session_name, path.c_str(), false)
     );
-
-    result->should_clear_session_ = true;
 
     if (!result->good()) {
         result.reset();

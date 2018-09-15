@@ -28,7 +28,6 @@ class ClippingSession: public Clipping {
     void remove_session();
  private:
     uint64_t last_version_;
-    bool should_clear_session_;
     std::string session_name_;
 };
 
