@@ -7,12 +7,12 @@
 BOOST_AUTO_TEST_SUITE(buffers_test_suite)
 
 BOOST_AUTO_TEST_CASE(test_buffer_allocation) {
-    vcutter::FifoBuffer buffer(100, 4);
+    vcutter::StackBuffer buffer(100, 4);
     BOOST_CHECK_EQUAL(buffer.count(), 4);
 }
 
 BOOST_AUTO_TEST_CASE(test_buffer_push_pop) {
-    vcutter::FifoBuffer buffer(32, 2);
+    vcutter::StackBuffer buffer(32, 2);
     uint8_t temp1[32] = "rodrigo";
     uint8_t temp2[32] = "test";
 

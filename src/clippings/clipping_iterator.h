@@ -32,7 +32,7 @@ class ClippingIterator {
 
  private:
     ClippingRender *clipping_;
-    std::unique_ptr<FifoBuffer> buffers_;
+    std::unique_ptr<StackBuffer> buffers_;
     std::unique_ptr<CharBuffer> render_buffer_;
     std::list<std::shared_ptr<CharBuffer> > frames_;
     uint32_t max_memory_;

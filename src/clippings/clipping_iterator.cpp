@@ -52,7 +52,7 @@ void ClippingIterator::iterate(bool from_start, bool append_reverse, frame_itera
                 return;
             }
 
-            buffers_.reset(new FifoBuffer(clipping_->req_buffer_size(), count));
+            buffers_.reset(new StackBuffer(clipping_->req_buffer_size(), count));
         }
 
         render_buffer_.reset(new CharBuffer(clipping_->req_buffer_size()));

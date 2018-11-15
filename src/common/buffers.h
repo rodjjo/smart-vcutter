@@ -25,10 +25,10 @@ class CharBuffer: private boost::noncopyable {
 };
 
 
-class FifoBuffer: private  boost::noncopyable {
+class StackBuffer: private  boost::noncopyable {
  public:
-    FifoBuffer(uint32_t individual_size, uint32_t buffer_count);
-    virtual ~FifoBuffer(){}
+    StackBuffer(uint32_t individual_size, uint32_t buffer_count);
+    virtual ~StackBuffer(){}
     bool push(uint8_t *buffer);
     uint8_t * pop();
     uint32_t count();
