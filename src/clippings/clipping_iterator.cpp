@@ -37,7 +37,7 @@ void ClippingIterator::iterate(bool from_start, bool append_reverse, frame_itera
         to_frame,
         append_reverse,
         cb
-    ] (vs::Player *player) {
+    ] (vs::Decoder *player) {
         uint32_t frame_count = (from_frame > to_frame) ? from_frame - to_frame : to_frame - from_frame;
 
         if (frame_count < 1) {
@@ -65,7 +65,7 @@ void ClippingIterator::iterate(bool from_start, bool append_reverse, frame_itera
     });
 }
 
-void ClippingIterator::from_begin(vs::Player *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb) {
+void ClippingIterator::from_begin(vs::Decoder *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb) {
     uint32_t frame_count = (to_frame - from_frame) + 1;
 
     player->seek_frame(from_frame);
@@ -83,7 +83,7 @@ void ClippingIterator::from_begin(vs::Player *player, bool append_reverse, uint3
     }
 }
 
-void ClippingIterator::from_end(vs::Player *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb) {
+void ClippingIterator::from_end(vs::Decoder *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb) {
     uint32_t frame_count = (to_frame - from_frame) + 1;
     uint32_t position = to_frame;
     bool flushing = false;
@@ -139,7 +139,7 @@ bool ClippingIterator::flush_buffers(frame_iteration_cb_t cb) {
     return true;
 }
 
-void ClippingIterator::grab_all(vs::Player *player, uint32_t from_frame, uint32_t to_frame, bool append_reverse, frame_iteration_cb_t cb) {
+void ClippingIterator::grab_all(vs::Decoder *player, uint32_t from_frame, uint32_t to_frame, bool append_reverse, frame_iteration_cb_t cb) {
     bool forward = from_frame <= to_frame;
     frames_.clear();
 

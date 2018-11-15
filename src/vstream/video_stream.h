@@ -43,9 +43,9 @@ class StreamInfo {
     virtual bool key_frame() = 0;
 };
 
-class Player: public StreamInfo {
+class Decoder: public StreamInfo {
  public:
-    virtual ~Player();
+    virtual ~Decoder();
     virtual void next() = 0;
     virtual void prior() = 0;
     virtual void seek_frame(int64_t frame) = 0;
@@ -62,7 +62,7 @@ class Encoder {
     static int default_bitrate(const char *format_name, unsigned int w, unsigned int h, double fps);
 };
 
-std::shared_ptr<Player> open_file(const char* path);
+std::shared_ptr<Decoder> open_file(const char* path);
 
 std::shared_ptr<Encoder> encoder(
     const char *codec_name,

@@ -13,7 +13,7 @@ namespace vcutter {
 
 typedef std::function<void()> async_callback_t;
 
-typedef std::function<void(vs::Player *player)> context_callback_t;
+typedef std::function<void(vs::Decoder *player)> context_callback_t;
 
 class PlayerWrapper {
  public:
@@ -54,7 +54,7 @@ class PlayerWrapper {
     std::atomic_bool context_finished_;
     unsigned int start_;
     unsigned int end_;
-    std::shared_ptr<vs::Player> player_;
+    std::shared_ptr<vs::Decoder> player_;
     std::shared_ptr<boost::thread> thread_;
     boost::mutex mtx_run_;
     async_callback_t callback_;

@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SRC_VSTREAM_PLAYER_H_
-#define SRC_VSTREAM_PLAYER_H_
+#ifndef SRC_VSTREAM_DECODER_H_
+#define SRC_VSTREAM_DECODER_H_
 
 #include <memory>
 
@@ -11,10 +11,10 @@
 
 namespace vs {
 
-class PlayerImp: public vs::Player {
+class DecoderImp: public vs::Decoder {
  public:
-    PlayerImp(const char* path, source_type origin);
-    virtual ~PlayerImp();
+    DecoderImp(const char* path, source_type origin);
+    virtual ~DecoderImp();
     source_type source() override;
     uint32_t w() override;
     uint32_t h() override;
@@ -44,4 +44,4 @@ class PlayerImp: public vs::Player {
 
 }  // namespace vs
 
-#endif  // SRC_VSTREAM_PLAYER_H_
+#endif  // SRC_VSTREAM_DECODER_H_
