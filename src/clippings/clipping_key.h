@@ -5,7 +5,7 @@
 #define SRC_CLIPPINGS_CLIPPING_KEY_H_
 
 #include <jsoncpp/json/json.h>
-#include "src/common/box.h"
+#include "src/geometry/box.h"
 
 namespace vcutter {
 

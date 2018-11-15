@@ -1,10 +1,10 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SRC_COMMON_BOX_H_
-#define SRC_COMMON_BOX_H_
+#ifndef SRC_GEOMETRY_BOX_H_
+#define SRC_GEOMETRY_BOX_H_
 
-#include "src/common/point.h"
+#include "src/geometry/point.h"
 
 namespace vcutter {
 
@@ -61,4 +61,4 @@ class box_t {
 
 }  // namespace vcutter
 
-#endif // SRC_COMMON_BOX_H_
+#endif // SRC_GEOMETRY_BOX_H_

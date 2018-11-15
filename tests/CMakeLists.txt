@@ -3,6 +3,7 @@ file(GLOB ExeSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/vstream/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/geometry/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/controls/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/clippings/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/data/*.cpp"

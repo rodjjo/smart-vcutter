@@ -2,7 +2,7 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 #include <cmath>
-#include "src/common/point.h"
+#include "src/geometry/point.h"
 
 #define ALMOST_INFINITE 99999999
 

@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#include "src/common/box.h"
+#include "src/geometry/box.h"
 
 namespace vcutter {
 
