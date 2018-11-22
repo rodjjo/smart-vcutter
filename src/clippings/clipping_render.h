@@ -8,7 +8,7 @@
 #include <inttypes.h>
 #include <memory>
 
-#include "src/wrappers/video_player.h"
+#include "src/player/player.h"
 #include "src/clippings/clipping_frame.h"
 
 namespace vcutter {

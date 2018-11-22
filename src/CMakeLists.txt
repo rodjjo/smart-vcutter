@@ -12,7 +12,7 @@ file(GLOB Sources
     "${CMAKE_CURRENT_SOURCE_DIR}/wnd_cutter/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/wnd_main/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/wnd_tools/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/*.cpp")
+    "${CMAKE_CURRENT_SOURCE_DIR}/player/*.cpp")
 
 if(WIN32)
 add_executable(smart-vcutter WIN32 ${Sources})

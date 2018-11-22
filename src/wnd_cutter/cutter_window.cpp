@@ -58,7 +58,7 @@ Clipping* CutterWindow::clipping() {
     return clipping_actions_->clipping();
 }
 
-PlayerWrapper *CutterWindow::player() {
+Player *CutterWindow::player() {
     if (clipping()) {
         return clipping()->player();
     }

@@ -19,7 +19,7 @@ class PlayerBar {
  public:
     PlayerBar(ClippingActions *actions, Fl_Group *parent);
     virtual ~PlayerBar();
-    PlayerWrapper *player();
+    Player *player();
     void resize_controls();
     void update();
     int h();

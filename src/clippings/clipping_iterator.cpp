@@ -31,7 +31,7 @@ void ClippingIterator::iterate(bool from_start, bool append_reverse, frame_itera
     uint32_t from_frame = from_start ? clipping_->first_frame() : clipping_->last_frame();
     uint32_t to_frame = from_start ? clipping_->last_frame() : clipping_->first_frame();
 
-    clipping_->player()->async_context([
+    clipping_->player()->execute([
         this,
         from_frame,
         to_frame,
@@ -192,7 +192,7 @@ void ClippingIterator::render_frame(uint8_t *buffer) {
 }
 
 bool ClippingIterator::finished() {
-    return clipping_->player()->context_finished();
+    return clipping_->player()->execution_finished();
 }
 
 }  // namespace vcutter

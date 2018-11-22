@@ -25,7 +25,7 @@ class ClippingActions {
  public:
     ClippingActions(ClippingActionsHandler * handler);
     virtual ~ClippingActions();
-    PlayerWrapper *player();
+    Player *player();
     ClippingActionsHandler *handler();
     void close();
     Clipping *clipping();

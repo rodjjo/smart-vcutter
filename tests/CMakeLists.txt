@@ -13,7 +13,7 @@ file(GLOB ExeSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_cutter/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_main/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_tools/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/wrappers/*.cpp")
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/player/*.cpp")
 
 file(GLOB TestSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../third-party/googlemock/src/gmock-all.cc"

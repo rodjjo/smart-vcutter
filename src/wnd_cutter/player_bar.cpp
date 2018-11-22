@@ -68,7 +68,7 @@ PlayerBar::PlayerBar(ClippingActions *actions, Fl_Group *parent) {
 PlayerBar::~PlayerBar() {
 }
 
-PlayerWrapper *PlayerBar::player() {
+Player *PlayerBar::player() {
     return actions_->player();
 }
 

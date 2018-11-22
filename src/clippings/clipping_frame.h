@@ -7,7 +7,7 @@
 
 #include <inttypes.h>
 
-#include "src/wrappers/video_player.h"
+#include "src/player/player.h"
 #include "src/clippings/clipping_data.h"
 #include "src/clippings/clipping_ref.h"
 
@@ -18,7 +18,7 @@ class ClippingFrame: public ClippingData {
     explicit ClippingFrame(const Json::Value * root);
     ClippingFrame(const char *path, bool path_is_video);
     virtual ~ClippingFrame(){}
-    PlayerWrapper *player();
+    Player *player();
     bool good();
     ClippingKey current_key();
     void positionate_left(uint32_t frame);
@@ -43,7 +43,7 @@ class ClippingFrame: public ClippingData {
     void video_open();
 
  private:
-    std::unique_ptr<PlayerWrapper> player_;
+    std::unique_ptr<Player> player_;
 };
 
 }  // namespace vcutter

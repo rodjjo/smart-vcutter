@@ -111,7 +111,7 @@ Clipping *ClippingOperation::clipping() {
     return *clipping_;
 }
 
-PlayerWrapper *ClippingOperation::player() {
+Player *ClippingOperation::player() {
     return clipping()->player();
 }
 

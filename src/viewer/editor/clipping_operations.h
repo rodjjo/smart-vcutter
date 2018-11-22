@@ -41,7 +41,7 @@ class ClippingOperation {
     virtual void alt_pressed();
  protected:
      Clipping *clipping();
-     PlayerWrapper *player();
+     Player *player();
      void add_key();
      void modify();
      int mouse_down_x();
