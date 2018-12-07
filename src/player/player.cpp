@@ -4,15 +4,26 @@
 #include <Fl/Fl.H>
 
 
-#include "src/wrappers/video_player.h"
+#include "src/player/player.h"
 
 namespace vcutter {
 
+const float kON_FRAME_TIMEOUT_INTERVAL = 0.0333;
 
-PlayerWrapper::PlayerWrapper(const std::string& path) {
-    player_ = vs::open_file(path.c_str());
+Player::Player(const char *path) {
+    init(path);
+}
+
+Player::Player(const char *path, frame_callback_t frame_changed_cb) {
+    frame_changed_cb_ = frame_changed_cb;
+    init(path);
+    init_frame_changed_notifier();
+}
+
+void Player::init(const char *path) {
+    decoder_ = vs::open_file(path);
     frame_changed_.store(true);
-    context_finished_.store(true);
+    execution_finished_.store(true);
     finished_ = false;
     playing_ = false;
     playing_interval_ = false;
@@ -24,48 +35,75 @@ PlayerWrapper::PlayerWrapper(const std::string& path) {
     }));
 }
 
-PlayerWrapper::~PlayerWrapper() {
+void Player::set_frame_changed_callback(frame_callback_t frame_changed_cb) {
+    clear_frame_changed_callback();
+    frame_changed_cb_ = frame_changed_cb;
+    init_frame_changed_notifier();
+}
+
+void Player::clear_frame_changed_callback() {
+    if (frame_changed_cb_) {
+        Fl::remove_timeout(&Player::timeout_handler, this);
+        frame_changed_cb_ = frame_callback_t();
+    }
+}
+
+void Player::init_frame_changed_notifier() {
+    if (frame_changed_cb_) {
+        Fl::add_timeout(kON_FRAME_TIMEOUT_INTERVAL, &Player::timeout_handler, this);
+    }
+}
+
+void Player::timeout_handler(void* ud) {
+    if (static_cast<Player *>(ud)->frame_changed(true)) {
+        static_cast<Player *>(ud)->frame_changed_cb_(static_cast<Player *>(ud));
+    }
+    Fl::repeat_timeout(kON_FRAME_TIMEOUT_INTERVAL, &Player::timeout_handler, ud);
+}
+
+Player::~Player() {
+    clear_frame_changed_callback();
     finished_ = true;
     thread_->join();
 }
 
-vs::StreamInfo *PlayerWrapper::info() {
-    return player_.get();
+vs::StreamInfo *Player::info() {
+    return decoder_.get();
 }
 
-void PlayerWrapper::set_speed(float speed) {
+void Player::set_speed(float speed) {
     speed_.store(floor(speed * 100 + 0.5));
 }
 
-float PlayerWrapper::get_speed() {
+float Player::get_speed() {
     return speed_.load() / 100.0;
 }
 
-void PlayerWrapper::play() {
+void Player::play() {
     stop_playing();
     playing_ = true;
 }
 
-bool PlayerWrapper::frame_changed(bool clear_flag) {
+bool Player::frame_changed(bool clear_flag) {
     if (clear_flag) {
         return frame_changed_.exchange(false) == true;
     }
     return frame_changed_.load();
 }
 
-bool PlayerWrapper::context_finished() {
-    return context_finished_.load();
+bool Player::execution_finished() {
+    return execution_finished_.load();
 }
 
-bool PlayerWrapper::is_playing() {
+bool Player::is_playing() {
     return playing_ || playing_interval_;
 }
 
-bool PlayerWrapper::is_playing_interval() {
+bool Player::is_playing_interval() {
     return playing_interval_;
 }
 
-void PlayerWrapper::play(unsigned int start, unsigned int end) {
+void Player::play(unsigned int start, unsigned int end) {
     stop_playing();
     if (start >= end) {
         return;
@@ -75,7 +113,7 @@ void PlayerWrapper::play(unsigned int start, unsigned int end) {
     playing_interval_ = true;
 }
 
-void PlayerWrapper::stop_playing() {
+void Player::stop_playing() {
     if (playing_ || playing_interval_) {
         playing_ = false;
         playing_interval_ = false;
@@ -83,49 +121,49 @@ void PlayerWrapper::stop_playing() {
     }
 }
 
-void PlayerWrapper::noop() {
+void Player::noop() {
     call_async([](){});
 }
 
-void PlayerWrapper::stop() {
+void Player::stop() {
     stop_playing();
     call_async([this] () {
-        player_->seek_frame(0);
+        decoder_->seek_frame(0);
         frame_changed_.store(true);
     });
 }
 
-void PlayerWrapper::next() {
+void Player::next() {
     stop_playing();
     call_async([this] () {
-        player_->next();
+        decoder_->next();
         frame_changed_.store(true);
     });
 }
 
-void PlayerWrapper::prior() {
+void Player::prior() {
     stop_playing();
     call_async([this] () {
-        player_->prior();
+        decoder_->prior();
         frame_changed_.store(true);
     });
 }
 
-void PlayerWrapper::seek_frame(int64_t frame) {
+void Player::seek_frame(int64_t frame) {
     call_async([this, frame] () {
-        player_->seek_frame(frame);
+        decoder_->seek_frame(frame);
         frame_changed_.store(true);
     });
 }
 
-void PlayerWrapper::seek_time(int64_t ms_time) {
+void Player::seek_time(int64_t ms_time) {
     call_async([this, ms_time] () {
-        player_->seek_time(ms_time);
+        decoder_->seek_time(ms_time);
         frame_changed_.store(true);
     });
 }
 
-void PlayerWrapper::replace_callback(async_callback_t callback) {
+void Player::replace_callback(async_callback_t callback) {
     while (!mtx_run_.try_lock()) {
         Fl::wait(0.1);
     }
@@ -133,7 +171,7 @@ void PlayerWrapper::replace_callback(async_callback_t callback) {
     callback_ = callback;
 }
 
-void PlayerWrapper::wait_callback() {
+void Player::wait_callback() {
     while (true) {
         {
             boost::lock_guard<boost::mutex> lock_guard(mtx_run_);
@@ -145,12 +183,12 @@ void PlayerWrapper::wait_callback() {
     }
 }
 
-void PlayerWrapper::call_async(async_callback_t callback) {
+void Player::call_async(async_callback_t callback) {
    replace_callback(callback);
    wait_callback();
 }
 
-void PlayerWrapper::run_callback() {
+void Player::run_callback() {
     boost::lock_guard<boost::mutex> lock_guard(mtx_run_);
     if (callback_) {
         callback_();
@@ -158,7 +196,7 @@ void PlayerWrapper::run_callback() {
     }
 }
 
-void PlayerWrapper::change_speed(bool increment) {
+void Player::change_speed(bool increment) {
     float step = 0.20 * (increment ? 1: -1);
 
     if (get_speed() + step <= 5.0 && get_speed() + step >= 0.20) {
@@ -172,7 +210,7 @@ void PlayerWrapper::change_speed(bool increment) {
     }
 }
 
-bool PlayerWrapper::grab_frame() {
+bool Player::grab_frame() {
     if (!playing_ && !playing_interval_) {
         return false;
     }
@@ -181,15 +219,15 @@ bool PlayerWrapper::grab_frame() {
         if (info()->position() >= end_ ||
             info()->position() < start_
         ) {
-            player_->seek_frame(start_);
+            decoder_->seek_frame(start_);
         } else {
-            player_->next();
+            decoder_->next();
         }
 
         frame_changed_.store(true);
     } else {
         frame_changed_.store(true);
-        player_->next();
+        decoder_->next();
 
         if (info()->position() >= info()->count()) {
             playing_ = false;
@@ -218,19 +256,19 @@ bool PlayerWrapper::grab_frame() {
     return true;
 }
 
-void PlayerWrapper::pause() {
+void Player::pause() {
     stop_playing();
 }
 
-void PlayerWrapper::async_context(context_callback_t callback) {
-    context_finished_.store(false);
+void Player::execute(context_callback_t callback) {
+    execution_finished_.store(false);
     replace_callback([this, callback] () {
-        callback(player_.get());
-        context_finished_.store(true);
+        callback(decoder_.get());
+        execution_finished_.store(true);
     });
 }
 
-void PlayerWrapper::run() {
+void Player::run() {
     while (!finished_) {
         run_callback();
         if (grab_frame()) {

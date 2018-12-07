@@ -71,14 +71,16 @@ class EncoderWindow {
     void sugest_output_file();
     const char *sugest_extension();
  private:
+    std::string last_save_path();
+    std::string last_open_path();
+    void last_save_path(const char *value);
+    void last_open_path(const char *value);
     std::shared_ptr<ClippingRender> clip_;
     int frame_w_;
     int frame_h_;
     std::string path_;
     std::string last_filepath_sug_;
     double original_fps_;
-    static std::string last_filepath_;
-    static std::string last_sugestion_;
  private:
     const void* bitrate_action_src_;
     History* history_;

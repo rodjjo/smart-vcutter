@@ -3,6 +3,7 @@ file(GLOB ExeSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/vstream/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/geometry/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/controls/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/clippings/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/data/*.cpp"
@@ -12,11 +13,9 @@ file(GLOB ExeSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_cutter/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_main/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/wnd_tools/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/wrappers/*.cpp")
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/player/*.cpp")
 
 file(GLOB TestSources
-    "${CMAKE_CURRENT_SOURCE_DIR}/../third-party/googlemock/src/gmock-all.cc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../third-party/googletest/src/gtest-all.cc"
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_vcutter/common/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/test_vcutter/clippings/*.cpp"

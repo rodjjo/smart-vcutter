@@ -141,7 +141,7 @@ void ClippingConversion::combine_buffers(uint8_t *primary_buffer, uint8_t *secon
 }
 
 void ClippingConversion::encode_frame(uint8_t *buffer) {
-    last_encoded_buffer_.store(buffer); // the clipping iterator does not release any buffer before it destroy itself.
+    last_encoded_buffer_.store(buffer); // the clipping iterator does not release any buffer before it destroys itself.
     encoder_->frame(buffer);
     ++current_position_;
 }

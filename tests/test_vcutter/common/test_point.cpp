@@ -2,7 +2,7 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 #include "tests/testing.h"
-#include "src/common/point.h"
+#include "src/geometry/point.h"
 
 BOOST_AUTO_TEST_SUITE(point_test_suite)
 

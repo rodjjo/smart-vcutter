@@ -39,7 +39,7 @@ Clipping *ClippingActions::clipping() {
     return clipping_.get();
 }
 
-PlayerWrapper *ClippingActions::player() {
+Player *ClippingActions::player() {
     if (clipping_) {
         return clipping_->player();
     }

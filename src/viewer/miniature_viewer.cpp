@@ -43,13 +43,12 @@ void MiniatureViewer::viewer_draw(BufferViewer *viewer, bool *handled, const uns
         return;
     }
 
-
-    //TODO: draw using texture
     if (modified_ || !viewer_texture_) {
         if (!viewer_texture_)  {
            viewer_texture_.reset(new ViewerTexture());
         }
-       viewer_texture_->draw(viewer->view_port(), render_buffer_.get(), miniature_buffer_w_, miniature_buffer_h_, true);
+
+        viewer_texture_->draw(viewer->view_port(), render_buffer_.get(), miniature_buffer_w_, miniature_buffer_h_, true);
     } else {
         viewer_texture_->draw(viewer->view_port());
     }

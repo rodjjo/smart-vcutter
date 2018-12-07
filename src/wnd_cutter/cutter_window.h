@@ -25,7 +25,7 @@ class CutterWindow : public ClippingActionsHandler {
 
     ClippingActions *clipping_actions();
     Clipping *clipping();
-    PlayerWrapper *player();
+    Player *player();
 
     void close();
     std::shared_ptr<ClippingRender> to_clipping();

@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SRC_COMMON_POINT_H_
-#define SRC_COMMON_POINT_H_
+#ifndef SRC_GEOMETRY_POINT_H_
+#define SRC_GEOMETRY_POINT_H_
 
 #define PI 3.1415926535897
 #define DEGS (PI / 180.0)
@@ -46,4 +46,4 @@ class point_t {
 
 }  // namespace vcutter
 
-#endif  // SRC_COMMON_POINT_H_
+#endif  // SRC_GEOMETRY_POINT_H_

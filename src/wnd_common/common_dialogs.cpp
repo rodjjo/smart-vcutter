@@ -65,7 +65,7 @@ std::string execute_file_choose(Fl_Native_File_Chooser *fc, std::string* current
         if (current_dir) {
             auto dir = boost::filesystem::path(path).parent_path().string();
             if (filepath_exists(dir.c_str())) {
-                *current_dir = boost::filesystem::path(path).parent_path().string();
+                *current_dir = dir;
             }
         }
 

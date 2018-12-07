@@ -23,16 +23,16 @@ class ClippingIterator {
     bool finished();
  private:
     uint32_t buffer_count(uint32_t frame_count);
-    void grab_all(vs::Player *player, uint32_t from_frame, uint32_t to_frame, bool append_reverse, frame_iteration_cb_t cb);
-    void from_begin(vs::Player *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb);
-    void from_end(vs::Player *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb);
+    void grab_all(vs::Decoder *player, uint32_t from_frame, uint32_t to_frame, bool append_reverse, frame_iteration_cb_t cb);
+    void from_begin(vs::Decoder *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb);
+    void from_end(vs::Decoder *player, bool append_reverse, uint32_t from_frame, uint32_t to_frame, frame_iteration_cb_t cb);
     void render_frame(uint8_t *buffer);
     void report_frames(bool forward, bool append_reverse, frame_iteration_cb_t cb);
     bool flush_buffers(frame_iteration_cb_t cb);
 
  private:
     ClippingRender *clipping_;
-    std::unique_ptr<FifoBuffer> buffers_;
+    std::unique_ptr<StackBuffer> buffers_;
     std::unique_ptr<CharBuffer> render_buffer_;
     std::list<std::shared_ptr<CharBuffer> > frames_;
     uint32_t max_memory_;

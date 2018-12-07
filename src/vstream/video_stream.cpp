@@ -2,7 +2,7 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 #include "src/vstream/video_stream.h"
-#include "src/vstream/player.h"
+#include "src/vstream/decoder.h"
 #include "src/vstream/encoder.h"
 
 namespace vs {
@@ -10,12 +10,12 @@ namespace vs {
 // abastract classes destructors:
 
 StreamInfo::~StreamInfo() {}
-Player::~Player() {}
+Decoder::~Decoder() {}
 Encoder::~Encoder() {}
 // instance creating functions:
 
-std::shared_ptr<vs::Player> open_file(const char* path) {
-    return std::shared_ptr<vs::Player>(new vs::PlayerImp(path, vs::file_source));
+std::shared_ptr<vs::Decoder> open_file(const char* path) {
+    return std::shared_ptr<vs::Decoder>(new vs::DecoderImp(path, vs::file_source));
 }
 
 std::shared_ptr<Encoder> encoder(

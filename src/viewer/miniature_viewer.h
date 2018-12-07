@@ -6,7 +6,7 @@
 
 #include <memory>
 
-#include "src/wrappers/video_player.h"
+#include "src/player/player.h"
 #include "src/clippings/clipping.h"
 #include "src/viewer/buffer_viewer.h"
 #include "src/viewer/viewer_texture.h"

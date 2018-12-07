@@ -23,7 +23,7 @@ void ClippingFrame::video_open() {
         return;
     }
 
-    player_.reset(new PlayerWrapper(video_path().c_str()));
+    player_.reset(new Player(video_path().c_str()));
 
     if (!good()){
         return;
@@ -54,7 +54,7 @@ bool ClippingFrame::good() {
     return false;
 }
 
-PlayerWrapper *ClippingFrame::player() {
+Player *ClippingFrame::player() {
     return player_.get();
 }
 

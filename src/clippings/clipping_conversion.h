@@ -44,7 +44,7 @@ class ClippingConversion: private boost::noncopyable {
     const char * error() const;
  private:
     void encode_frame(uint8_t *buffer);
-    void copy_buffer(vs::Player *player, uint8_t *buffer);
+    void copy_buffer(vs::Decoder *player, uint8_t *buffer);
     float transparency_increment();
     void combine_buffers(uint8_t *primary_buffer, uint8_t *secondary_buffer);
     void define_transition_settings(uint8_t *transition_frames);

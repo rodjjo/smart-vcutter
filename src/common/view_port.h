@@ -5,8 +5,8 @@
 #define SRC_COMMON_VIEW_PORT_H_
 
 #include <inttypes.h>
-#include "src/common/point.h"
-#include "src/common/box.h"
+#include "src/geometry/point.h"
+#include "src/geometry/box.h"
 
 
 namespace vcutter {

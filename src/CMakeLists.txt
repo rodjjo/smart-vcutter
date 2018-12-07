@@ -2,6 +2,7 @@ file(GLOB Sources
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/vstream/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/controls/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/clippings/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/data/*.cpp"
@@ -11,7 +12,7 @@ file(GLOB Sources
     "${CMAKE_CURRENT_SOURCE_DIR}/wnd_cutter/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/wnd_main/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/wnd_tools/*.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/wrappers/*.cpp")
+    "${CMAKE_CURRENT_SOURCE_DIR}/player/*.cpp")
 
 if(WIN32)
 add_executable(smart-vcutter WIN32 ${Sources})
