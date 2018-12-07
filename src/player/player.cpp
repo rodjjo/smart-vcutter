@@ -35,6 +35,19 @@ void Player::init(const char *path) {
     }));
 }
 
+void Player::set_frame_changed_callback(frame_callback_t frame_changed_cb) {
+    clear_frame_changed_callback();
+    frame_changed_cb_ = frame_changed_cb;
+    init_frame_changed_notifier();
+}
+
+void Player::clear_frame_changed_callback() {
+    if (frame_changed_cb_) {
+        Fl::remove_timeout(&Player::timeout_handler, this);
+        frame_changed_cb_ = frame_callback_t();
+    }
+}
+
 void Player::init_frame_changed_notifier() {
     if (frame_changed_cb_) {
         Fl::add_timeout(kON_FRAME_TIMEOUT_INTERVAL, &Player::timeout_handler, this);
@@ -49,9 +62,7 @@ void Player::timeout_handler(void* ud) {
 }
 
 Player::~Player() {
-    if (frame_changed_cb_) {
-        Fl::remove_timeout(&Player::timeout_handler, this);
-    }
+    clear_frame_changed_callback();
     finished_ = true;
     thread_->join();
 }
