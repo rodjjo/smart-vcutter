@@ -11,7 +11,7 @@
 #include <FL/Fl_Image.H>
 
 #include "src/wnd_cutter/clipping_actions.h"
-#include "src/controls/button.h"
+#include "src/ui/controls/button.h"
 
 namespace vcutter {
 

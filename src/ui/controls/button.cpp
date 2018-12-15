@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#include "src/controls/button.h"
+#include "src/ui/controls/button.h"
 
 namespace vcutter {
 

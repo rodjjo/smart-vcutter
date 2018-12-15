@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
-#ifndef SRC_CONTROLS_BUTTON_H_
-#define SRC_CONTROLS_BUTTON_H_
+#ifndef SRC_UI_CONTROLS_BUTTON_H_
+#define SRC_UI_CONTROLS_BUTTON_H_
 
 #include <memory>
 #include <FL/Fl_Button.H>
@@ -35,4 +35,4 @@ class Button {
 
 }  // namespace vcutter
 
-#endif  // SRC_CONTROLS_BUTTON_H_
+#endif  // SRC_UI_CONTROLS_BUTTON_H_
