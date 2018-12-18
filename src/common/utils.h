@@ -54,6 +54,8 @@ std::string temp_filepath(const char *filename);
 */
 void seconds_to_str(char *buffer, int size, double tmr_in_seconds, bool ms=false);
 
+bool is_video_path(const std::string& path);
+
 }  // namespace vcutter
 
 #endif  // SRC_COMMON_UTILS_H_

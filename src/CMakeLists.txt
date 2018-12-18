@@ -4,6 +4,7 @@ file(GLOB Sources
     "${CMAKE_CURRENT_SOURCE_DIR}/common/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/geometry/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ui/controls/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/ui/dialogs/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/ui/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/clippings/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/data/*.cpp"

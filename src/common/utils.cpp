@@ -2,6 +2,7 @@
  * Copyright (C) 2018 by Rodrigo Antonio de Araujo
  */
 #include <cstdio>
+#include <regex> // NOLINT
 #include <boost/filesystem.hpp>
 #include "src/common/utils.h"
 
@@ -94,6 +95,11 @@ void seconds_to_str(char *buffer, int size, double tmr_in_seconds, bool ms) {
     } else {
         snprintf(buffer, size, "%02d:%02d:%02d", hours, mins, seconds);
     }
+}
+
+bool is_video_path(const std::string& path) {
+    std::regex project_ext_regex("^.*\\.vcutter$", std::regex_constants::icase);
+    return std::regex_match(path, project_ext_regex);
 }
 
 }  // namespace vcutter

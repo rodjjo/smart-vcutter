@@ -23,15 +23,15 @@ Button::Button(std::shared_ptr<Fl_Image> image, callback_t callback) {
 }
 
 int Button::x() {
-    button_->x();
+    return button_->x();
 }
 
 int Button::y() {
-    button_->y();
+    return button_->y();
 }
 
 int Button::w() {
-    button_->w();
+    return button_->w();
 }
 
 void Button::size(int sw, int sh) {
@@ -42,12 +42,17 @@ void Button::position(int px, int py) {
     button_->position(px, py);
 }
 
+void Button::coordinates(int x, int y, int w, int h) {
+    position(x, y);
+    size(w, h);
+}
+
 void Button::button_callback(Fl_Widget* widget, void *userdata) {
     (*static_cast<callback_t *>(userdata))();
 }
 
 int Button::h() {
-    button_->h();
+    return button_->h();
 }
 
 void Button::change_label(const char *label) {

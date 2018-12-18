@@ -7,7 +7,7 @@
 #include <memory>
 #include "src/data/history.h"
 #include "src/clippings/clipping_session.h"
-#include "src/wnd_main/callbacks.h"
+#include "src/common/callbacks.h"
 
 namespace vcutter {
 

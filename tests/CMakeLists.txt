@@ -5,6 +5,7 @@ file(GLOB ExeSources
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/common/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/geometry/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/ui/controls/*.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/ui/dialogs/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/ui/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/clippings/*.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/data/*.cpp"

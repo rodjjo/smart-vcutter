@@ -8,11 +8,12 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Image.H>
 
-#include "src/wnd_main/callbacks.h"
+#include "src/ui/controls/control.h"
+#include "src/common/callbacks.h"
 
 namespace vcutter {
 
-class Button {
+class Button : public Control {
  public:
     Button(const char *label, callback_t callback);
     Button(std::shared_ptr<Fl_Image> image, callback_t callback);
@@ -21,10 +22,11 @@ class Button {
     void shortcut(int value);
     void size(int sw, int sh);
     void tooltip(const char *text);
-    int x();
-    int y();
-    int w();
-    int h();
+    int x() override;
+    int y() override;
+    int w() override;
+    int h() override;
+    void coordinates(int x, int y, int w, int h) override;
  private:
     static void button_callback(Fl_Widget* widget, void *userdata);
  private:
