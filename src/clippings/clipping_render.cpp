@@ -56,10 +56,10 @@ void copy_center(cv::Mat& source, cv::Mat& target) {
 
 }  // namespace tmp
 
-ClippingRender::ClippingRender(const char *path, bool path_is_video) : ClippingFrame(path, path_is_video) {
+ClippingRender::ClippingRender(const char *path, bool path_is_video, frame_callback_t frame_cb) : ClippingFrame(path, path_is_video, frame_cb) {
 }
 
-ClippingRender::ClippingRender(const Json::Value * root) : ClippingFrame(root) {
+ClippingRender::ClippingRender(const Json::Value * root, frame_callback_t frame_cb) : ClippingFrame(root, frame_cb) {
 }
 
 void ClippingRender::render(ClippingKey key, uint8_t *source_buffer, uint32_t target_w, uint32_t target_h, uint8_t *buffer) {
@@ -139,7 +139,7 @@ void ClippingRender::render(ClippingKey key, uint8_t *buffer) {
 }
 
 std::shared_ptr<ClippingRender> ClippingRender::clone() {
-  std::shared_ptr<ClippingRender> clipping(new ClippingRender(video_path().c_str(), true));
+  std::shared_ptr<ClippingRender> clipping(new ClippingRender(video_path().c_str(), true, frame_callback()));
   clipping->wh(w(), h());
 
   for (const auto & k : keys()) {

@@ -14,7 +14,7 @@ std::unique_ptr<vcutter::Clipping> clp;
 class SuiteFixture {
  public:
     SuiteFixture() {
-        clp.reset(new vcutter::Clipping("data/sample_video.webm", true));
+        clp.reset(new vcutter::Clipping("data/sample_video.webm", true, vcutter::frame_callback_t()));
         clp->w(clp->player()->info()->w());
         clp->h(clp->player()->info()->h());
     }
@@ -52,15 +52,15 @@ BOOST_AUTO_TEST_CASE(test_clipping_key_constructors) {
 
     BOOST_CHECK_EQUAL(k1.angle(), 0.0);
     BOOST_CHECK_EQUAL(k1.scale, 1.0);
-    BOOST_CHECK_EQUAL(k1.px, 0);
-    BOOST_CHECK_EQUAL(k1.py, 0);
-    BOOST_CHECK_EQUAL(k1.frame, 0);
+    BOOST_CHECK_EQUAL(k1.px, 0u);
+    BOOST_CHECK_EQUAL(k1.py, 0u);
+    BOOST_CHECK_EQUAL(k1.frame, 0u);
 
     BOOST_CHECK_EQUAL(k2.angle(), 360.0);
     BOOST_CHECK_EQUAL(k2.scale, 4.0);
-    BOOST_CHECK_EQUAL(k2.px, 2);
-    BOOST_CHECK_EQUAL(k2.py, 3);
-    BOOST_CHECK_EQUAL(k2.frame, 120);
+    BOOST_CHECK_EQUAL(k2.px, 2u);
+    BOOST_CHECK_EQUAL(k2.py, 3u);
+    BOOST_CHECK_EQUAL(k2.frame, 120u);
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_key_serialize) {

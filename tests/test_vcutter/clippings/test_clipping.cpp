@@ -38,7 +38,7 @@ void restore_clipping() {
 class SuiteFixture {
  public:
     SuiteFixture() {
-        clp.reset(new vcutter::Clipping("data/sample_video.webm", true));
+        clp.reset(new vcutter::Clipping("data/sample_video.webm", true, vcutter::frame_callback_t()));
         restore_clipping();
     }
 
@@ -78,7 +78,7 @@ class ClippingTearDown {
 BOOST_FIXTURE_TEST_SUITE(clipping_test_suite, SuiteFixture)
 
 BOOST_AUTO_TEST_CASE(test_clipping_constructors) {
-    vcutter::Clipping clp3("data/it_does_not_exists.mp4", true);
+    vcutter::Clipping clp3("data/it_does_not_exists.mp4", true, vcutter::frame_callback_t());
 
     BOOST_CHECK_EQUAL(clp->good(), true);
     BOOST_CHECK_EQUAL(clp3.good(), false);
@@ -100,17 +100,17 @@ BOOST_AUTO_TEST_CASE(test_clipping_deserialize) {
 
     data["keys"].append(key);
 
-    vcutter::Clipping clp2(&data);
+    vcutter::Clipping clp2(&data, vcutter::frame_callback_t());
 
     BOOST_CHECK_EQUAL(clp2.good(), true);
-    BOOST_CHECK_EQUAL(clp2.w(), 100);
-    BOOST_CHECK_EQUAL(clp2.h(), 200);
-    BOOST_CHECK_EQUAL(clp2.keys().size(), 1);
+    BOOST_CHECK_EQUAL(clp2.w(), 100u);
+    BOOST_CHECK_EQUAL(clp2.h(), 200u);
+    BOOST_CHECK_EQUAL(clp2.keys().size(), 1u);
 }
 
 
 BOOST_AUTO_TEST_CASE(test_clipping_serialize) {
-    BOOST_CHECK_EQUAL(clp->keys().size(), 2);
+    BOOST_CHECK_EQUAL(clp->keys().size(), 2u);
 
     auto data = clp->serialize();
 
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_serialize) {
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_buffer_size) {
-    BOOST_CHECK_EQUAL(clp->req_buffer_size(), 80 * 180 * 3);
+    BOOST_CHECK_EQUAL(clp->req_buffer_size(), 80u * 180u * 3u);
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_get_keys) {
@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
 
     BOOST_CHECK_EQUAL(clp->saved_path(), temp_path);
 
-    vcutter::Clipping clp2(temp_path, false);
+    vcutter::Clipping clp2(temp_path, false, vcutter::frame_callback_t());
 
     BOOST_CHECK_EQUAL(clp2.saved_path(), temp_path);
     BOOST_CHECK_EQUAL(clp2.video_path(), "data/sample_video.webm");
@@ -360,7 +360,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_version) {
     vcutter::ClippingKey k1;
     k1.frame = 120;
 
-    BOOST_CHECK_EQUAL(clipping.version(), 0);
+    BOOST_CHECK_EQUAL(clipping.version(), 0u);
 
 
     for (int i = 0; i < 10; ++i) {

@@ -17,11 +17,11 @@ namespace vcutter {
 */
 class ClippingSession: public Clipping {
  public:
-    explicit ClippingSession(const char *session_name, const Json::Value * root);
-    ClippingSession(const char *session_name, const char *path, bool path_is_video);
+    explicit ClippingSession(const char *session_name, const Json::Value * root, frame_callback_t frame_cb);
+    ClippingSession(const char *session_name, const char *path, bool path_is_video, frame_callback_t frame_cb);
     virtual ~ClippingSession();
     static void fltk_timeout_handler(void* clipping_session);
-    static std::unique_ptr<ClippingSession> restore_session(const char *session_name);
+    static std::unique_ptr<ClippingSession> restore_session(const char *session_name, frame_callback_t frame_cb);
  private:
     std::string session_path();
     void save_session();

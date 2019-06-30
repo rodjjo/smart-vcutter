@@ -6,10 +6,10 @@
 namespace vcutter {
 
 
-Clipping::Clipping(const char *path, bool path_is_video) : ClippingRender(path, path_is_video), clipping_ref_(this){
+Clipping::Clipping(const char *path, bool path_is_video, frame_callback_t frame_cb) : ClippingRender(path, path_is_video, frame_cb), clipping_ref_(this){
 }
 
-Clipping::Clipping(const Json::Value * root) : ClippingRender(root), clipping_ref_(this) {
+Clipping::Clipping(const Json::Value * root, frame_callback_t frame_cb) : ClippingRender(root, frame_cb), clipping_ref_(this) {
 }
 
 ClippingRef & Clipping::ref() {

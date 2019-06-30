@@ -16,7 +16,7 @@ std::shared_ptr<vcutter::Clipping> clp;
 class TestConversionFixture {
  public:
     TestConversionFixture() {
-        clp.reset(new vcutter::Clipping("data/sample_video.webm", true));
+        clp.reset(new vcutter::Clipping("data/sample_video.webm", true, vcutter::frame_callback_t()));
         BOOST_REQUIRE(clp->good());
         std::remove(kCONVERSION_PATH);
     }
@@ -39,10 +39,10 @@ BOOST_FIXTURE_TEST_CASE(test_convert_from_begin, TestConversionFixture) {
 
     BOOST_CHECK(conversion.convert("mp4-x264", kCONVERSION_PATH, 1000000, 24, true, false, 0));
 
-    vcutter::Clipping clip(kCONVERSION_PATH, true);
+    vcutter::Clipping clip(kCONVERSION_PATH, true, vcutter::frame_callback_t());
 
-    BOOST_CHECK_EQUAL(clip.w(), 80);
-    BOOST_CHECK_EQUAL(clip.h(), 82);
+    BOOST_CHECK_EQUAL(clip.w(), 80u);
+    BOOST_CHECK_EQUAL(clip.h(), 82u);
     BOOST_CHECK_EQUAL(clip.last_frame(), clp->last_frame());
 }
 
@@ -53,10 +53,10 @@ BOOST_FIXTURE_TEST_CASE(test_convert_from_end, TestConversionFixture) {
 
     BOOST_CHECK(conversion.convert("mp4-x264", kCONVERSION_PATH, 1000000, 24, false, false, 0));
 
-    vcutter::Clipping clip(kCONVERSION_PATH, true);
+    vcutter::Clipping clip(kCONVERSION_PATH, true, vcutter::frame_callback_t());
 
-    BOOST_CHECK_EQUAL(clip.w(), 80);
-    BOOST_CHECK_EQUAL(clip.h(), 82);
+    BOOST_CHECK_EQUAL(clip.w(), 80u);
+    BOOST_CHECK_EQUAL(clip.h(), 82u);
     BOOST_CHECK_EQUAL(clip.last_frame(), clp->last_frame());
 }
 
@@ -67,10 +67,10 @@ BOOST_FIXTURE_TEST_CASE(test_convert_append, TestConversionFixture) {
 
     BOOST_CHECK(conversion.convert("mp4-x264", kCONVERSION_PATH, 1000000, 24, true, true, 0));
 
-    vcutter::Clipping clip(kCONVERSION_PATH, true);
+    vcutter::Clipping clip(kCONVERSION_PATH, true, vcutter::frame_callback_t());
 
-    BOOST_CHECK_EQUAL(clip.w(), 80);
-    BOOST_CHECK_EQUAL(clip.h(), 82);
+    BOOST_CHECK_EQUAL(clip.w(), 80u);
+    BOOST_CHECK_EQUAL(clip.h(), 82u);
     BOOST_CHECK_EQUAL(clip.last_frame(), clp->last_frame() * 2 - 2);
 }
 
@@ -85,11 +85,11 @@ BOOST_FIXTURE_TEST_CASE(test_convert_transition_frames, TestConversionFixture) {
 
     BOOST_CHECK(conversion.convert("mp4-x264", kCONVERSION_PATH, 1000000, 24, false, false, 5));
 
-    vcutter::Clipping clip(kCONVERSION_PATH, true);
+    vcutter::Clipping clip(kCONVERSION_PATH, true, vcutter::frame_callback_t());
 
-    BOOST_CHECK_EQUAL(clip.w(), 80);
-    BOOST_CHECK_EQUAL(clip.h(), 82);
-    BOOST_CHECK_EQUAL(clip.last_frame(), 15);
+    BOOST_CHECK_EQUAL(clip.w(), 80u);
+    BOOST_CHECK_EQUAL(clip.h(), 82u);
+    BOOST_CHECK_EQUAL(clip.last_frame(), 15u);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

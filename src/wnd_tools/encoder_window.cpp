@@ -289,7 +289,7 @@ bool EncoderWindow::deserialize(const string_map_t & data) {
             return false;
         }
 
-        clip_.reset(new ClippingRender(&clipping_data));
+        clip_.reset(new ClippingRender(&clipping_data, frame_callback_t()));
 
         if (!clip_->good()) {
             clip_.reset();
@@ -504,7 +504,7 @@ void EncoderWindow::action_convert() {
     std::shared_ptr<ClippingRender> clip = clip_;
 
     if (!clip) {
-        clip.reset(new ClippingRender(edt_path_->value(), true));
+        clip.reset(new ClippingRender(edt_path_->value(), true, frame_callback_t()));
         auto key1 = clip->at(start_frame);
         auto key2 = clip->at(end_frame - 1);
 

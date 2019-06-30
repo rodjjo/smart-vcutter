@@ -5,7 +5,8 @@
 
 namespace vcutter {
 
-ClippingFrame::ClippingFrame(const char *path, bool path_is_video) : ClippingData(path_is_video ? "" : path) {
+ClippingFrame::ClippingFrame(const char *path, bool path_is_video, frame_callback_t frame_cb) : ClippingData(path_is_video ? "" : path) {
+    frame_cb_ = frame_cb;
     if (path_is_video) {
         video_path(path);
         video_open();
@@ -14,7 +15,8 @@ ClippingFrame::ClippingFrame(const char *path, bool path_is_video) : ClippingDat
     }
 }
 
-ClippingFrame::ClippingFrame(const Json::Value * root) : ClippingData(root) {
+ClippingFrame::ClippingFrame(const Json::Value * root, frame_callback_t frame_cb) : ClippingData(root) {
+    frame_cb_ = frame_cb;
     video_open();
 }
 
@@ -23,7 +25,7 @@ void ClippingFrame::video_open() {
         return;
     }
 
-    player_.reset(new Player(video_path().c_str()));
+    player_.reset(new Player(video_path().c_str(), frame_cb_));
 
     if (!good()){
         return;
@@ -195,5 +197,8 @@ ClippingKey ClippingFrame::current_key() {
     return at(player_->info()->position());
 }
 
+frame_callback_t ClippingFrame::frame_callback() {
+    return frame_cb_;
+}
 
 }  // namespace vcutter

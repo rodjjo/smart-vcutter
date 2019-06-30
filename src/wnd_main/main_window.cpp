@@ -245,7 +245,7 @@ callback_t MainWindow::action_utils_clipping() {
             return;
         }
 
-        std::shared_ptr<Clipping> clip(new Clipping(path.c_str(), false));
+        std::shared_ptr<Clipping> clip(new Clipping(path.c_str(), false, frame_callback_t()));
         if (!clip->good()) {
             show_error("Could not open the clipping project.");
             return;
