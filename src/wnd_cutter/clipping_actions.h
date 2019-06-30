@@ -19,7 +19,7 @@ class ClippingActionsHandler {
     virtual void handle_clipping_resized() = 0;
     virtual void handle_clipping_keys_changed() = 0;
     virtual void handle_buffer_modified() = 0;
-    virtual void handle_frame_changed(Player *player) {}
+    virtual void handle_frame_changed(Player *player) = 0;
 };
 
 class ClippingActions {

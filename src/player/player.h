@@ -40,13 +40,13 @@ class Player {
     bool is_playing_interval();
     bool execution_finished();
     void execute(context_callback_t callback);
-    bool frame_changed(bool clear_flag); // turn private
     void set_frame_changed_callback(frame_callback_t frame_changed_cb);
     void clear_frame_changed_callback();
   private:
     void init(const char *path);
     void init_frame_changed_notifier();
     static void timeout_handler(void* ud);
+    bool frame_changed(bool clear_flag);
     void replace_callback(async_callback_t callback);
     void wait_callback();
     void call_async(async_callback_t callback);

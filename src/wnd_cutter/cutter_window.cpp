@@ -271,6 +271,9 @@ void CutterWindow::update_buffers(bool frame_changed) {
         clipping_editor_->update(clipping());
         side_bar_->viewer()->update_preview(clipping());
     } else {
+        if (clipping_editor_->current_clipping() != clipping()) {
+            clipping_editor_->update(clipping());
+        }
         clipping_editor_->draw_operations();
         if (clipping_editor_->key_changed(true)) {
             side_bar_->update();
@@ -285,9 +288,13 @@ void CutterWindow::update_buffers(bool frame_changed) {
     side_bar_->update(true);
 }
 
+void CutterWindow::handle_frame_changed(Player *player) {
+    update_buffers(true);
+}
+
 void CutterWindow::poll_actions() {
     if (clipping()) {
-        update_buffers(player()->frame_changed(true));
+        update_buffers(false);
         if (wink_comparison_ && clipping_editor_->compare_box() && !player()->is_playing()) {
             ++wink_lap_;
             if (wink_lap_ > 11) {
