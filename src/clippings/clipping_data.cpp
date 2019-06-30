@@ -76,11 +76,13 @@ void ClippingData::load_file(const char *path) {
     saved_path_ = path;
 }
 
-void ClippingData::save(const char *path) {
+void ClippingData::save(const char *path, bool preserve_path) {
     JsonFile jsf(path, false, false);
     jsf["ClippingData"] = serialize();
     jsf.save();
-    saved_path_ = path;
+    if (preserve_path) {
+        saved_path_ = path;
+    }
 }
 
 std::string ClippingData::saved_path() {

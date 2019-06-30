@@ -97,9 +97,10 @@ void SideBar::resize_controls() {
     int key_list_w = parent_->w() - base_left;
     int bottom_size = parent_->h() - left_component_->h();
     int key_list_size = left_component_->h() - key_list_w - bottom_size - 38;
-    int key_list_top = 33 + key_list_->h();
+
     key_list_->size(key_list_w, key_list_size);
-    viewer_->position(base_left, key_list_top);
+    int key_list_top = 33 + key_list_->h();
+
     viewer_->position(base_left, key_list_top + 1);
 
     btn_new_key_->position(base_left, 3);

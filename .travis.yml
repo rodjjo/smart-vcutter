@@ -9,23 +9,23 @@ addons:
     packages:
       - cmake
       - python3
-      - libboost-chrono-dev 
-      - libboost-filesystem-dev 
-      - libboost-system-dev 
+      - libboost-chrono-dev
+      - libboost-filesystem-dev
+      - libboost-system-dev
       - libboost-timer-dev
-      - libboost-thread-dev 
-      - libboost-test-dev 
-      - libavcodec-dev 
-      - libavformat-dev 
-      - libavutil-dev
-      - libavfilter-dev
-      - libavdevice-dev
-      - libswresample-dev
-      - libswscale-dev
-      - fluid 
-      - libfltk1.3-dev 
+      - libboost-thread-dev
+      - libboost-test-dev
+      - libavcodec-dev_5.8.0
+      - libavformat-dev_5.8.0
+      - libavutil-dev_5.8.0
+      - libavfilter-dev_5.8.0
+      - libavdevice-dev_5.8.0
+      - libswresample-dev_5.8.0
+      - libswscale-dev_5.8.0
+      - fluid
+      - libfltk1.3-dev
       - libgl1-mesa-dev
       - libjsoncpp-dev
-      - libopencv-dev 
+      - libopencv-dev
       - lcov
 script: python3 misc/checks.py lint && cmake . && cmake --build .

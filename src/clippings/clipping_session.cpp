@@ -33,7 +33,7 @@ void ClippingSession::fltk_timeout_handler(void* clipping_session) {
 void ClippingSession::save_session() {
     if (last_version_ != version()) {
         last_version_ = version();
-        save(session_path().c_str());
+        save(session_path().c_str(), false);
     }
 }
 
