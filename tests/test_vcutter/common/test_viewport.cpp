@@ -127,26 +127,26 @@ BOOST_AUTO_TEST_CASE(test_viewport_fit) {
 
     uint32_t w = 100, h = 90;
     BOOST_CHECK_EQUAL(vp.fit(&w, &h), 0.125);
-    BOOST_CHECK_EQUAL(w, 800);
-    BOOST_CHECK_EQUAL(h, 720);
+    BOOST_CHECK_EQUAL(w, 800u);
+    BOOST_CHECK_EQUAL(h, 720u);
 
     w = 1280 * 2;
     h = 90;
     BOOST_CHECK_EQUAL(vp.fit(&w, &h), 2);
-    BOOST_CHECK_EQUAL(w, 1280);
-    BOOST_CHECK_EQUAL(h, 45);
+    BOOST_CHECK_EQUAL(w, 1280u);
+    BOOST_CHECK_EQUAL(h, 45u);
 
     w = 1280;
     h = 720 * 2;
     BOOST_CHECK_EQUAL(vp.fit(&w, &h), 2);
-    BOOST_CHECK_EQUAL(w, 640);
-    BOOST_CHECK_EQUAL(h, 720);
+    BOOST_CHECK_EQUAL(w, 640u);
+    BOOST_CHECK_EQUAL(h, 720u);
 
     w = 1290;
     h = 760;
     BOOST_CHECK_CLOSE(vp.fit(&w, &h), 1.055555, 0.1);
-    BOOST_CHECK_EQUAL(w, 1222);
-    BOOST_CHECK_EQUAL(h, 720);
+    BOOST_CHECK_EQUAL(w, 1222u);
+    BOOST_CHECK_EQUAL(h, 720u);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_remove_all) {
         ++k1.frame;
     }
 
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10u);
 
     clipping.remove_all(100);
     BOOST_CHECK_EQUAL(clipping.keys().size(), 1u);
@@ -531,8 +531,8 @@ BOOST_AUTO_TEST_CASE(test_interpolation_decrement_position) {
 
     k1 = clipping.at(121);
 
-    BOOST_CHECK_EQUAL(k1.px, 99);
-    BOOST_CHECK_EQUAL(k1.py, 99);
+    BOOST_CHECK_EQUAL(k1.px, 99u);
+    BOOST_CHECK_EQUAL(k1.py, 99u);
 }
 
 

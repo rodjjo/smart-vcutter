@@ -5,7 +5,9 @@ language: cpp
 addons:
   apt:
     sources:
-      - sourceline: 'deb http://en.archive.ubuntu.com/ubuntu/ artful main universe'
+      - sourceline: 'ppa:jonathonf/ffmpeg-4'
+      - sourceline: 'ppa:adrozdoff/cmake'
+      - sourceline: 'ppa:boost-latest/ppa'
     packages:
       - cmake
       - python3
@@ -15,13 +17,13 @@ addons:
       - libboost-timer-dev
       - libboost-thread-dev
       - libboost-test-dev
-      - libavcodec-dev_5.8.0
-      - libavformat-dev_5.8.0
-      - libavutil-dev_5.8.0
-      - libavfilter-dev_5.8.0
-      - libavdevice-dev_5.8.0
-      - libswresample-dev_5.8.0
-      - libswscale-dev_5.8.0
+      - libavcodec-dev
+      - libavformat-dev
+      - libavutil-dev
+      - libavfilter-dev
+      - libavdevice-dev
+      - libswresample-dev
+      - libswscale-dev
       - fluid
       - libfltk1.3-dev
       - libgl1-mesa-dev

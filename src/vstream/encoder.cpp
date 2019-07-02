@@ -166,8 +166,8 @@ bool EncoderImp::find_codec() {
         codec_id = AV_CODEC_ID_HEVC;
     } else if (strcmp(kVP9_CODEC, codec_name_.c_str()) == 0) {
         codec_id = AV_CODEC_ID_VP9;
-    } else if (strcmp(kAV1_CODEC, codec_name_.c_str()) == 0) {
-        codec_id = AV_CODEC_ID_AV1;
+    // } else  if (strcmp(kAV1_CODEC, codec_name_.c_str()) == 0) {
+        // codec_id = AV_CODEC_ID_AV1;
     } else {
         report_error("Invalid codec name");
         return NULL;
