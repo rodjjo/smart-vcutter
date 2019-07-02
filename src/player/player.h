@@ -55,6 +55,7 @@ class Player {
     void stop_playing();
     void run_callback();
     bool grab_frame();
+    void notify_frame_changed();
   private:
     bool finished_;
     bool playing_;

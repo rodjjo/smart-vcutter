@@ -168,7 +168,7 @@ void MainWindow::init_main_menu() {
     menu_edit_->add("Swap width and height", "", ca->action_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
     menu_edit_->add("Clear all keys", "", ca->action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
     menu_compare_ = menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
-    menu_compare_alt_ = menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER | FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
+    menu_compare_alt_ = menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
     menu_edit_->add("Output properties", "", ca->action_properties(), 0, GROUP_CLIPPING_OPEN, xpm::note_16x16);
 
     menu_tools_.reset(new Menu(menu_, "&Tools"));

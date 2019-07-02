@@ -99,7 +99,7 @@ void CutterWindow::resize_controls() {
     parent_->position(parent_x, parent_y);
 
     if (visible()) {
-        update_buffers(true);
+        update_buffers(false);
         redraw_frame();
     }
 }
@@ -165,7 +165,7 @@ void CutterWindow::handle_clipping_opened(bool opened) {
     update_title();
     clipping_version_ = clipping()->version();
 
-    update_buffers(true);
+    update_buffers(false);
 }
 
 void CutterWindow::close() {
@@ -226,7 +226,7 @@ void CutterWindow::action_clear_ref() {
         return;
     }
     clipping()->ref().clear_reference();
-    update_buffers(true);
+    update_buffers(false);
 }
 
 void CutterWindow::action_goto_reference() {
@@ -234,7 +234,7 @@ void CutterWindow::action_goto_reference() {
     if (clipping()->ref().get_reference_frame(&frame)) {
         player()->pause();
         player()->seek_frame(frame);
-        update_buffers(true);
+        update_buffers(false);
     }
 }
 
@@ -256,7 +256,7 @@ void CutterWindow::redraw_frame(bool update_key_list) {
 }
 
 void CutterWindow::handle_buffer_modified() {
-    update_buffers(true);
+    // update_buffers(false);
 }
 
 void CutterWindow::update_buffers(bool frame_changed) {
@@ -307,6 +307,7 @@ void CutterWindow::poll_actions() {
 
 void CutterWindow::action_toggle_compare() {
     clipping_editor_->toggle_compare_box();
+    wink_comparison_ = false;
 }
 
 void CutterWindow::action_toggle_compare_wink() {
