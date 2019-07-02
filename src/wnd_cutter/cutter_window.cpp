@@ -156,7 +156,7 @@ void CutterWindow::handle_clipping_opened(bool opened) {
         return;
     }
 
-    player()->seek_frame(clipping()->first_frame());
+    clipping_editor_->update(clipping());
 
     player_bar_->update();
     redraw_frame();

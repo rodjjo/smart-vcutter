@@ -326,11 +326,13 @@ void MainWindow::open_video_or_project(const std::string& path) {
 
     std::string extension(".vcutter");
     if (path.substr(path.size() - extension.size()) == extension) {
+        cutter_window_->close();
         if (cutter_window_->clipping_actions()->open(path, false)) {
             enable_controls();
             return;
         }
     } else {
+        cutter_window_->close();
         if (cutter_window_->clipping_actions()->open(path, true)) {
             enable_controls();
             return;
