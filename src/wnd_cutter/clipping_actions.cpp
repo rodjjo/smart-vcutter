@@ -52,7 +52,9 @@ void ClippingActions::close() {
 }
 
 bool ClippingActions::open(const std::string& path, bool path_is_video) {
-    clipping_.reset(new ClippingSession("cwnd", path.c_str(), path_is_video));
+    clipping_.reset(new ClippingSession("cwnd", path.c_str(), path_is_video, [this] (Player* player) {
+        handler_->handle_frame_changed(player);
+    }));
     return handle_opened_clipping();
 }
 
@@ -68,7 +70,12 @@ bool ClippingActions::handle_opened_clipping() {
 }
 
 bool ClippingActions::restore_session() {
-    std::shared_ptr<ClippingSession> restored(std::move(ClippingSession::restore_session("cwnd")));
+    std::shared_ptr<ClippingSession> restored(std::move(ClippingSession::restore_session(
+        "cwnd",
+        [this] (Player* player) {
+            handler_->handle_frame_changed(player);
+        }
+    )));
 
     if (!restored) {
         return false;

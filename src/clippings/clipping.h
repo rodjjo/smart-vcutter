@@ -11,8 +11,8 @@ namespace vcutter {
 
 class Clipping: public ClippingRender {
  public:
-    explicit Clipping(const Json::Value * root);
-    Clipping(const char *path, bool path_is_video);
+    Clipping(const Json::Value * root, frame_callback_t frame_cb);
+    Clipping(const char *path, bool path_is_video, frame_callback_t frame_cb);
     virtual ~Clipping(){}
     ClippingRef & ref();
  private:

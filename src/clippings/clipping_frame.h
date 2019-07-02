@@ -15,8 +15,8 @@ namespace vcutter {
 
 class ClippingFrame: public ClippingData {
  public:
-    explicit ClippingFrame(const Json::Value * root);
-    ClippingFrame(const char *path, bool path_is_video);
+    ClippingFrame(const Json::Value * root, frame_callback_t frame_cb);
+    ClippingFrame(const char *path, bool path_is_video, frame_callback_t frame_cb);
     virtual ~ClippingFrame(){}
     Player *player();
     bool good();
@@ -39,10 +39,12 @@ class ClippingFrame: public ClippingData {
     uint32_t default_w() override;
     uint32_t default_h() override;
     uint32_t frame_count() override;
+    frame_callback_t frame_callback();
  private:
     void video_open();
 
  private:
+    frame_callback_t frame_cb_;
     std::unique_ptr<Player> player_;
 };
 

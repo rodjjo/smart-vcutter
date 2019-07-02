@@ -168,7 +168,7 @@ void MainWindow::init_main_menu() {
     menu_edit_->add("Swap width and height", "", ca->action_swap_wh(), 0, GROUP_CLIPPING_OPEN, xpm::arrow_dwn_16x16);
     menu_edit_->add("Clear all keys", "", ca->action_clear_keys(), 0, GROUP_CLIPPING_OPEN, xpm::erase_all_16x16);
     menu_compare_ = menu_edit_->add("Compare first last frame", "", action_toggle_compare_box(), FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::eye_16x16);
-    menu_compare_alt_ = menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER | FL_MENU_TOGGLE, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
+    menu_compare_alt_ = menu_edit_->add("Alternate comparation", "", action_wink_comparison(), FL_MENU_DIVIDER, GROUP_CLIPPING_OPEN, xpm::clock_16x16);
     menu_edit_->add("Output properties", "", ca->action_properties(), 0, GROUP_CLIPPING_OPEN, xpm::note_16x16);
 
     menu_tools_.reset(new Menu(menu_, "&Tools"));
@@ -245,7 +245,7 @@ callback_t MainWindow::action_utils_clipping() {
             return;
         }
 
-        std::shared_ptr<Clipping> clip(new Clipping(path.c_str(), false));
+        std::shared_ptr<Clipping> clip(new Clipping(path.c_str(), false, frame_callback_t()));
         if (!clip->good()) {
             show_error("Could not open the clipping project.");
             return;
@@ -326,11 +326,13 @@ void MainWindow::open_video_or_project(const std::string& path) {
 
     std::string extension(".vcutter");
     if (path.substr(path.size() - extension.size()) == extension) {
+        cutter_window_->close();
         if (cutter_window_->clipping_actions()->open(path, false)) {
             enable_controls();
             return;
         }
     } else {
+        cutter_window_->close();
         if (cutter_window_->clipping_actions()->open(path, true)) {
             enable_controls();
             return;
@@ -625,7 +627,7 @@ int main(int argc, char **argv) {
     return result;
 }
 
-#ifdef _WIN32
+#ifdef WIN32
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
      return main(__argc, __argv);
 }

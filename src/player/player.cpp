@@ -55,9 +55,7 @@ void Player::init_frame_changed_notifier() {
 }
 
 void Player::timeout_handler(void* ud) {
-    if (static_cast<Player *>(ud)->frame_changed(true)) {
-        static_cast<Player *>(ud)->frame_changed_cb_(static_cast<Player *>(ud));
-    }
+    static_cast<Player *>(ud)->notify_frame_changed();
     Fl::repeat_timeout(kON_FRAME_TIMEOUT_INTERVAL, &Player::timeout_handler, ud);
 }
 
@@ -125,12 +123,19 @@ void Player::noop() {
     call_async([](){});
 }
 
+void Player::notify_frame_changed() {
+    if (frame_changed_cb_ && frame_changed(true)) {
+        frame_changed_cb_(this);
+    }
+}
+
 void Player::stop() {
     stop_playing();
     call_async([this] () {
         decoder_->seek_frame(0);
         frame_changed_.store(true);
     });
+    notify_frame_changed();
 }
 
 void Player::next() {
@@ -139,6 +144,7 @@ void Player::next() {
         decoder_->next();
         frame_changed_.store(true);
     });
+    notify_frame_changed();
 }
 
 void Player::prior() {
@@ -147,6 +153,7 @@ void Player::prior() {
         decoder_->prior();
         frame_changed_.store(true);
     });
+    notify_frame_changed();
 }
 
 void Player::seek_frame(int64_t frame) {
@@ -154,6 +161,7 @@ void Player::seek_frame(int64_t frame) {
         decoder_->seek_frame(frame);
         frame_changed_.store(true);
     });
+    notify_frame_changed();
 }
 
 void Player::seek_time(int64_t ms_time) {
@@ -161,6 +169,7 @@ void Player::seek_time(int64_t ms_time) {
         decoder_->seek_time(ms_time);
         frame_changed_.store(true);
     });
+    notify_frame_changed();
 }
 
 void Player::replace_callback(async_callback_t callback) {

@@ -6,8 +6,14 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake-mod
 set(Boost_USE_STATIC_LIBS ON)
 set(CMAKE_CXX_STANDARD 14)
 set(FLTK_SKIP_FLUID true)
-set(CMAKE_BUILD_TYPE Debug)
-# set(CMAKE_BUILD_TYPE Release)
+
+if ($ENV{VCUTTER_DEBUG})
+    message("Compliling in Debug build type")
+    set(CMAKE_BUILD_TYPE Debug)
+else ($ENV{VCUTTER_DEBUG})
+    message("Compliling in Release build type")
+    set(CMAKE_BUILD_TYPE Release)
+endif ($ENV{VCUTTER_DEBUG})
 
 find_path(AVCODEC_INCLUDE_DIR libavcodec/avcodec.h)
 find_library(AVCODEC_LIBRARY avcodec)

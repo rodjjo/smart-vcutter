@@ -28,6 +28,7 @@ public:
     virtual ~ClippingEditor();
     void invalidate();
     void update(Clipping *clipping);
+    Clipping *current_clipping();
     void draw_operations();
     bool first_frame_cache_initialized();
     bool last_frame_cache_initialized();

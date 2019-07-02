@@ -88,6 +88,10 @@ void ClippingEditor::update(Clipping *clipping) {
     redraw();
 }
 
+Clipping *ClippingEditor::current_clipping() {
+    return clipping_;
+}
+
 void ClippingEditor::viewer_draw(BufferViewer *viewer, bool *handled, const unsigned char* buffer, uint32_t w, uint32_t h) {
     if (!clipping_) {
         return;

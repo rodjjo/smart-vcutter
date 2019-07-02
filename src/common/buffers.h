@@ -6,12 +6,13 @@
 
 #include <memory>
 #include <vector>
-#include <boost/core/noncopyable.hpp>
 
 
 namespace vcutter {
 
-class CharBuffer: private boost::noncopyable {
+class CharBuffer {
+   CharBuffer(const CharBuffer&) = delete;
+   CharBuffer& operator=(const CharBuffer&) = delete;
  public:
     CharBuffer(uint32_t size) {
         data = new uint8_t[size];
@@ -25,7 +26,9 @@ class CharBuffer: private boost::noncopyable {
 };
 
 
-class StackBuffer: private  boost::noncopyable {
+class StackBuffer {
+    StackBuffer(const StackBuffer&) = delete;
+    StackBuffer& operator=(const StackBuffer&) = delete;
  public:
     StackBuffer(uint32_t individual_size, uint32_t buffer_count);
     virtual ~StackBuffer(){}

@@ -38,7 +38,7 @@ void restore_clipping() {
 class SuiteFixture {
  public:
     SuiteFixture() {
-        clp.reset(new vcutter::Clipping("data/sample_video.webm", true));
+        clp.reset(new vcutter::Clipping("data/sample_video.webm", true, vcutter::frame_callback_t()));
         restore_clipping();
     }
 
@@ -78,7 +78,7 @@ class ClippingTearDown {
 BOOST_FIXTURE_TEST_SUITE(clipping_test_suite, SuiteFixture)
 
 BOOST_AUTO_TEST_CASE(test_clipping_constructors) {
-    vcutter::Clipping clp3("data/it_does_not_exists.mp4", true);
+    vcutter::Clipping clp3("data/it_does_not_exists.mp4", true, vcutter::frame_callback_t());
 
     BOOST_CHECK_EQUAL(clp->good(), true);
     BOOST_CHECK_EQUAL(clp3.good(), false);
@@ -100,17 +100,17 @@ BOOST_AUTO_TEST_CASE(test_clipping_deserialize) {
 
     data["keys"].append(key);
 
-    vcutter::Clipping clp2(&data);
+    vcutter::Clipping clp2(&data, vcutter::frame_callback_t());
 
     BOOST_CHECK_EQUAL(clp2.good(), true);
-    BOOST_CHECK_EQUAL(clp2.w(), 100);
-    BOOST_CHECK_EQUAL(clp2.h(), 200);
-    BOOST_CHECK_EQUAL(clp2.keys().size(), 1);
+    BOOST_CHECK_EQUAL(clp2.w(), 100u);
+    BOOST_CHECK_EQUAL(clp2.h(), 200u);
+    BOOST_CHECK_EQUAL(clp2.keys().size(), 1u);
 }
 
 
 BOOST_AUTO_TEST_CASE(test_clipping_serialize) {
-    BOOST_CHECK_EQUAL(clp->keys().size(), 2);
+    BOOST_CHECK_EQUAL(clp->keys().size(), 2u);
 
     auto data = clp->serialize();
 
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_serialize) {
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_buffer_size) {
-    BOOST_CHECK_EQUAL(clp->req_buffer_size(), 80 * 180 * 3);
+    BOOST_CHECK_EQUAL(clp->req_buffer_size(), 80u * 180u * 3u);
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_get_keys) {
@@ -142,31 +142,31 @@ BOOST_AUTO_TEST_CASE(test_clipping_get_keys) {
     BOOST_CHECK_EQUAL(k3.computed(), false);
     BOOST_CHECK_EQUAL(k4.computed(), true);
 
-    BOOST_CHECK_EQUAL(k0.frame, 119);
+    BOOST_CHECK_EQUAL(k0.frame, 119u);
     BOOST_CHECK_EQUAL(k0.angle(), k1.angle());
     BOOST_CHECK_EQUAL(k0.scale, k1.scale);
     BOOST_CHECK_EQUAL(k0.px, k1.px);
     BOOST_CHECK_EQUAL(k0.py, k1.py);
 
-    BOOST_CHECK_EQUAL(k1.frame, 120);
+    BOOST_CHECK_EQUAL(k1.frame, 120u);
     BOOST_CHECK_EQUAL(k1.angle(), 360);
     BOOST_CHECK_EQUAL(k1.scale, 1);
-    BOOST_CHECK_EQUAL(k1.px, 40);
-    BOOST_CHECK_EQUAL(k1.py, 60);
+    BOOST_CHECK_EQUAL(k1.px, 40u);
+    BOOST_CHECK_EQUAL(k1.py, 60u);
 
-    BOOST_CHECK_EQUAL(k2.frame, 500);
+    BOOST_CHECK_EQUAL(k2.frame, 500u);
     BOOST_CHECK_CLOSE(k2.angle(), 63.3333, 0.1);
     BOOST_CHECK_CLOSE(k2.scale, 0.82407, 0.1);
-    BOOST_CHECK_EQUAL(k2.px, 54);
-    BOOST_CHECK_EQUAL(k2.py, 81);
+    BOOST_CHECK_EQUAL(k2.px, 54u);
+    BOOST_CHECK_EQUAL(k2.py, 81u);
 
-    BOOST_CHECK_EQUAL(k3.frame, 1200);
+    BOOST_CHECK_EQUAL(k3.frame, 1200u);
     BOOST_CHECK_EQUAL(k3.angle(), 180);
     BOOST_CHECK_CLOSE(k3.scale, 0.5, 0.00001);
-    BOOST_CHECK_EQUAL(k3.px, 80);
-    BOOST_CHECK_EQUAL(k3.py, 120);
+    BOOST_CHECK_EQUAL(k3.px, 80u);
+    BOOST_CHECK_EQUAL(k3.py, 120u);
 
-    BOOST_CHECK_EQUAL(k4.frame, 1201);
+    BOOST_CHECK_EQUAL(k4.frame, 1201u);
     BOOST_CHECK_EQUAL(k4.angle(), k3.angle());
     BOOST_CHECK_EQUAL(k4.scale, k3.scale);
     BOOST_CHECK_EQUAL(k4.px, k3.px);
@@ -181,15 +181,15 @@ BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
 
     BOOST_CHECK_EQUAL(clp->saved_path(), temp_path);
 
-    vcutter::Clipping clp2(temp_path, false);
+    vcutter::Clipping clp2(temp_path, false, vcutter::frame_callback_t());
 
     BOOST_CHECK_EQUAL(clp2.saved_path(), temp_path);
     BOOST_CHECK_EQUAL(clp2.video_path(), "data/sample_video.webm");
 
     BOOST_CHECK_EQUAL(clp2.good(), true);
-    BOOST_CHECK_EQUAL(clp2.w(), 80);
-    BOOST_CHECK_EQUAL(clp2.h(), 180);
-    BOOST_CHECK_EQUAL(clp2.keys().size(), 2);
+    BOOST_CHECK_EQUAL(clp2.w(), 80u);
+    BOOST_CHECK_EQUAL(clp2.h(), 180u);
+    BOOST_CHECK_EQUAL(clp2.keys().size(), 2u);
 
     std::remove(temp_path);
 }
@@ -197,14 +197,14 @@ BOOST_AUTO_TEST_CASE(test_clipping_save_load) {
 BOOST_AUTO_TEST_CASE(test_clipping_wh) {
     clp->wh(90, 91);
 
-    BOOST_CHECK_EQUAL(clp->w(), 90);
-    BOOST_CHECK_EQUAL(clp->h(), 91);
+    BOOST_CHECK_EQUAL(clp->w(), 90u);
+    BOOST_CHECK_EQUAL(clp->h(), 91u);
 
     clp->w(80);
     clp->h(180);
 
-    BOOST_CHECK_EQUAL(clp->w(), 80);
-    BOOST_CHECK_EQUAL(clp->h(), 180);
+    BOOST_CHECK_EQUAL(clp->w(), 80u);
+    BOOST_CHECK_EQUAL(clp->h(), 180u);
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_remove) {
@@ -214,9 +214,9 @@ BOOST_AUTO_TEST_CASE(test_clipping_remove) {
     k1.frame = 120;
 
     clipping.add(k1);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 1);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 1u);
     clipping.remove(120);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 0);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 0u);
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_define_start) {
@@ -230,23 +230,23 @@ BOOST_AUTO_TEST_CASE(test_clipping_define_start) {
         ++k1.frame;
     }
 
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10u);
 
     clipping.define_start(119);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 11);
-    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 119);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 11u);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 119u);
 
     clipping.define_start(120);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
-    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 120);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10u);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 120u);
 
     clipping.define_start(125);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 5);
-    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 125);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 5u);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 125u);
 
     clipping.define_start(140);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 1);
-    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 140);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 1u);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 140u);
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_define_end) {
@@ -260,23 +260,23 @@ BOOST_AUTO_TEST_CASE(test_clipping_define_end) {
         ++k1.frame;
     }
 
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10u);
 
     clipping.define_end(131);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 11);
-    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 131);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 11u);
+    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 131u);
 
     clipping.define_end(129);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
-    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 129);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10u);
+    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 129u);
 
     clipping.define_end(124);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 5);
-    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 124);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 5u);
+    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 124u);
 
     clipping.define_end(100);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 1);
-    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 100);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 1u);
+    BOOST_CHECK_EQUAL(clipping.keys().rbegin()->frame, 100u);
 }
 
 
@@ -291,14 +291,14 @@ BOOST_AUTO_TEST_CASE(test_clipping_remove_all) {
         ++k1.frame;
     }
 
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 10);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 10u);
 
     clipping.remove_all(100);
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 1);
-    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 100);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 1u);
+    BOOST_CHECK_EQUAL(clipping.keys().begin()->frame, 100u);
 
     clipping.remove_all();
-    BOOST_CHECK_EQUAL(clipping.keys().size(), 0);
+    BOOST_CHECK_EQUAL(clipping.keys().size(), 0u);
 }
 
 
@@ -309,16 +309,16 @@ BOOST_AUTO_TEST_CASE(test_clipping_first_last_frame) {
     k1.frame = 120;
 
     BOOST_CHECK(clipping.keys().empty());
-    BOOST_CHECK_EQUAL(clipping.first_frame(), 1);
-    BOOST_CHECK_EQUAL(clipping.last_frame(), 10000);
+    BOOST_CHECK_EQUAL(clipping.first_frame(), 1u);
+    BOOST_CHECK_EQUAL(clipping.last_frame(), 10000u);
 
     for (int i = 0; i < 10; ++i) {
         clipping.add(k1);
         ++k1.frame;
     }
 
-    BOOST_CHECK_EQUAL(clipping.first_frame(), 120);
-    BOOST_CHECK_EQUAL(clipping.last_frame(), 129);
+    BOOST_CHECK_EQUAL(clipping.first_frame(), 120u);
+    BOOST_CHECK_EQUAL(clipping.last_frame(), 129u);
 }
 
 BOOST_AUTO_TEST_CASE(test_clipping_at_index) {
@@ -332,8 +332,8 @@ BOOST_AUTO_TEST_CASE(test_clipping_at_index) {
         ++k1.frame;
     }
 
-    BOOST_CHECK_EQUAL(clipping.at_index(0).frame, 120);
-    BOOST_CHECK_EQUAL(clipping.at_index(9).frame, 129);
+    BOOST_CHECK_EQUAL(clipping.at_index(0).frame, 120u);
+    BOOST_CHECK_EQUAL(clipping.at_index(9).frame, 129u);
 }
 
 
@@ -360,7 +360,7 @@ BOOST_AUTO_TEST_CASE(test_clipping_version) {
     vcutter::ClippingKey k1;
     k1.frame = 120;
 
-    BOOST_CHECK_EQUAL(clipping.version(), 0);
+    BOOST_CHECK_EQUAL(clipping.version(), 0u);
 
 
     for (int i = 0; i < 10; ++i) {
@@ -368,27 +368,27 @@ BOOST_AUTO_TEST_CASE(test_clipping_version) {
         ++k1.frame;
     }
 
-    BOOST_CHECK_EQUAL(clipping.version(), 10);
+    BOOST_CHECK_EQUAL(clipping.version(), 10u);
 
     clipping.remove(120);
 
-    BOOST_CHECK_EQUAL(clipping.version(), 11);
+    BOOST_CHECK_EQUAL(clipping.version(), 11u);
 
     clipping.define_start(120);
 
-    BOOST_CHECK_EQUAL(clipping.version(), 13);
+    BOOST_CHECK_EQUAL(clipping.version(), 13u);
 
     clipping.define_end(120);
 
-    BOOST_CHECK_EQUAL(clipping.version(), 15);
+    BOOST_CHECK_EQUAL(clipping.version(), 15u);
 
     clipping.remove_all(100);
 
-    BOOST_CHECK_EQUAL(clipping.version(), 17);
+    BOOST_CHECK_EQUAL(clipping.version(), 17u);
 
     clipping.remove_all();
 
-    BOOST_CHECK_EQUAL(clipping.version(), 18);
+    BOOST_CHECK_EQUAL(clipping.version(), 18u);
 }
 
 
@@ -531,8 +531,8 @@ BOOST_AUTO_TEST_CASE(test_interpolation_decrement_position) {
 
     k1 = clipping.at(121);
 
-    BOOST_CHECK_EQUAL(k1.px, 99);
-    BOOST_CHECK_EQUAL(k1.py, 99);
+    BOOST_CHECK_EQUAL(k1.px, 99u);
+    BOOST_CHECK_EQUAL(k1.py, 99u);
 }
 
 

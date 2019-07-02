@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_SUITE(buffers_test_suite)
 
 BOOST_AUTO_TEST_CASE(test_buffer_allocation) {
     vcutter::StackBuffer buffer(100, 4);
-    BOOST_CHECK_EQUAL(buffer.count(), 4);
+    BOOST_CHECK_EQUAL(buffer.count(), 4u);
 }
 
 BOOST_AUTO_TEST_CASE(test_buffer_push_pop) {

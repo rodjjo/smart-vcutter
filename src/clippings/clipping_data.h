@@ -9,14 +9,15 @@
 #include <string>
 #include <list>
 
-#include <boost/core/noncopyable.hpp>
 #include <jsoncpp/json/json.h>
 
 #include "src/clippings/clipping_key.h"
 
 namespace vcutter {
 
-class ClippingData: private boost::noncopyable {
+class ClippingData {
+    ClippingData(const ClippingData&) = delete;
+    ClippingData& operator=(const ClippingData&) = delete;
  public:
     explicit ClippingData(const Json::Value * root);
     explicit ClippingData(const char *path);
@@ -27,7 +28,7 @@ class ClippingData: private boost::noncopyable {
     void h(uint32_t value);
     void add(const ClippingKey & key);
     ClippingKey at(uint32_t frame);
-    void save(const char *path);
+    void save(const char *path, bool preserve_path=true);
     std::string saved_path();
     Json::Value serialize();
     uint32_t req_buffer_size();

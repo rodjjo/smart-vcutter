@@ -99,7 +99,7 @@ void CutterWindow::resize_controls() {
     parent_->position(parent_x, parent_y);
 
     if (visible()) {
-        update_buffers(true);
+        // update_buffers(false);
         redraw_frame();
     }
 }
@@ -156,7 +156,7 @@ void CutterWindow::handle_clipping_opened(bool opened) {
         return;
     }
 
-    player()->seek_frame(clipping()->first_frame());
+    clipping_editor_->update(clipping());
 
     player_bar_->update();
     redraw_frame();
@@ -165,7 +165,7 @@ void CutterWindow::handle_clipping_opened(bool opened) {
     update_title();
     clipping_version_ = clipping()->version();
 
-    update_buffers(true);
+    // update_buffers(false);
 }
 
 void CutterWindow::close() {
@@ -226,7 +226,7 @@ void CutterWindow::action_clear_ref() {
         return;
     }
     clipping()->ref().clear_reference();
-    update_buffers(true);
+    // update_buffers(false);
 }
 
 void CutterWindow::action_goto_reference() {
@@ -234,7 +234,7 @@ void CutterWindow::action_goto_reference() {
     if (clipping()->ref().get_reference_frame(&frame)) {
         player()->pause();
         player()->seek_frame(frame);
-        update_buffers(true);
+        // update_buffers(false);
     }
 }
 
@@ -256,7 +256,7 @@ void CutterWindow::redraw_frame(bool update_key_list) {
 }
 
 void CutterWindow::handle_buffer_modified() {
-    update_buffers(true);
+    // update_buffers(false);
 }
 
 void CutterWindow::update_buffers(bool frame_changed) {
@@ -271,6 +271,9 @@ void CutterWindow::update_buffers(bool frame_changed) {
         clipping_editor_->update(clipping());
         side_bar_->viewer()->update_preview(clipping());
     } else {
+        if (clipping_editor_->current_clipping() != clipping()) {
+            clipping_editor_->update(clipping());
+        }
         clipping_editor_->draw_operations();
         if (clipping_editor_->key_changed(true)) {
             side_bar_->update();
@@ -285,9 +288,13 @@ void CutterWindow::update_buffers(bool frame_changed) {
     side_bar_->update(true);
 }
 
+void CutterWindow::handle_frame_changed(Player *player) {
+    update_buffers(true);
+}
+
 void CutterWindow::poll_actions() {
     if (clipping()) {
-        update_buffers(player()->frame_changed(true));
+        update_buffers(false);
         if (wink_comparison_ && clipping_editor_->compare_box() && !player()->is_playing()) {
             ++wink_lap_;
             if (wink_lap_ > 11) {
@@ -300,6 +307,7 @@ void CutterWindow::poll_actions() {
 
 void CutterWindow::action_toggle_compare() {
     clipping_editor_->toggle_compare_box();
+    wink_comparison_ = false;
 }
 
 void CutterWindow::action_toggle_compare_wink() {

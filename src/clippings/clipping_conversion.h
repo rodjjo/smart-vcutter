@@ -9,7 +9,6 @@
 #include <memory>
 #include <list>
 #include <atomic>
-#include <boost/core/noncopyable.hpp>
 #include "src/clippings/clipping_iterator.h"
 #include "src/clippings/clipping.h"
 #include "src/common/buffers.h"
@@ -28,7 +27,9 @@ class ProgressHandler {
     virtual void set_progress(uint32_t progress, uint32_t max_progress) = 0;
 };
 
-class ClippingConversion: private boost::noncopyable {
+class ClippingConversion {
+   ClippingConversion(const ClippingConversion&) = delete;
+   ClippingConversion& operator=(const ClippingConversion&) = delete;
  public:
     ClippingConversion(std::shared_ptr<ProgressHandler> prog_handler, std::shared_ptr<ClippingRender> clipping, uint32_t max_memory=419430400);
 

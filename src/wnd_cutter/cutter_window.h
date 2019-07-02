@@ -54,6 +54,7 @@ class CutterWindow : public ClippingActionsHandler {
     void handle_clipping_keys_changed() override;
     void handle_buffer_modified() override;
     bool clipping_actions_active() override;
+    void handle_frame_changed(Player *player) override;
 
  private:
     void clear(bool clear_controls = true);
