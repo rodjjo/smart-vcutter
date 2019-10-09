@@ -62,7 +62,7 @@ Generate and build the project
 ```bash
 cmake .
 cmake --build .
-# the test will run after the command above
+the test will run after the command above
 ```
 
 Generate and build clearing first
@@ -103,7 +103,7 @@ Windows building
 ```
 # It's necessary mingw
 # The project was successfully compiled with: gcc.exe (i686-posix-dwarf-rev2, Built by MinGW-W64 project) 6.3.0
-cmake -G 'MinGW Makefiles' .
+cmake -G "MinGW Makefiles" .
 mingw32-make
 ```
 

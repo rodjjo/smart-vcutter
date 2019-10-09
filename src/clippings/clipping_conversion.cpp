@@ -15,7 +15,10 @@ namespace vcutter {
 ClippingConversion::ClippingConversion(
     std::shared_ptr<ProgressHandler> prog_handler,
     std::shared_ptr<ClippingRender> clipping,
-    uint32_t max_memory
+    uint32_t max_memory,
+    const char *title,
+    const char *author,
+    const char *tags
 ) {
     max_memory_ = max_memory;
     clipping_ = clipping;
@@ -25,6 +28,9 @@ ClippingConversion::ClippingConversion(
     last_encoded_buffer_.store(NULL);
     current_alpha_ = 1.0;
     alpha_increment_ = 0;
+    author_ = author ? author : "";
+    title_ = title ? title : "";
+    tags_ = tags ? tags : "";
 }
 
 
@@ -40,7 +46,8 @@ bool ClippingConversion::prepare_conversion(
     transitions_.clear();
     last_encoded_buffer_.store(NULL);
 
-    encoder_ = vs::encoder(codec, path, clipping_->w(), clipping_->h(), 1000, fps * 1000, bitrate);
+    encoder_ = vs::encoder(codec, path, clipping_->w(), clipping_->h(), 1000, fps * 1000, bitrate,
+                           title_.c_str(), author_.c_str(), tags_.c_str());
 
     if (encoder_->error()) {
         error_ = encoder_->error();

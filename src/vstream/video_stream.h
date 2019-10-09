@@ -71,7 +71,10 @@ std::shared_ptr<Encoder> encoder(
     unsigned int frame_height,
     int fps_numerator,
     int fps_denominator,
-    int bit_rate
+    int bit_rate,
+    const char *title=NULL,
+    const char *author=NULL,
+    const char *tags=NULL
 );
 
 

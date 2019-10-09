@@ -18,6 +18,9 @@ class EncoderImp: public Encoder {
     EncoderImp(
         const char *codec_name,
         const char *path,
+        const char *title,
+        const char *author,
+        const char *tags,
         unsigned int frame_width,
         unsigned int frame_height,
         int fps_numerator,
@@ -54,6 +57,11 @@ class EncoderImp: public Encoder {
 
     std::string codec_name_;
     std::string path_;
+
+    std::string title_;
+    std::string author_;
+    std::string tags_;
+
     unsigned int frame_width_;
     unsigned int frame_height_;
     int max_bidirectional_frames_;
