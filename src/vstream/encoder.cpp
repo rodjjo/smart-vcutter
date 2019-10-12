@@ -225,7 +225,7 @@ bool EncoderImp::allocate_format() {
         av_dict_set(&format_ctx_->metadata , "title", title_.c_str(), 0);
         av_dict_set(&format_ctx_->metadata , "artist", author_.c_str(), 0);
         av_dict_set(&format_ctx_->metadata , "comment", tags_.c_str(), 0);
-        av_dict_set(&format_ctx_->metadata , "description", "encoding using https://github.com/rodjjo/smart-vcutter", 0);
+        av_dict_set(&format_ctx_->metadata , "description", "encoded using https://github.com/rodjjo/smart-vcutter", 0);
     }
 
     return true;
