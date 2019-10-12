@@ -33,8 +33,8 @@ class ClippingConversion {
    ClippingConversion& operator=(const ClippingConversion&) = delete;
  public:
     ClippingConversion(
-       std::shared_ptr<ProgressHandler> prog_handler, 
-       std::shared_ptr<ClippingRender> clipping, 
+       std::shared_ptr<ProgressHandler> prog_handler,
+       std::shared_ptr<ClippingRender> clipping,
       uint32_t max_memory=419430400,
       const char *title=NULL,
       const char *author=NULL,
