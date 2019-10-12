@@ -9,6 +9,7 @@
 #include <memory>
 #include <list>
 #include <atomic>
+#include <string>
 #include "src/clippings/clipping_iterator.h"
 #include "src/clippings/clipping.h"
 #include "src/common/buffers.h"
@@ -31,7 +32,13 @@ class ClippingConversion {
    ClippingConversion(const ClippingConversion&) = delete;
    ClippingConversion& operator=(const ClippingConversion&) = delete;
  public:
-    ClippingConversion(std::shared_ptr<ProgressHandler> prog_handler, std::shared_ptr<ClippingRender> clipping, uint32_t max_memory=419430400);
+    ClippingConversion(
+       std::shared_ptr<ProgressHandler> prog_handler,
+       std::shared_ptr<ClippingRender> clipping,
+      uint32_t max_memory=419430400,
+      const char *title=NULL,
+      const char *author=NULL,
+      const char *tags=NULL);
 
     bool convert(
         const char *codec,
@@ -70,6 +77,9 @@ class ClippingConversion {
     std::unique_ptr<ClippingIterator> clip_iter_;
     std::list<std::shared_ptr<CharBuffer> > transitions_;
     std::string error_;
+    std::string author_;
+    std::string title_;
+    std::string tags_;
     float current_alpha_;
     float alpha_increment_;
     uint32_t max_memory_;

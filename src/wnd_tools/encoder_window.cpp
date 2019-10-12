@@ -21,7 +21,7 @@ const char *kCLIPPING_DIR_KEY = "ews-clipping-dir";
 const char *kCONVERSION_DIR_KEY = "ews-conversion-dir";
 
 const int kWINDOW_WIDTH = 700;
-const int kWINDOW_HEIGHT = 300;
+const int kWINDOW_HEIGHT = 410;
 
 const char *kEDT_PATH_FIELD = "source_path";
 const char *kEDT_OUTPUT_FIELD = "target_path";
@@ -112,6 +112,13 @@ void EncoderWindow::init(History* history, std::shared_ptr<ClippingRender> clip)
     edt_fps_->align(FL_ALIGN_TOP_LEFT);
 
     btn_fps_ = new Fl_Button(edt_fps_->x() + edt_fps_->w() + 1,  edt_fps_->y(), 60, 25, "change");
+
+    edt_title_ = new Fl_Input(5, btn_fps_->y() + 25 + btn_fps_->h(), window_->w() - 37, 25, "Title:");
+    edt_title_->align(FL_ALIGN_TOP_LEFT);
+    edt_author_ = new Fl_Input(5, edt_title_->y() + 25 + edt_title_->h(), window_->w() - 37, 25, "Author:");
+    edt_author_->align(FL_ALIGN_TOP_LEFT);
+    edt_tags_ = new Fl_Input(5, edt_author_->y() + 25 + edt_author_->h(), window_->w() - 37, 25, "Description:");
+    edt_tags_->align(FL_ALIGN_TOP_LEFT);
 
     components_group_->end();
 
@@ -512,7 +519,7 @@ void EncoderWindow::action_convert() {
         clip->add(key2);
     }
 
-    ClippingConversion conv(prog, clip);
+    ClippingConversion conv(prog, clip, 419430400, edt_title_->value(), edt_author_->value(), edt_tags_->value());
     conv.convert(
         format,
         edt_output_->value(),

@@ -99,6 +99,9 @@ class EncoderWindow {
     Fl_Spinner *spn_transitions_;
     Fl_Input *edt_start_;
     Fl_Input *edt_end_;
+    Fl_Input *edt_title_;
+    Fl_Input *edt_author_;
+    Fl_Input *edt_tags_;
     Fl_Button *btn_fps_;
     Fl_Button *btn_path_;
     Fl_Button *btn_output_;

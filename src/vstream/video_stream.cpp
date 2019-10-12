@@ -25,11 +25,17 @@ std::shared_ptr<Encoder> encoder(
     unsigned int frame_height,
     int fps_numerator,
     int fps_denominator,
-    int bit_rate
+    int bit_rate,
+    const char *title,
+    const char *author,
+    const char *tags
 ) {
     return std::shared_ptr<vs::Encoder>(new vs::EncoderImp(
         codec_name,
         path,
+        title ? title : "",
+        author ? author : "",
+        tags ? tags : "",
         frame_width,
         frame_height,
         fps_numerator,

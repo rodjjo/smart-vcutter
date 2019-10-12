@@ -53,6 +53,9 @@ int Encoder::default_bitrate(const char *format_name, unsigned int w, unsigned i
 EncoderImp::EncoderImp(
     const char *codec_name,
     const char *path,
+    const char *title,
+    const char *author,
+    const char *tags,
     unsigned int frame_width,
     unsigned int frame_height,
     int fps_numerator,
@@ -66,6 +69,9 @@ EncoderImp::EncoderImp(
     codec_ = NULL;
     codec_name_ = codec_name;
     path_ = path;
+    tags_ = tags;
+    title_ = title;
+    author_ = author;
     frame_pts_ = 0;
     got_packet_ptr_ = 0;
     frame_width_ = frame_width;
@@ -214,6 +220,14 @@ bool EncoderImp::allocate_format() {
     }
 
     format_ctx_ = vs::allocate_format_context(context);
+
+    if (strcmp(format_name, "mp4") == 0) {
+        av_dict_set(&format_ctx_->metadata , "title", title_.c_str(), 0);
+        av_dict_set(&format_ctx_->metadata , "artist", author_.c_str(), 0);
+        av_dict_set(&format_ctx_->metadata , "comment", tags_.c_str(), 0);
+        av_dict_set(&format_ctx_->metadata , "description", "encoded using https://github.com/rodjjo/smart-vcutter", 0);
+    }
+
     return true;
 }
 
